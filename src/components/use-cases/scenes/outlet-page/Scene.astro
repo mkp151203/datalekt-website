@@ -1,0 +1,131 @@
+---
+// Use case 5: the Customisable Web Page. Based on the product recording
+// (video5): the hotel's own page on Datalekt (bang.datalekt.com/paradise)
+// with a promotions carousel and a card per outlet listing its offers,
+// Menu and Reserve. Here staff add a promotion and an offer, publish,
+// and the guest's page updates; the guest then reserves from it.
+// scene.ts plays it; UseCases.astro shows it in the switcher.
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import './scene.css';
+
+// Outlet photos keyed by file name
+const files = import.meta.glob<{ default: ImageMetadata }>('../../../../assets/images/outlets/*.jpg', { eager: true });
+const outlets: Record<string, string> = {};
+for (const [path, module] of Object.entries(files)) {
+  const image = await getImage({ src: module.default, format: 'webp' });
+  outlets[path.split('/').pop()!] = image.src;
+}
+---
+
+<div class="w-wrap" data-scene="outlet-page">
+  <div class="w-scene" role="img" aria-label="In Datalekt, staff add a New Year's Eve poster and a New Year's Eve dinner offer for UKIYO and publish; the hotel's page on a guest's phone shows the new poster and offer, and the guest taps Reserve.">
+    <svg class="w-links w-links-wide" viewBox="0 0 1100 640" aria-hidden="true">
+      <path pathLength="1" d="M630 128 C 700 128, 720 200, 790 200"/>
+    </svg>
+    <svg class="w-links w-links-stack" viewBox="0 0 660 1240" aria-hidden="true">
+      <path pathLength="1" d="M330 580 C 330 600, 330 615, 330 636"/>
+    </svg>
+    <span class="w-packet w-packet-wide" style="offset-path: path('M630 128 C 700 128, 720 200, 790 200')"></span>
+    <span class="w-packet w-packet-stack" style="offset-path: path('M330 580 C 330 600, 330 615, 330 636')"></span>
+
+    <!-- Staff edit the page in Datalekt -->
+    <div class="w-editor">
+      <div class="w-chrome"><img src="/brand/datalekt-mark.svg" alt="">Datalekt<i></i><i></i><i></i></div>
+      <div class="w-ehead">
+        <div><b>Web page <span class="w-live">Live</span></b><small>The Ritz-Carlton, Pune · bang.datalekt.com/paradise</small></div>
+        <span class="w-publish is-idle">Publish</span>
+      </div>
+      <div class="w-ebody">
+        <div class="w-sec">
+          <h6><span>Promotions</span><span>Shown at the top of the page</span></h6>
+          <div class="w-thumbs">
+            <div class="pst pst-season"><small>THE RITZ-CARLTON</small><b>SEASON’S</b><span>SPECIALS</span></div>
+            <div class="pst pst-festive"><small>THE RITZ-CARLTON SPA</small><b>FESTIVE TOUCH</b><span>120 MIN · ₹10,500</span></div>
+            <div class="pst pst-ukiyo"><small>UKIYO</small><b>UKIYO-E</b><span>ALL-NEW COCKTAILS</span></div>
+            <div class="pst pst-nye is-new"><small>AASMANA</small><b>New Year’s Eve</b><span>DEC 31 · 8 PM</span></div>
+            <span class="w-add"><span><b>+</b>Add</span></span>
+          </div>
+        </div>
+
+        <div class="w-sec">
+          <h6><span>Outlets</span><span>4 on the page</span></h6>
+          <div class="w-outlets">
+            <span class="w-outlet-tile on"><img src={outlets['ukiyo.jpg']} alt="">UKIYO</span>
+            <span class="w-outlet-tile"><img src={outlets['aasmana.jpg']} alt="">AASMANA</span>
+            <span class="w-outlet-tile"><img src={outlets['alta-vida.jpg']} alt="">ALTA VIDA</span>
+            <span class="w-outlet-tile"><img src={outlets['three-kitchen.jpg']} alt="">Three Kitchen</span>
+          </div>
+        </div>
+
+        <div class="w-sec">
+          <h6><span>Offers · UKIYO</span><span>Shown under the outlet</span></h6>
+          <div class="w-offer-list">
+            <div class="w-offer is-new"><svg viewBox="0 0 16 16"><path d="m8 1.8 1.8 3.8 4.2.5-3.1 2.9.8 4.2L8 11.1l-3.7 2.1.8-4.2L2 6.1l4.2-.5z"/></svg>New Year’s Eve Dinner | Dec 31 | 8 PM onwards<em>Live</em></div>
+            <div class="w-offer"><svg viewBox="0 0 16 16"><path d="m8 1.8 1.8 3.8 4.2.5-3.1 2.9.8 4.2L8 11.1l-3.7 2.1.8-4.2L2 6.1l4.2-.5z"/></svg>Savor an all-new menu with Ukiyo<em>Live</em></div>
+            <div class="w-offer"><svg viewBox="0 0 16 16"><path d="m8 1.8 1.8 3.8 4.2.5-3.1 2.9.8 4.2L8 11.1l-3.7 2.1.8-4.2L2 6.1l4.2-.5z"/></svg>Yakitori and Choya Cocktails Brunch · Every Sunday<em>Live</em></div>
+            <div class="w-offer"><svg viewBox="0 0 16 16"><path d="m8 1.8 1.8 3.8 4.2.5-3.1 2.9.8 4.2L8 11.1l-3.7 2.1.8-4.2L2 6.1l4.2-.5z"/></svg>Christmas Eve Dinner | Dec 24 | 7 PM onwards<em>Live</em></div>
+            <div class="w-input"><svg viewBox="0 0 16 16" style="width:13px;fill:none;stroke:currentColor;stroke-width:1.6"><path d="M8 3v10M3 8h10"/></svg><span class="w-typed"><span class="ph">Add an offer…</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Guest: the hotel's page -->
+    <div class="w-phone">
+      <div class="w-screen">
+        <div class="w-url"><span>bang.datalekt.com/paradise</span></div>
+        <div class="w-page">
+          <p class="w-brand">THE RITZ-CARLTON<small>PUNE</small></p>
+          <div class="w-carousel">
+            <div class="w-track">
+              <div class="pst pst-season"><small>THE RITZ-CARLTON</small><b>SEASON’S</b><span>SPECIALS</span><i>Festive dining all season</i></div>
+              <div class="pst pst-festive"><small>THE RITZ-CARLTON SPA</small><b>FESTIVE TOUCH</b><span>120 MIN · ₹10,500</span><i>Reserve +91 20 6767 5000</i></div>
+              <div class="pst pst-ukiyo"><small>UKIYO</small><b>UKIYO-E</b><span>ALL-NEW COCKTAILS</span><i>Every evening from 6 PM</i></div>
+              <div class="pst pst-nye is-new is-hidden"><small>AASMANA</small><b>New Year’s Eve</b><span>DEC 31 · 8 PM</span><i>Rooftop dinner and live band</i></div>
+            </div>
+          </div>
+          <div class="w-dots"><i class="on"></i><i></i><i></i><i class="is-hidden"></i></div>
+
+          <div class="w-card">
+            <img src={outlets['ukiyo.jpg']} alt="">
+            <b>UKIYO</b><small>Modern Japanese Dining</small>
+          </div>
+          <div class="w-pg-offers">
+            <div class="w-pg-offer is-new"><svg viewBox="0 0 16 16"><path d="m8 1.8 1.8 3.8 4.2.5-3.1 2.9.8 4.2L8 11.1l-3.7 2.1.8-4.2L2 6.1l4.2-.5z"/></svg>New Year’s Eve Dinner | Dec 31 | 8 PM onwards</div>
+            <div class="w-pg-offer"><svg viewBox="0 0 16 16"><path d="m8 1.8 1.8 3.8 4.2.5-3.1 2.9.8 4.2L8 11.1l-3.7 2.1.8-4.2L2 6.1l4.2-.5z"/></svg>Savor an all-new menu with Ukiyo</div>
+            <div class="w-pg-offer"><svg viewBox="0 0 16 16"><path d="m8 1.8 1.8 3.8 4.2.5-3.1 2.9.8 4.2L8 11.1l-3.7 2.1.8-4.2L2 6.1l4.2-.5z"/></svg>Yakitori and Choya Cocktails Brunch · Every Sunday</div>
+            <div class="w-pg-offer"><svg viewBox="0 0 16 16"><path d="m8 1.8 1.8 3.8 4.2.5-3.1 2.9.8 4.2L8 11.1l-3.7 2.1.8-4.2L2 6.1l4.2-.5z"/></svg>Christmas Eve Dinner | Dec 24 | 7 PM onwards</div>
+          </div>
+          <div class="w-pg-actions"><span>Menu</span><span class="w-reserve">Reserve</span></div>
+          <div class="w-card">
+            <img src={outlets['aasmana.jpg']} alt="">
+            <b>AASMANA</b><small>Roof Top Dining</small>
+          </div>
+        </div>
+
+        <div class="w-dim"></div>
+        <div class="w-sheet">
+          <b>Reserve at UKIYO</b><small>The Ritz-Carlton, Pune</small>
+          <div class="w-sheet-row"><span class="on">Tonight</span><span>Tomorrow</span><span>Sat</span></div>
+          <div class="w-sheet-row"><span>7:30</span><span class="on">8:00</span><span>8:30</span><span>2 guests</span></div>
+          <p class="w-sheet-btn">Request booking</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="w-chip w-chip-1"><i></i>Add promotions and offers</p>
+    <p class="w-chip w-chip-2"><i></i>Published in one click</p>
+    <p class="w-chip w-chip-3"><i></i>Guests reserve from the page</p>
+
+    <span class="w-tap" aria-hidden="true"></span>
+    <svg class="w-cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 1.5v19l5-4.6 3.4 7.6 3.3-1.5-3.4-7.4 6.9-.4z" fill="#fff" stroke="#0b2a3f" stroke-width="1.5" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<script>
+  import { initAll } from '../../../../scripts/lib/in-view';
+  import { initScene } from './scene';
+
+  initAll('[data-scene="outlet-page"]', initScene);
+</script>

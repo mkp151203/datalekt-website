@@ -1,0 +1,296 @@
+/* Partners: one large photograph with the current hotel's name, a count
+   and a row of dots. assets/js/partners-showcase.js reads the hotel list
+   from .partners-roster and reveals each one in a ripple of dots. */
+
+.partners {
+  --partner-duration: 5.9s; /* set by the script: reveal plus hold */
+  display: grid;
+  grid-template-columns: minmax(0, 25rem) minmax(0, 1fr);
+  /* The text group sits centred against the photo, between two spacer rows */
+  grid-template-areas:
+    ".       view"
+    "title   view"
+    "caption view"
+    "nav     view"
+    ".       view";
+  grid-template-rows: 1fr auto auto auto 1fr;
+  column-gap: clamp(40px, 5vw, 80px);
+  padding: clamp(32px, 4vw, 64px) var(--edge) clamp(64px, 7vw, 104px);
+}
+
+/* Desktop: the hotel name sits a step below the section heading, and the
+   arrows sit on the same row as the dots */
+@media (min-width: 1101px) {
+  .partners-view { box-shadow: 0 30px 60px -30px rgb(11 42 63 / 0.4); }
+  .partners-arrow { box-shadow: 0 1px 2px rgb(11 42 63 / 0.08); }
+
+
+  .partner-caption .caption-name { font-size: clamp(1.75rem, 1rem + 1.6vw, 2.5rem); }
+  .partner-caption .caption-city { font-size: clamp(1.375rem, 0.9rem + 1.1vw, 1.875rem); }
+
+  .partners-nav .partner-dot {
+    width: 22px;
+    height: 22px;
+  }
+
+  .partners-nav .partners-arrow {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.partners-title {
+  grid-area: title;
+  margin: 0 0 clamp(28px, 3vw, 44px);
+  font-size: clamp(1.75rem, 1rem + 2vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.partners-view {
+  grid-area: view;
+  position: relative;
+  aspect-ratio: 16 / 10;
+  max-height: 560px;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--ink);
+}
+
+/* Still photo for the first paint and without script; scaled to crop the
+   white corners baked into the files */
+.partners-still {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.2);
+}
+
+.partners-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.partners-view.is-live .partners-still { visibility: hidden; }
+
+/* The current hotel, set like the hero: name in the sans, city in the
+   serif italic. Each line slides out and the next slides in. */
+.partner-caption {
+  grid-area: caption;
+  margin: 0 0 24px;
+}
+
+.caption-line {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.caption-text {
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.caption-text.is-leaving {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-110%);
+}
+
+.caption-text.is-arriving { transform: translateY(110%); transition: none; }
+
+.caption-name {
+  font-size: clamp(2rem, 1.2rem + 2.2vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.caption-city {
+  color: var(--ink-muted);
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 1rem + 1.4vw, 2.25rem);
+  font-style: italic;
+  font-weight: 500;
+  font-variation-settings: "opsz" 11;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.caption-line + .caption-line .caption-text { transition-delay: 0.06s; }
+
+/* Dots and arrows: one row on desktop, arrows above the dots on phones */
+.partners-nav {
+  grid-area: nav;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.partners-controls {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.partners-arrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px rgb(11 42 63 / 0.06);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.partners-arrow svg {
+  width: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.partners-arrow:hover {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+/* One dot per hotel; they wrap into rows as partners are added */
+.partners-dots {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+  margin-left: -7px;
+}
+
+.partner-dot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+
+.partner-dot::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #b9c9d5;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease;
+}
+
+.partner-dot:hover::before { background: var(--ink-muted); transform: scale(1.25); }
+
+.partner-dot[aria-current="true"]::before {
+  background: var(--cyan);
+  transform: scale(1.15);
+}
+
+/* Countdown ring around the current dot */
+@property --ring {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+.partner-dot[aria-current="true"] .partner-ring {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: conic-gradient(var(--cyan) calc(var(--ring) * 1turn), rgb(69 187 206 / 0.18) 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+}
+
+.partners.is-playing .partner-dot[aria-current="true"] .partner-ring {
+  animation: partner-ring var(--partner-duration) linear forwards;
+}
+
+.partners.is-paused .partner-ring { animation-play-state: paused; }
+
+@keyframes partner-ring {
+  to { --ring: 1; }
+}
+
+/* Name tooltip */
+.partner-dot::after {
+  content: attr(data-name);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--surface);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.partner-dot:hover::after,
+.partner-dot:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Controls only work with script */
+.partners:not(.is-ready) .partners-nav { display: none; }
+
+@media (max-width: 1100px) {
+  /* Partners: title, a full-bleed photo, then the name and controls */
+  .partners {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "title"
+      "view"
+      "caption"
+      "nav";
+    grid-template-rows: auto;
+    padding: clamp(56px, 12vw, 96px) var(--gutter);
+  }
+
+  .partners-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+  }
+
+  .partners-controls { order: -1; }
+
+  .partners-title { margin-bottom: 0; }
+
+  .partners-view {
+    max-height: none;
+    aspect-ratio: 4 / 3;
+    margin: 24px calc(-1 * var(--gutter)) 28px;
+    border-radius: 0;
+  }
+
+  .partner-caption { margin-bottom: 20px; }
+}

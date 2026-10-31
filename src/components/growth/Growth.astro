@@ -1,0 +1,61 @@
+---
+// "Empowering growth": a fine dot map of India with the partner cities linked
+// one by one (growth-map.ts), beside the counts and the hotels by city.
+// Everything here comes from data/partners.ts and data/cities.ts.
+import { getPartnerCities, getPartnerStats } from '../../data/partners';
+import './growth.css';
+
+const cities = getPartnerCities();
+const stats = getPartnerStats();
+---
+
+<section class="growth" id="locations" aria-labelledby="growth-title">
+  <div class="growth-copy">
+    <h2 class="growth-title" id="growth-title">Empowering growth, <em>one partnership at a time.</em></h2>
+    <p class="growth-lead">Some of India’s finest hotels run their restaurants on Datalekt.</p>
+    <dl class="growth-stats">
+      <div><dt>Partner hotels</dt><dd>{stats.hotels}</dd></div>
+      <div><dt>Cities</dt><dd>{stats.cities}</dd></div>
+      <div><dt>States</dt><dd>{stats.states}</dd></div>
+    </dl>
+    <ul class="growth-cities" aria-label="Partner hotels by city">
+      {
+        cities.map((city) => (
+          <li>
+            <button
+              class="growth-city"
+              type="button"
+              data-lat={city.lat}
+              data-lon={city.lon}
+              data-state={city.state}
+              data-side={city.labelSide}
+              aria-pressed="false"
+            >
+              <span class="growth-city-name">
+                {city.name}
+                <b>{city.hotels.length}</b>
+              </span>
+              <span class="growth-city-hotels">{city.hotels.join(' · ')}</span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="growth-map" aria-hidden="true">
+    <canvas class="growth-dots"></canvas>
+    <svg class="growth-lines" viewBox="0 0 1000 1114" preserveAspectRatio="none">
+      <g class="growth-states"></g>
+      <g class="growth-arcs"></g>
+    </svg>
+    <div class="growth-pins"></div>
+  </div>
+</section>
+
+<script>
+  import { initAll } from '../../scripts/lib/in-view';
+  import { initGrowthMap } from './growth-map';
+
+  initAll('.growth', initGrowthMap);
+</script>

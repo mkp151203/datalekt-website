@@ -1,0 +1,50 @@
+---
+// Site footer: brand line, link columns, copyright, privacy and back to top.
+import { footerNav } from '../../data/navigation';
+import { links, site } from '../../data/site';
+import './footer.css';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#top" aria-label="Datalekt, back to top"
+        ><img src="/brand/datalekt-wordmark.png" width="410" height="126" alt="Datalekt" /></a
+      >
+      <p>{site.tagline}</p>
+    </div>
+    <nav class="footer-cols" aria-label="Footer">
+      {
+        footerNav.map((group) => (
+          <div>
+            <h2 class="footer-heading">{group.heading}</h2>
+            <ul>
+              {group.links.map((link) => (
+                <li>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <p>© {site.since}–{year} {site.name}. All rights reserved.</p>
+    <a href={links.privacy}>Privacy policy</a>
+    <a class="footer-up" href="#top"
+      >Back to top<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"
+        ><path
+          d="M6 10V2M2.5 5.5 6 2l3.5 3.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path></svg
+      ></a
+    >
+  </div>
+</footer>

@@ -1,0 +1,25 @@
+---
+// Closing call to action: a deep panel with the hero's dot ripple in cyan,
+// rippling by itself every few seconds (scripts/dot-wave.ts).
+import { links } from '../../data/site';
+import './cta.css';
+---
+
+<section class="cta" aria-labelledby="cta-title">
+  <div class="cta-panel">
+    <canvas class="cta-wave" data-wave data-ambient data-ink="69, 187, 206" data-quiet=".cta-badge, .cta-line, .cta-lead, .cta-actions > *" aria-hidden="true"></canvas>
+    <p class="cta-badge">30 days on us</p>
+    <h2 class="cta-title" id="cta-title"><span class="cta-line">Experience the power of</span> <span class="cta-line"><em>proactive hospitality.</em></span></h2>
+    <p class="cta-lead">Try Datalekt free for your first 30 days.</p>
+    <div class="cta-actions">
+      <a class="button button-light" href={links.demo}>Schedule a demo</a>
+      <a class="cta-secondary" href="#product">See how it works</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initDotWaves } from '../../scripts/dot-wave';
+
+  initDotWaves();
+</script>

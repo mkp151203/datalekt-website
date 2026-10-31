@@ -1,0 +1,48 @@
+---
+// "Where data meets efficiency": five white cards on the pale field, each with
+// a small product scene. Text from data/features.ts; scenes in visuals/.
+import { getFeatures, type Feature } from '../../data/features';
+import SecureVisual from './visuals/SecureVisual.astro';
+import AutomationsVisual from './visuals/AutomationsVisual.astro';
+import SimplifyVisual from './visuals/SimplifyVisual.astro';
+import SyncVisual from './visuals/SyncVisual.astro';
+import InsightsVisual from './visuals/InsightsVisual.astro';
+import './features.css';
+
+const visuals: Record<Feature['id'], typeof SecureVisual> = {
+  secure: SecureVisual,
+  auto: AutomationsVisual,
+  simple: SimplifyVisual,
+  sync: SyncVisual,
+  insight: InsightsVisual,
+};
+---
+
+<section class="eff" id="features" aria-labelledby="eff-title">
+  <div class="eff-head">
+    <h2 class="eff-title" id="eff-title">Where data meets <em>efficiency.</em></h2>
+    <p class="eff-lead">Everything your outlets know about a guest, kept safe, kept in sync and put to work.</p>
+  </div>
+
+  <div class="eff-grid">
+    {
+      getFeatures().map((feature) => {
+        const Visual = visuals[feature.id];
+        return (
+          <article class={`eff-card eff-${feature.id}`}>
+            <Visual />
+            <h3>{feature.title}</h3>
+            <p>{feature.text}</p>
+          </article>
+        );
+      })
+    }
+  </div>
+</section>
+
+<script>
+  import { initAll } from '../../scripts/lib/in-view';
+  import { initFeatures } from './features';
+
+  initAll('.eff', initFeatures);
+</script>

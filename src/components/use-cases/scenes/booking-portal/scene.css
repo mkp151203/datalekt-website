@@ -1,0 +1,160 @@
+/* Use case 3: the Reservation Booking Portal. Based on the product
+   recording (video3): a guest books on the hotel's own booking page,
+   staff approve the request in Datalekt with one click, and the guest
+   gets a branded confirmation ticket on WhatsApp. */
+
+/* The scene: drawn at a fixed size and scaled to fit */
+.b-wrap { position: relative; max-width: 1100px; height: calc(var(--h, 650px) * var(--s, 1)); margin: 0 auto; }
+
+.b-scene {
+  --sw: 1100px;
+  --sh: 650px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--sw);
+  height: var(--sh);
+  transform: translateX(-50%) scale(var(--s, 1));
+  transform-origin: top center;
+  font-size: 13px;
+}
+
+.b-scene.is-stack { --sw: 680px; --sh: 940px; }
+.b-scene > * { position: absolute; }
+
+.b-links { inset: 0; width: var(--sw); height: var(--sh); overflow: visible; pointer-events: none; }
+.b-links path { fill: none; stroke: var(--cyan); stroke-width: 1.6; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+.b-links path.is-drawn { stroke-dashoffset: 0; }
+.b-links-stack, .b-packet-stack { display: none; }
+.is-stack .b-links-wide, .is-stack .b-packet-wide { display: none; }
+.is-stack .b-links-stack, .is-stack .b-packet-stack { display: block; }
+
+.b-packet { z-index: 7; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 5px rgb(69 187 206 / 0.25); opacity: 0; offset-rotate: 0deg; }
+.b-packet.is-moving { animation: b-travel 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+@keyframes b-travel {
+  0% { offset-distance: 0%; opacity: 0; }
+  12%, 88% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* Browser: the hotel's own booking page */
+.b-browser { z-index: 2; left: 0; top: 50px; width: 640px; height: 500px; overflow: hidden; border-radius: 14px; background: var(--surface); box-shadow: 0 1px 2px rgb(11 42 63 / 0.08), 0 40px 70px -30px rgb(11 42 63 / 0.45), 0 0 0 1px var(--line); }
+.is-stack .b-browser { left: 20px; top: 20px; }
+.b-tabs { display: flex; align-items: flex-end; gap: 6px; height: 34px; padding: 0 12px; background: #dfe7ed; }
+.b-tab { display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 14px; border-radius: 8px 8px 0 0; background: var(--surface); font-size: 11px; }
+.b-tab i { width: 9px; height: 9px; border-radius: 50%; background: #b9c9d5; }
+.b-url { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; background: var(--surface); border-bottom: 1px solid var(--line); font-size: 11.5px; }
+.b-url span { flex: 1; padding: 5px 12px; border-radius: 999px; background: var(--tint); color: var(--ink-soft); }
+.b-url b { font-weight: 500; color: var(--ink); }
+
+.b-page { position: relative; height: calc(100% - 68px); }
+.b-hero { position: absolute; inset: 0; overflow: hidden; }
+.b-hero img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.25); filter: blur(5px) saturate(0.9); }
+.b-hero::after { content: ""; position: absolute; inset: 0; background: rgb(11 27 38 / 0.55); }
+.b-brand { position: absolute; top: 18px; left: 0; right: 0; z-index: 1; color: #fff; text-align: center; font-family: var(--serif); letter-spacing: 0.08em; }
+.b-brand b { display: block; font-size: 18px; font-weight: 500; }
+.b-brand small { font-family: var(--sans); font-size: 10px; letter-spacing: 0.2em; opacity: 0.8; }
+
+/* The booking overlay */
+.b-overlay { position: absolute; top: 74px; left: 50%; z-index: 2; width: 420px; margin-left: -210px; padding: 18px 20px 16px; border-radius: 16px; background: var(--surface); box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.5); }
+.b-overlay h5 { margin: 0 0 12px; font-size: 15px; font-weight: 500; }
+.b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 12px; }
+.b-field { position: relative; padding: 6px 10px; border-radius: 9px; background: var(--tint); font-size: 12px; min-height: 40px; }
+.b-field small { display: block; color: var(--ink-muted); font-size: 9.5px; }
+.b-field.wide { grid-column: 1 / -1; }
+.b-field .val { font-weight: 500; }
+.b-field .ph { color: #9fb2c0; }
+.b-field.is-focus { box-shadow: inset 0 0 0 1.5px var(--blue); background: var(--surface); }
+.b-list { position: absolute; top: 100%; left: 0; right: 0; z-index: 3; margin-top: 4px; padding: 4px; border-radius: 9px; background: var(--surface); box-shadow: 0 16px 30px -12px rgb(11 42 63 / 0.4), 0 0 0 1px var(--line); opacity: 0; transform: translateY(-6px); transition: opacity 0.2s ease, transform 0.25s ease; pointer-events: none; }
+.b-list.is-open { opacity: 1; transform: none; }
+.b-list span { display: block; padding: 6px 8px; border-radius: 6px; font-size: 11.5px; }
+.b-list span.is-hit { background: var(--ink); color: #fff; }
+.b-chips { display: flex; gap: 4px; margin-top: 2px; }
+.b-chips span { padding: 2px 8px; border-radius: 999px; background: var(--surface); font-size: 11px; transition: background-color 0.25s ease, color 0.25s ease; }
+.b-chips span.on { background: var(--ink); color: #fff; }
+.b-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+.b-btn { padding: 9px 20px; border-radius: 999px; font-size: 12.5px; font-weight: 500; transition: transform 0.15s ease, background-color 0.3s ease; }
+.b-btn.ghost { box-shadow: inset 0 0 0 1px var(--line); }
+.b-btn.submit { background: var(--ink); color: #fff; }
+.b-btn.is-pressed { transform: scale(0.93); }
+.b-btn.is-done { background: #0e8a6a; }
+.b-caret { display: inline-block; width: 1.5px; height: 13px; margin-left: 1px; vertical-align: -2px; background: var(--blue); animation: b-blink 1s steps(1) infinite; }
+@keyframes b-blink { 50% { opacity: 0; } }
+
+.b-thanks { position: absolute; top: 74px; left: 50%; z-index: 3; width: 420px; margin-left: -210px; padding: 12px 14px; border-radius: 12px; background: #e3f6ec; color: #1f6a49; font-size: 12px; line-height: 1.45; box-shadow: 0 12px 24px -12px rgb(0 0 0 / 0.3); opacity: 0; transform: translateY(-10px); transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+.b-thanks.is-in { opacity: 1; transform: translateY(-58px); }
+.b-thanks b { font-weight: 500; }
+
+/* Staff tablet: Datalekt notifications */
+.b-tablet { z-index: 2; left: 680px; top: 50px; width: 410px; height: 214px; padding: 10px; border-radius: 22px; background: #0d1b26; box-shadow: 0 30px 50px -24px rgb(11 42 63 / 0.45); }
+.is-stack .b-tablet { left: 20px; top: 556px; width: 400px; }
+.b-screen { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 13px; background: var(--ground); }
+.b-bar { display: flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; background: var(--ink); color: #fff; font-size: 11.5px; }
+.b-bar img { width: 13px; }
+.b-bell { position: relative; margin-left: auto; width: 18px; height: 18px; border-radius: 50%; background: #2c3e4c; }
+.b-bell::after { content: "1"; position: absolute; top: -5px; right: -6px; display: grid; place-items: center; width: 14px; height: 14px; border-radius: 50%; background: var(--cyan); color: #06303a; font-size: 9px; font-weight: 600; transform: scale(0); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.b-tablet.has-note .b-bell::after { transform: scale(1); }
+.b-notes { padding: 12px; }
+.b-notes h6 { margin: 0 0 8px; color: var(--ink-muted); font-size: 11px; font-weight: 500; }
+.b-empty { color: #9fb2c0; font-size: 12px; }
+.b-note { padding: 11px 12px; border-radius: 12px; background: var(--surface); box-shadow: var(--float); opacity: 0; transform: translateY(10px) scale(0.97); transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+.b-tablet.has-note .b-note { opacity: 1; transform: none; }
+.b-tablet.has-note .b-empty { display: none; }
+.b-note b { font-size: 12.5px; font-weight: 500; }
+.b-note b span { padding: 1px 7px; margin-left: 4px; border-radius: 999px; background: var(--tint); font-size: 10px; }
+.b-note p { margin: 3px 0 9px; color: var(--ink-muted); font-size: 11px; }
+.b-note .row { display: flex; gap: 6px; }
+.b-note .row span { padding: 6px 14px; border-radius: 999px; font-size: 11.5px; font-weight: 500; transition: transform 0.15s ease, background-color 0.3s ease; }
+.b-note .cancel { box-shadow: inset 0 0 0 1px var(--line); }
+.b-note .reserve { background: var(--blue); color: #fff; }
+.b-note .reserve.is-pressed { transform: scale(0.92); }
+.b-note .reserve.is-done { background: #0e8a6a; }
+
+/* Guest phone: WhatsApp confirmation ticket */
+.b-phone { z-index: 3; left: 770px; top: 296px; width: 196px; height: 344px; padding: 8px; border-radius: 30px; background: #0d1b26; box-shadow: 0 40px 60px -24px rgb(11 42 63 / 0.55); }
+.is-stack .b-phone { left: 456px; top: 560px; }
+.b-phone::before { content: ""; position: absolute; top: 12px; left: 50%; z-index: 4; width: 50px; height: 7px; margin-left: -25px; border-radius: 7px; background: #0d1b26; }
+.b-wa { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 23px; background: #efeae2; }
+.b-wa-top { display: flex; align-items: center; gap: 6px; height: 46px; padding: 16px 10px 0; background: #008069; color: #fff; font-size: 11px; font-weight: 500; }
+.b-wa-top i { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #fff; font-style: normal; }
+.b-wa-top i img { width: 11px; }
+.b-wa-top em { display: grid; place-items: center; width: 11px; height: 11px; border-radius: 50%; background: #53bdeb; font-size: 8px; font-style: normal; }
+.b-chat { padding: 8px; }
+.b-ticket { padding: 7px; border-radius: 8px; background: #fff; opacity: 0; transform: translateY(26px); clip-path: inset(0 0 100% 0); transition: opacity 0.2s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), clip-path 0.9s cubic-bezier(0.22, 1, 0.36, 1); }
+.b-ticket.is-in { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+.b-tk { border-radius: 5px; background: #eceff2; }
+.b-tk-head { display: flex; justify-content: space-between; align-items: center; padding: 6px 7px; border-bottom: 1.5px dashed #c5ced5; font-size: 7.5px; font-weight: 600; line-height: 1.2; }
+.b-tk-head span:last-child { font-family: var(--serif); font-size: 7px; letter-spacing: 0.06em; text-align: right; }
+.b-tk-row { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 4px 5px; }
+.b-tk-cell { padding: 4px 5px; border-radius: 3px; background: #fff; font-size: 8.5px; font-weight: 600; }
+.b-tk-cell.wide { grid-column: 1 / -1; }
+.b-tk-cell small { display: block; color: #8796a3; font-size: 6.5px; font-weight: 400; }
+.b-tk-qr { display: flex; align-items: flex-end; justify-content: space-between; padding: 5px 7px 6px; border-top: 1.5px dashed #c5ced5; font-size: 6.5px; color: #8796a3; }
+.b-tk-qr canvas { width: 42px; height: 42px; image-rendering: pixelated; }
+.b-tk-qr img { width: 11px; }
+.b-msg { margin-top: 6px; padding: 7px 8px; border-radius: 8px; background: #fff; font-size: 9.5px; line-height: 1.4; opacity: 0; transform: translateY(8px); transition: opacity 0.35s ease, transform 0.45s ease; }
+.b-msg.is-in { opacity: 1; transform: none; }
+.b-msg b { font-weight: 600; }
+
+/* Cursor, chips and labels */
+.b-cursor { z-index: 9; left: 0; top: 0; width: 22px; transform: translate(var(--cx, 560px), var(--cy, 520px)); transition: transform 0.7s cubic-bezier(0.45, 0, 0.2, 1); filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.25)); }
+.b-cursor.is-click { transform: translate(var(--cx), var(--cy)) scale(0.85); transition-duration: 0.12s; }
+
+.b-chip { z-index: 6; display: flex; align-items: center; gap: 7px; padding: 7px 12px 7px 9px; border-radius: 999px; background: var(--surface); box-shadow: var(--float); font-size: 12px; font-weight: 500; white-space: nowrap; opacity: 0; transform: translateY(8px) scale(0.92); transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.b-chip.is-in { opacity: 1; transform: none; }
+.b-chip i { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #dff3f7; }
+.b-chip i::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }
+.b-chip-1 { left: 210px; top: 0; }
+.b-chip-2 { left: 780px; top: 6px; }
+.b-chip-3 { left: 520px; top: 600px; }
+.is-stack .b-chip-1 { left: 230px; top: 532px; }
+.is-stack .b-chip-2 { left: 40px; top: 790px; }
+.is-stack .b-chip-3 { left: 400px; top: 908px; }
+
+.b-label { z-index: 4; color: var(--ink-muted); font-size: 12px; font-weight: 500; }
+.b-label-site { left: 250px; top: 560px; }
+.b-label-staff { left: 694px; top: 272px; }
+.is-stack .b-label-site, .is-stack .b-label-staff { display: none; }
+
+@media (max-width: 760px) {
+}

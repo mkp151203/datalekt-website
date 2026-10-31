@@ -1,0 +1,109 @@
+---
+// Use case 3: the Reservation Booking Portal. Based on the product
+// recording (video3): a guest books on the hotel's own booking page,
+// staff approve the request in Datalekt with one click, and the guest
+// gets a branded confirmation ticket on WhatsApp.
+// scene.ts plays it; UseCases.astro shows it in the switcher.
+import { getImage } from 'astro:assets';
+import './scene.css';
+import ritzCarltonPune from '../../../../assets/images/partners/ritz-carlton-pune.jpg';
+
+const hotelPhoto = await getImage({ src: ritzCarltonPune, format: 'webp', width: 760 });
+---
+
+<div class="b-wrap" data-scene="booking-portal">
+  <div class="b-scene" role="img" aria-label="A guest books UKIYO for 5 on the hotel's own booking page; the request appears in Datalekt, staff click Reserve, and the guest receives a branded reservation confirmation with a payment QR code on WhatsApp.">
+    <svg class="b-links b-links-wide" viewBox="0 0 1100 650" aria-hidden="true">
+      <path pathLength="1" d="M640 180 C 660 180, 662 150, 690 150"/>
+      <path pathLength="1" d="M885 264 C 885 280, 868 282, 868 300"/>
+    </svg>
+    <svg class="b-links b-links-stack" viewBox="0 0 680 940" aria-hidden="true">
+      <path pathLength="1" d="M200 520 C 200 540, 220 545, 220 566"/>
+      <path pathLength="1" d="M420 660 C 440 660, 440 650, 458 650"/>
+    </svg>
+    <span class="b-packet b-packet-wide" style="offset-path: path('M640 180 C 660 180, 662 150, 690 150')"></span>
+    <span class="b-packet b-packet-wide" style="offset-path: path('M885 264 C 885 280, 868 282, 868 300')"></span>
+    <span class="b-packet b-packet-stack" style="offset-path: path('M200 520 C 200 540, 220 545, 220 566')"></span>
+    <span class="b-packet b-packet-stack" style="offset-path: path('M420 660 C 440 660, 440 650, 458 650')"></span>
+
+    <!-- Guest: the hotel's booking page -->
+    <div class="b-browser">
+      <div class="b-tabs"><span class="b-tab"><i></i>Paradise · Reservations</span></div>
+      <div class="b-url"><span><b>reserve.datalekt.com</b>/paradise</span></div>
+      <div class="b-page">
+        <div class="b-hero"><img src={hotelPhoto.src} alt=""></div>
+        <p class="b-brand"><b>THE RITZ-CARLTON</b><small>PUNE</small></p>
+
+        <div class="b-overlay">
+          <h5>Reserve a table</h5>
+          <div class="b-grid">
+            <div class="b-field wide b-restaurant"><small>Restaurant</small><span class="val">AASMANA</span>
+              <div class="b-list"><span>AASMANA</span><span>3K</span><span class="b-ukiyo">UKIYO</span><span>RCTL</span><span>ALTA VIDA</span></div>
+            </div>
+            <div class="b-field b-name"><small>Name</small><span class="val"></span><span class="ph">Your name</span></div>
+            <div class="b-field b-phone-field"><small>Mobile</small><span class="val"></span><span class="ph">+91</span></div>
+            <div class="b-field"><small>Guests</small><span class="val b-pax">2</span></div>
+            <div class="b-field"><small>Date and time</small><div class="b-chips"><span class="b-date">Fri 24 Jan</span><span class="b-time">8:00 pm</span></div></div>
+            <div class="b-field wide b-note-field"><small>Special comments</small><span class="val"></span><span class="ph">Anything we should know?</span></div>
+          </div>
+          <div class="b-actions"><span class="b-btn ghost">Cancel</span><span class="b-btn submit">Submit</span></div>
+        </div>
+
+        <p class="b-thanks"><b>Thank you!</b> Your reservation request has been submitted. Confirmation will be shared shortly on your phone number.</p>
+      </div>
+    </div>
+
+    <!-- Staff: the request arrives in Datalekt -->
+    <div class="b-tablet">
+      <div class="b-screen">
+        <div class="b-bar"><img src="/brand/datalekt-mark.svg" alt="">Datalekt<span class="b-bell"></span></div>
+        <div class="b-notes">
+          <h6>Notifications</h6>
+          <p class="b-empty">No new requests</p>
+          <div class="b-note">
+            <b>Booking · Elisha Suri <span>UKIYO</span></b>
+            <p>Fri 24 Jan · 8:00 pm · 5 guests · Corner table</p>
+            <div class="row"><span class="cancel">Cancel</span><span class="reserve">Reserve</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Guest: the confirmation on WhatsApp -->
+    <div class="b-phone">
+      <div class="b-wa">
+        <div class="b-wa-top"><i><img src="/brand/datalekt-mark.svg" alt=""></i>Datalekt <em>✓</em></div>
+        <div class="b-chat">
+          <div class="b-ticket">
+            <div class="b-tk">
+              <div class="b-tk-head"><span>RESERVATION<br>CONFIRMATION</span><span>THE RITZ-CARLTON<br>PUNE</span></div>
+              <div class="b-tk-row">
+                <div class="b-tk-cell wide"><small>Restaurant</small>UKIYO</div>
+                <div class="b-tk-cell wide"><small>Guest name</small>ELISHA SURI · 5 PAX</div>
+                <div class="b-tk-cell"><small>Date</small>24 JAN</div>
+                <div class="b-tk-cell"><small>Time</small>8:00 PM</div>
+              </div>
+              <div class="b-tk-qr"><span>Payment QR code<br><canvas class="b-qr" width="21" height="21"></canvas></span><span>Powered by <img src="/brand/datalekt-mark.svg" alt="Datalekt"></span></div>
+            </div>
+          </div>
+          <p class="b-msg">Dear Elisha, your reservation is confirmed. <b>We’ll hold your table for 30 minutes.</b></p>
+        </div>
+      </div>
+    </div>
+
+    <p class="b-chip b-chip-1"><i></i>Request sent to the hotel</p>
+    <p class="b-chip b-chip-2"><i></i>Approved in one click</p>
+    <p class="b-chip b-chip-3"><i></i>Branded confirmation on WhatsApp</p>
+    <p class="b-label b-label-site">The hotel’s booking page</p>
+    <p class="b-label b-label-staff">Hotel staff · Datalekt</p>
+
+    <svg class="b-cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 1.5v19l5-4.6 3.4 7.6 3.3-1.5-3.4-7.4 6.9-.4z" fill="#fff" stroke="#0b2a3f" stroke-width="1.5" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<script>
+  import { initAll } from '../../../../scripts/lib/in-view';
+  import { initScene } from './scene';
+
+  initAll('[data-scene="booking-portal"]', initScene);
+</script>

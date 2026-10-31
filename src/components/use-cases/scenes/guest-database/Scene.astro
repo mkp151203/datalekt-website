@@ -1,0 +1,92 @@
+---
+// Use case 6: Guest Database Management. Based on the product recording
+// (video1): All Clients (Total 1098 · Pending 251 · Completed 847), the
+// client list with category tags, the database filter (dates, rating,
+// age, categories, do-not-disturb) narrowing to 18 guests, and the
+// filtered list. Each guest is drawn as a dot so the narrowing shows.
+// scene.ts plays it; UseCases.astro shows it in the switcher.
+import './scene.css';
+---
+
+<div class="g-wrap" data-scene="guest-database">
+  <div class="g-scene" role="img" aria-label="Datalekt's guest database of 1,098 guests, each drawn as a dot. Filters for a 4-star rating, AASMANA, UKIYO, regular and VIP guests, excluding do-not-disturb, narrow it to 18; the list shows them and Sanya Suri's full profile opens.">
+    <p class="g-chip g-chip-1"><i></i>1,098 guests, one database</p>
+    <p class="g-chip g-chip-2"><i></i>Do-not-disturb respected</p>
+    <p class="g-chip g-chip-3"><i></i>Narrowed to 18 in seconds</p>
+    <p class="g-chip g-chip-4"><i></i>Every guest, one full profile</p>
+
+    <div class="g-window">
+      <div class="g-chrome"><img src="/brand/datalekt-mark.svg" alt="">Datalekt<i></i><i></i><i></i></div>
+      <div class="g-appbar">
+        <span class="grid"><b></b><b></b><b></b><b></b></span>
+        <span class="pill">All Clients</span>
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/><circle cx="7" cy="5" r="1.8" fill="#fff"/><circle cx="13" cy="10" r="1.8" fill="#fff"/><circle cx="8" cy="15" r="1.8" fill="#fff"/></svg>
+      </div>
+
+      <div class="g-body">
+        <div class="g-filter">
+          <h5>Database filter</h5>
+          <h6>Visited</h6>
+          <div class="g-range">Last 90 days</div>
+          <h6>Rating</h6>
+          <div class="g-stars"><i></i><i></i><i></i><i></i><i></i></div>
+          <h6>Categories</h6>
+          <div class="g-chips">
+            <span>3K</span><span data-k>AASMANA</span><span data-k>UKIYO</span><span>RCTL</span>
+            <span>ALTA VIDA</span><span data-k>REGULAR</span><span>CORPORATE</span><span>SPA</span>
+            <span>MD CEO</span><span data-k>VIP</span><span>HIGH SPENDER</span><span>IN HOUSE</span>
+          </div>
+          <div class="g-dnd"><span>Exclude do-not-disturb</span><span class="g-switch"></span></div>
+          <span class="g-apply">Apply</span>
+        </div>
+
+        <div class="g-field">
+          <div class="g-stats">
+            <span class="g-stat"><small>Total</small><b class="g-total">0</b></span>
+            <span class="g-stat"><small>Pending</small><b class="g-pending">0</b></span>
+            <span class="g-stat"><small>Completed</small><b class="g-completed">0</b></span>
+          </div>
+          <canvas class="g-canvas" aria-hidden="true"></canvas>
+          <div class="g-match"><small>Matching guests</small><span><b class="g-count">1,098</b> <span class="g-of">of 1,098</span></span></div>
+        </div>
+
+        <div class="g-results">
+          <div class="g-list g-all">
+            <h5>All clients</h5>
+            <div class="g-rows-all"></div>
+          </div>
+          <div class="g-list g-filtered is-off">
+            <h5>Filtered clients · 18</h5>
+            <div class="g-list-chips"><span>4★ and above</span><span>AASMANA</span><span>UKIYO</span><span>REGULAR</span><span>VIP</span><span>No DND</span></div>
+            <div class="g-rows-filtered"></div>
+            <p class="g-more">+ 10 more guests</p>
+          </div>
+          <div class="g-profile">
+            <div class="g-p-head"><span class="g-av">SS</span><div><b>Sanya Suri</b><small>+91 ••••• •1165 · guest since 2023</small><span class="g-p-stars"><i></i><i></i><i></i><i></i><i class="off"></i></span></div></div>
+            <div class="g-p-stats"><span><b>14</b>visits</span><span><b>12 Jan</b>last visit</span><span><b>₹6,200</b>avg. spend</span></div>
+            <h6>Categories</h6>
+            <div class="g-decoded">
+              <span><i>K</i>3K</span><span><i>A</i>AASMANA</span><span><i>U</i>UKIYO</span><span><i>R</i>REGULAR</span><span><i>V</i>VIP</span>
+              <span><i>S</i>SPA</span><span><i>C</i>CORPORATE</span><span><i>M</i>MD CEO</span><span><i>H</i>HIGH SPENDER</span>
+            </div>
+            <h6>Details</h6>
+            <div class="g-facts">
+              <p><span>Birthday</span><em>3 Feb</em></p>
+              <p><span>Prefers</span><em>Corner table · sparkling water</em></p>
+              <p><span>WhatsApp</span><em>Opted in</em></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <svg class="g-cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 1.5v19l5-4.6 3.4 7.6 3.3-1.5-3.4-7.4 6.9-.4z" fill="#fff" stroke="#0b2a3f" stroke-width="1.5" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<script>
+  import { initAll } from '../../../../scripts/lib/in-view';
+  import { initScene } from './scene';
+
+  initAll('[data-scene="guest-database"]', initScene);
+</script>

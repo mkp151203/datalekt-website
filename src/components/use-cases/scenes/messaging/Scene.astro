@@ -1,0 +1,90 @@
+---
+// Use case 4: Messaging Integration. Based on the product recording
+// (video4): filter the guest database by rating, age and category, select
+// the matching guests, pick a ready-made template and send it; each guest
+// gets a personalised WhatsApp message.
+// scene.ts plays it; UseCases.astro shows it in the switcher.
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import './scene.css';
+
+// Partner photos for the templates and messages, keyed by file name
+const photos = import.meta.glob<{ default: ImageMetadata }>('../../../../assets/images/partners/*.jpg', { eager: true });
+const images: Record<string, string> = {};
+for (const [path, module] of Object.entries(photos)) {
+  const image = await getImage({ src: module.default, format: 'webp', width: 360 });
+  images[path.split('/').pop()!] = image.src;
+}
+---
+
+<div class="m-wrap" data-scene="messaging" data-images={JSON.stringify(images)}>
+  <div class="m-scene" role="img" aria-label="In Datalekt, staff filter the guest database to 19 regular and VIP guests of AASMANA and UKIYO rated four stars and above, select them all, choose the Sea Side Brunch template and send; each guest receives a personalised WhatsApp invitation.">
+    <svg class="m-links m-links-wide" viewBox="0 0 1100 620" aria-hidden="true">
+      <path pathLength="1" d="M610 300 C 640 300, 640 220, 680 220"/>
+    </svg>
+    <svg class="m-links m-links-stack" viewBox="0 0 640 1000" aria-hidden="true">
+      <path pathLength="1" d="M320 560 C 320 580, 320 590, 320 610"/>
+    </svg>
+    <span class="m-packet m-packet-wide" style="offset-path: path('M610 300 C 640 300, 640 220, 680 220')"></span>
+    <span class="m-packet m-packet-stack" style="offset-path: path('M320 560 C 320 580, 320 590, 320 610')"></span>
+
+    <div class="m-window">
+      <div class="m-chrome"><img src="/brand/datalekt-mark.svg" alt="">Datalekt<i></i><i></i><i></i></div>
+      <div class="m-steps"><span class="m-s1 on"><b>1</b>Audience</span><span class="m-s2"><b>2</b>Guests</span><span class="m-s3"><b>3</b>Template</span></div>
+
+      <!-- 1. Filter the database -->
+      <div class="m-pane m-filter is-on">
+        <h5>Database filter</h5>
+        <h6>Rating</h6>
+        <div class="m-stars"><i></i><i></i><i></i><i></i><i></i></div>
+        <h6>Age</h6>
+        <div class="m-chips"><span>16–20</span><span>21–30</span><span>31–40</span><span>41–50</span><span>51–60</span></div>
+        <h6>Categories</h6>
+        <div class="m-chips m-cats">
+          <span>3K</span><span data-k="AASMANA">AASMANA</span><span data-k="UKIYO">UKIYO</span><span>RCTL</span><span>ALTA VIDA</span><span>LIVING ROOM</span>
+          <span data-k="REGULAR">REGULAR</span><span>CORPORATE</span><span>SPA</span><span>MD CEO</span><span>EXPAT</span><span>HIGH SPENDER</span>
+          <span>INFLUENCER</span><span data-k="VIP">VIP</span><span>IN HOUSE</span>
+        </div>
+        <div class="m-apply"><div><small>Matching guests</small><b class="m-match">1,284</b></div><span class="m-btn m-apply-btn">Apply</span></div>
+      </div>
+
+      <!-- 2. Select the guests -->
+      <div class="m-pane m-list">
+        <h5>Filtered guests · 19</h5>
+        <div class="m-filters"><span>AASMANA</span><span>UKIYO</span><span>REGULAR</span><span>VIP</span><span>4★ and above</span></div>
+        <div class="m-selectall"><span class="m-box m-all"></span>Select all</div>
+        <div class="m-guests"></div>
+        <p class="m-more">+ 11 more guests</p>
+        <div class="m-send"><small class="m-selected">0 selected</small><span class="m-btn m-next">Next</span></div>
+      </div>
+
+      <!-- 3. Choose a template and send -->
+      <div class="m-pane m-tpl-pane">
+        <h5>Templates</h5>
+        <div class="m-tpls"></div>
+        <div class="m-preview">
+          <img src={images['marriott-resort-goa.jpg']} alt="">
+          <p><b>Sea Side Brunch</b><br>Hi <mark>&#123;first name&#125;</mark>, join us this Sunday for a slow seaside brunch with live music. Reply to reserve your table.</p>
+        </div>
+        <div class="m-send"><small>To 19 guests</small><span class="m-btn m-send-btn">Send</span></div>
+      </div>
+    </div>
+
+    <!-- Guests receive it -->
+    <div class="m-phone m-p1" data-name="Vansh"></div>
+    <div class="m-phone m-p2" data-name="Sanya"></div>
+    <div class="m-phone m-p3" data-name="Illisha"></div>
+
+    <p class="m-chip m-chip-1"><i></i>Audience: <b>19</b> guests</p>
+    <p class="m-chip m-chip-2"><i></i>Delivered <b class="m-delivered">0</b> / 19</p>
+
+    <svg class="m-cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 1.5v19l5-4.6 3.4 7.6 3.3-1.5-3.4-7.4 6.9-.4z" fill="#fff" stroke="#0b2a3f" stroke-width="1.5" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<script>
+  import { initAll } from '../../../../scripts/lib/in-view';
+  import { initScene } from './scene';
+
+  initAll('[data-scene="messaging"]', initScene);
+</script>

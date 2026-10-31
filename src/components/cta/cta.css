@@ -1,0 +1,81 @@
+/* Closing call to action: a deep panel with the hero's dot ripple in cyan,
+   rippling by itself every few seconds (assets/js/hero-wave.js) */
+
+.cta { padding: clamp(24px, 4vw, 56px) var(--edge) clamp(40px, 5vw, 72px); }
+
+.cta-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  padding: clamp(64px, 9vw, 128px) clamp(20px, 5vw, 64px);
+  border-radius: clamp(24px, 3vw, 36px);
+  background:
+    radial-gradient(120% 80% at 50% 120%, rgb(17 107 174 / 0.55), transparent 60%),
+    var(--ink);
+  color: #fff;
+  text-align: center;
+}
+
+.cta-wave {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cta-panel > :not(.cta-wave) { position: relative; z-index: 1; }
+
+.cta-badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgb(69 187 206 / 0.14);
+  box-shadow: inset 0 0 0 1px rgb(69 187 206 / 0.35);
+  color: #9fe0ea;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.cta-title {
+  max-width: 15em;
+  margin: 24px 0 0;
+  font-size: clamp(2.25rem, 1rem + 3.6vw, 4.25rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+.cta-line { display: inline-block; }
+
+@media (max-width: 560px) {
+  .cta-title { font-size: 2.125rem; text-wrap: balance; }
+  .cta-line { display: inline; }
+}
+
+.cta-title em {
+  font-family: var(--serif);
+  font-size: 1.06em;
+  font-style: italic;
+  font-weight: 500;
+  font-variation-settings: "opsz" 11;
+  letter-spacing: -0.02em;
+  color: #bfeaf1;
+}
+
+.cta-lead { margin-top: 20px; color: rgb(255 255 255 / 0.72); font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem); }
+
+.cta-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px 28px; margin-top: 36px; }
+
+.cta-secondary {
+  color: #fff;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: rgb(255 255 255 / 0.35);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 6px;
+}
+
+.cta-secondary:hover { text-decoration-color: currentColor; }

@@ -1,0 +1,135 @@
+/* Use case 6: Guest Database Management. Based on the product recording
+   (video1): All Clients (Total 1098 · Pending 251 · Completed 847), the
+   client list with category tags, the database filter (dates, rating,
+   age, categories, do-not-disturb) narrowing to 18 guests, and the
+   filtered list. Each guest is drawn as a dot so the narrowing shows. */
+
+/* The scene: drawn at a fixed size and scaled to fit */
+.g-wrap { position: relative; max-width: 1100px; height: calc(var(--h, 650px) * var(--s, 1)); margin: 0 auto; }
+
+.g-scene {
+  --sw: 1100px;
+  --sh: 650px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--sw);
+  height: var(--sh);
+  transform: translateX(-50%) scale(var(--s, 1));
+  transform-origin: top center;
+  font-size: 13px;
+}
+
+.g-scene.is-stack { --sw: 660px; --sh: 1330px; }
+.g-scene > * { position: absolute; }
+
+/* The app window */
+.g-window { z-index: 2; top: 40px; left: 50px; width: 1000px; height: 560px; overflow: hidden; border-radius: 16px; background: var(--ground); box-shadow: 0 1px 2px rgb(11 42 63 / 0.08), 0 40px 70px -30px rgb(11 42 63 / 0.45), 0 0 0 1px var(--line); }
+.is-stack .g-window { top: 44px; left: 20px; width: 620px; height: 1240px; }
+
+.g-chrome { display: flex; align-items: center; gap: 7px; height: 30px; padding: 0 14px; background: #0d1b26; color: #fff; font-size: 11.5px; }
+.g-chrome img { width: 13px; }
+.g-chrome i { width: 9px; height: 9px; border-radius: 50%; background: #2c3e4c; }
+.g-chrome i:first-of-type { margin-left: auto; }
+
+.g-appbar { display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 0 16px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.g-appbar .grid { display: grid; grid-template-columns: repeat(2, 8px); gap: 3px; }
+.g-appbar .grid b { width: 8px; height: 8px; border-radius: 3px; box-shadow: inset 0 0 0 1.6px var(--ink); }
+.g-appbar .pill { padding: 6px 16px; border-radius: 999px; background: var(--tint); font-size: 12px; font-weight: 500; }
+.g-appbar svg { width: 20px; fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; }
+
+.g-body { display: grid; grid-template-columns: 280px minmax(0, 1fr) 300px; height: calc(100% - 78px); }
+.is-stack .g-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: 330px 420px minmax(0, 1fr); }
+
+/* Column 1: database filter */
+.g-filter { position: relative; padding: 16px; border-right: 1px solid var(--line); background: var(--surface); }
+.is-stack .g-filter { border-right: 0; border-bottom: 1px solid var(--line); }
+.g-filter h5 { margin: 0 0 10px; font-size: 14px; font-weight: 500; }
+.g-filter h6 { margin: 10px 0 6px; color: var(--ink-muted); font-size: 10.5px; font-weight: 500; }
+.g-range { padding: 7px 10px; border-radius: 8px; background: var(--tint); font-size: 11.5px; }
+.g-stars { display: flex; gap: 4px; }
+.g-stars i { width: 17px; height: 17px; background: #d3dee6; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); transition: background-color 0.2s ease; }
+.g-stars i.on { background: #e8a92c; }
+.g-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.g-chips span { padding: 4px 9px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); font-size: 10.5px; font-weight: 500; transition: background-color 0.25s ease, color 0.25s ease, transform 0.15s ease; }
+.g-chips span.on { background: var(--ink); color: #fff; box-shadow: none; }
+.g-chips span.is-pressed { transform: scale(0.9); }
+.g-dnd { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; font-size: 11.5px; }
+.g-switch { position: relative; width: 34px; height: 20px; border-radius: 999px; background: #c9d7e1; transition: background-color 0.3s ease, transform 0.15s ease; }
+.g-switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / 0.2); transition: transform 0.3s ease; }
+.g-switch.on { background: var(--ink); }
+.g-switch.on::after { transform: translateX(14px); }
+.g-switch.is-pressed { transform: scale(0.92); }
+.g-apply { position: absolute; right: 16px; bottom: 16px; left: 16px; padding: 10px 0; border-radius: 999px; background: var(--ink); color: #fff; font-size: 12.5px; font-weight: 500; text-align: center; transition: transform 0.15s ease, background-color 0.3s ease; }
+.g-apply.is-pressed { transform: scale(0.95); }
+.g-apply.is-done { background: #0e8a6a; }
+
+/* Column 2: every guest as a dot */
+.g-field { display: flex; flex-direction: column; padding: 16px; }
+.g-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.g-stat { padding: 8px 10px; border-radius: 10px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); text-align: center; }
+.g-stat small { display: block; color: var(--ink-muted); font-size: 10.5px; }
+.g-stat b { font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.g-canvas { flex: 1; width: 100%; min-height: 0; margin: 12px 0 10px; }
+.g-match { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.g-match small { color: var(--ink-muted); font-size: 11px; }
+.g-match b { font-size: 26px; font-weight: 500; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.g-match .g-of { color: var(--ink-muted); font-size: 12px; }
+
+/* Column 3: clients, then the filtered list, then one profile */
+.g-results { position: relative; overflow: hidden; padding: 16px; border-left: 1px solid var(--line); background: var(--surface); }
+.is-stack .g-results { border-left: 0; border-top: 1px solid var(--line); }
+.g-list { position: absolute; inset: 16px; transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+.g-list.is-off { opacity: 0; transform: translateX(-16px); pointer-events: none; }
+.g-list h5 { margin: 0 0 8px; font-size: 14px; font-weight: 500; }
+.g-list-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.g-list-chips span { padding: 2px 8px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 9.5px; font-weight: 500; }
+.g-row { display: grid; grid-template-columns: 28px 1fr; align-items: center; gap: 9px; padding: 4px 4px; border-bottom: 1px solid var(--line); transition: background-color 0.2s ease; }
+.g-row.in { animation: g-row-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes g-row-in { from { opacity: 0; transform: translateY(8px); } }
+.g-row.is-pressed { background: var(--tint); }
+.g-av { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--field); font-size: 10px; font-weight: 500; }
+.g-row b { display: block; font-size: 12px; font-weight: 500; }
+.g-tags { display: flex; gap: 2px; margin-top: 2px; }
+.g-tags i { display: grid; place-items: center; width: 13px; height: 13px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 7px; font-style: normal; font-weight: 600; }
+.g-more { margin-top: 8px; color: var(--ink-muted); font-size: 11px; }
+
+.g-profile { position: absolute; inset: 0; padding: 16px; background: var(--surface); opacity: 0; transform: translateX(30px); transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); pointer-events: none; }
+.g-profile.is-in { opacity: 1; transform: none; }
+.g-p-head { display: grid; grid-template-columns: 44px 1fr; gap: 10px; align-items: center; }
+.g-p-head .g-av { width: 44px; height: 44px; font-size: 14px; background: var(--ink); color: #fff; }
+.g-p-head b { display: block; font-size: 15px; font-weight: 500; }
+.g-p-head small { color: var(--ink-muted); font-size: 10.5px; }
+.g-p-stars { display: flex; gap: 2px; margin-top: 3px; }
+.g-p-stars i { width: 10px; height: 10px; background: #e8a92c; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+.g-p-stars i.off { background: #d3dee6; }
+.g-p-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 12px 0; }
+.g-p-stats span { padding: 7px 4px; border-radius: 9px; background: var(--tint); font-size: 9.5px; color: var(--ink-muted); text-align: center; }
+.g-p-stats b { display: block; color: var(--ink); font-size: 13px; font-weight: 500; }
+.g-p h6, .g-profile h6 { margin: 10px 0 5px; color: var(--ink-muted); font-size: 10.5px; font-weight: 500; }
+.g-decoded { display: flex; flex-wrap: wrap; gap: 4px; }
+.g-decoded span { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px 2px 2px; border-radius: 999px; background: var(--tint); font-size: 9.5px; font-weight: 500; }
+.g-decoded span i { display: grid; place-items: center; width: 14px; height: 14px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 7.5px; font-style: normal; font-weight: 600; }
+.g-facts { display: grid; gap: 5px; }
+.g-facts p { display: flex; justify-content: space-between; padding: 6px 9px; border-radius: 8px; background: var(--tint); font-size: 10.5px; }
+.g-facts p em { color: #0b6676; font-style: normal; font-weight: 500; }
+
+/* Cursor, chips */
+.g-cursor { z-index: 9; left: 0; top: 0; width: 22px; transform: translate(var(--cx, 560px), var(--cy, 600px)); transition: transform 0.6s cubic-bezier(0.45, 0, 0.2, 1); filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.25)); }
+.g-cursor.is-click { transform: translate(var(--cx), var(--cy)) scale(0.85); transition-duration: 0.12s; }
+
+.g-chip { z-index: 6; display: flex; align-items: center; gap: 7px; padding: 7px 12px 7px 9px; border-radius: 999px; background: var(--surface); box-shadow: var(--float); font-size: 12px; font-weight: 500; white-space: nowrap; opacity: 0; transform: translateY(8px) scale(0.92); transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.g-chip.is-in { opacity: 1; transform: none; }
+.g-chip i { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #dff3f7; }
+.g-chip i::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }
+.g-chip-1 { left: 70px; top: 2px; }
+.g-chip-2 { left: 70px; top: 612px; }
+.g-chip-3 { left: 420px; top: 612px; }
+.g-chip-4 { left: 790px; top: 2px; }
+.is-stack .g-chip-1 { left: 20px; top: 4px; }
+.is-stack .g-chip-2 { left: 20px; top: 1294px; }
+.is-stack .g-chip-3 { left: 330px; top: 1294px; }
+.is-stack .g-chip-4 { left: 360px; top: 4px; }
+
+@media (max-width: 760px) {
+}

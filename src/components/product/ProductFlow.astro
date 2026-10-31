@@ -1,0 +1,118 @@
+---
+// Product flow ("We're all about making things efficient"): the guest books
+// on their phone and every system follows. product-flow.ts plays the scene.
+import './product-flow.css';
+---
+
+<section class="about" id="product" aria-labelledby="about-title">
+  <div class="about-head">
+    <h2 class="about-title" id="about-title">We’re all about making things <em class="cycle" aria-live="polite"><span class="word">efficient.</span></em></h2>
+    <p class="about-lead">Our journey began with a simple thought: <strong>save data with a click.</strong> Today, we unlock data-driven excellence.</p>
+  </div>
+
+  <div class="scene-wrap">
+    <div class="scene">
+      <canvas class="ripple" aria-hidden="true"></canvas>
+
+      <!-- Guest phone → hotel laptop, guest phone → front desk, hotel → guest (WhatsApp).
+           One set for the side-by-side scene, one for the phone pyramid. -->
+      <svg class="links links-wide" viewBox="0 0 1100 640" aria-hidden="true">
+        <path pathLength="1" d="M470 250 C 455 250, 455 240, 440 240"/>
+        <path pathLength="1" d="M660 250 C 740 250, 750 300, 820 300"/>
+        <path pathLength="1" d="M300 412 C 300 470, 420 470, 470 420"/>
+      </svg>
+      <span class="packet packet-wide" style="offset-path: path('M470 250 C 455 250, 455 240, 440 240')"></span>
+      <span class="packet packet-wide" style="offset-path: path('M660 250 C 740 250, 750 300, 820 300')"></span>
+      <span class="packet packet-wide" style="offset-path: path('M300 412 C 300 470, 420 470, 470 420')"></span>
+
+      <svg class="links links-stack" viewBox="0 0 720 860" aria-hidden="true">
+        <path pathLength="1" d="M300 412 C 300 450, 230 440, 230 486"/>
+        <path pathLength="1" d="M420 412 C 420 450, 588 432, 588 470"/>
+        <path pathLength="1" d="M120 486 C 120 380, 200 300, 265 300"/>
+      </svg>
+      <span class="packet packet-stack" style="offset-path: path('M300 412 C 300 450, 230 440, 230 486')"></span>
+      <span class="packet packet-stack" style="offset-path: path('M420 412 C 420 450, 588 432, 588 470')"></span>
+      <span class="packet packet-stack" style="offset-path: path('M120 486 C 120 380, 200 300, 265 300')"></span>
+
+      <!-- Hotel: Live Table on the laptop -->
+      <div class="device laptop">
+        <div class="screen">
+          <div class="ui">
+            <div class="ui-top"><img src="/brand/datalekt-mark.svg" alt="">Datalekt · Live Table<span>Terrace · Tonight</span></div>
+            <div class="live-floor">
+              <h5>Tonight, <span class="covers">34</span> of 64 covers</h5>
+              <div class="tables">
+                <span class="t">T1</span><span class="t r">T2</span><span class="t f">T3</span><span class="t">T4</span><span class="t f">T5</span>
+                <span class="t r">T6</span><span class="t f t7">T7</span><span class="t">T8</span><span class="t f">T9</span><span class="t r">T10</span>
+              </div>
+              <div class="legend"><span><i></i>Seated</span><span><i class="r"></i>Reserved</span><span><i class="f"></i>Free</span></div>
+            </div>
+            <div class="notify"><span class="bell">●</span><div><b>New booking · Ananya Rao</b><span>4 guests · 7:30 pm · Table 7</span></div></div>
+          </div>
+        </div>
+        <div class="base"></div>
+      </div>
+
+      <!-- Guest: booking on their phone, then WhatsApp -->
+      <div class="device phone">
+        <div class="ui">
+          <div class="screen-pane book-pane">
+            <div class="book-hero"><small>Book a table</small><b>The Terrace</b></div>
+            <div class="book-body">
+              <p class="book-label">Date</p>
+              <div class="pills"><span class="on">Tonight</span><span>Tomorrow</span></div>
+              <p class="book-label">Time</p>
+              <div class="pills"><span>7:00</span><span class="on">7:30</span><span>8:00</span></div>
+              <p class="book-label">Guests</p>
+              <div class="book-field"><span>4 people</span><span>Window seat</span></div>
+            </div>
+            <button class="book-btn" type="button"><svg viewBox="0 0 20 20"><path d="M4.5 10.5 8.5 14.5 15.5 6.5"/></svg><span>Book</span></button>
+          </div>
+          <div class="screen-pane chat-pane">
+            <div class="wa-top"><i>T</i><div>The Terrace<small>Business account</small></div></div>
+            <div class="chat">
+              <span class="day">Today</span>
+              <p class="msg biz m1">Hi Ananya, your table for 4 at The Terrace is confirmed for 7:30 pm tonight. We’ve kept your window seat.<small>6:02 pm</small></p>
+              <p class="msg me m2">Perfect, thank you!<small>6:03 pm <span class="ticks">✓✓</span></small></p>
+              <p class="msg biz m3">Reminder: we’ll see you at 7:30 pm. Reply 1 to change your booking.<small>6:00 pm</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Front desk: guest profile on the tablet -->
+      <div class="device tablet">
+        <div class="ui">
+          <div class="ui-top"><img src="/brand/datalekt-mark.svg" alt="">Front desk<span>Arriving</span></div>
+          <div class="profile skeleton"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="filled">
+            <div class="p-head"><span class="p-avatar">AR</span><div><b>Ananya Rao</b><small>Returning guest, 6th visit</small></div></div>
+            <div class="p-row"><span>Room 1204</span><em>Opera</em></div>
+            <div class="p-row"><span>Table 7 · 7:30 pm</span><em>Datalekt</em></div>
+            <div class="p-row"><span>Last bill ₹14,800</span><em>Infrasys</em></div>
+            <div class="p-tags"><span>Window seat</span><span>No shellfish</span><span>Anniversary</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="side-label label-hotel">Hotel · Live Table</p>
+      <p class="side-label label-guest">Guest’s phone</p>
+      <p class="side-label label-desk">Front desk</p>
+
+      <p class="chip chip-notified"><i></i>Hotel notified instantly</p>
+      <p class="chip chip-table"><i></i>Table 7 reserved</p>
+      <p class="chip chip-profile"><i></i>Opera profile linked</p>
+      <p class="chip chip-whatsapp"><i></i>WhatsApp confirmation sent</p>
+      <p class="chip chip-reminder"><i></i>Reminder set for 6:00 pm</p>
+
+      <span class="tap" aria-hidden="true"></span>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initAll } from '../../scripts/lib/in-view';
+  import { initProductFlow } from './product-flow';
+
+  initAll('.about', initProductFlow);
+</script>

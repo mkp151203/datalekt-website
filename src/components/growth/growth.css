@@ -1,0 +1,192 @@
+/* Empowering growth: a fine dot map of India (assets/js/growth-map.js,
+   data in assets/js/india-map-data.js) with the partner cities linked one
+   by one, beside the list of hotels by city. */
+
+.growth {
+  display: grid;
+  grid-template-columns: minmax(0, 32rem) minmax(0, 1fr);
+  column-gap: clamp(32px, 4vw, 72px);
+  align-items: center;
+  padding: clamp(56px, 8vw, 112px) var(--edge);
+  overflow-x: clip;
+}
+
+.growth-title {
+  margin: 0;
+  font-size: clamp(2.25rem, 1rem + 2.6vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.growth-title em {
+  font-family: var(--serif);
+  font-size: 1.06em;
+  font-style: italic;
+  font-weight: 500;
+  font-variation-settings: "opsz" 11;
+  letter-spacing: -0.02em;
+}
+
+.growth-lead { margin-top: 18px; color: var(--ink-soft); font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem); line-height: 1.55; }
+
+.growth-stats { display: flex; gap: clamp(24px, 3vw, 44px); margin: 32px 0 0; }
+.growth-stats div { display: flex; flex-direction: column-reverse; }
+.growth-stats dt { color: var(--ink-muted); font-size: 0.875rem; }
+.growth-stats dd { margin: 0; font-size: clamp(2rem, 1.4rem + 1.4vw, 2.75rem); font-weight: 500; line-height: 1.1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+
+.growth-cities { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px; margin: 28px 0 0; padding: 0; list-style: none; }
+
+.growth-city {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 12px 16px 12px 20px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.growth-city::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: #c3d5e1;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.growth-city:hover { background: var(--tint); }
+.growth-city:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.growth-city[aria-pressed="true"] { background: var(--field); }
+.growth-city[aria-pressed="true"]::before { background: var(--cyan); box-shadow: 0 0 0 4px rgb(69 187 206 / 0.25); }
+
+.growth-city-name { display: flex; justify-content: space-between; gap: 12px; font-size: 1.0625rem; font-weight: 500; }
+.growth-city-name b { color: var(--blue); font-weight: 500; font-variant-numeric: tabular-nums; }
+.growth-city-hotels { color: var(--ink-muted); font-size: 0.875rem; line-height: 1.4; }
+
+.growth-map {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  aspect-ratio: 1000 / 1114;
+  justify-self: center;
+}
+
+/* A soft field behind the subcontinent */
+.growth-map::before {
+  content: "";
+  position: absolute;
+  inset: 8% 4% 10% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(69 187 206 / 0.12), rgb(228 239 246 / 0.5) 55%, transparent);
+  filter: blur(20px);
+}
+
+.growth-dots, .growth-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.growth-states path { fill: none; stroke: rgb(11 42 63 / 0.16); stroke-width: 0.8; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.growth-states path.is-partner { fill: rgb(17 107 174 / 0.05); stroke: rgb(17 107 174 / 0.3); }
+
+.growth-arcs path { fill: none; stroke: var(--blue); stroke-width: 1.6; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1); }
+.growth-arcs path.is-drawn { stroke-dashoffset: 0; }
+.growth-arcs circle { fill: var(--cyan); opacity: 0; }
+
+.growth-pin {
+  position: absolute;
+  z-index: 1;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.growth-pin.is-in { opacity: 1; transform: none; }
+
+.growth-pin i {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 12px;
+  height: 12px;
+  border: 2.5px solid #fff;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 2px 6px rgb(11 42 63 / 0.35);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.growth-pin i::after {
+  content: "";
+  position: absolute;
+  inset: -9px;
+  border: 1.5px solid var(--cyan);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.growth-pin.is-active i { background: var(--cyan); transform: scale(1.25); }
+.growth-pin.is-active i::after { animation: growth-ping 1.8s ease-out infinite; }
+
+@keyframes growth-ping {
+  from { opacity: 0.9; transform: scale(0.5); }
+  to { opacity: 0; transform: scale(2.2); }
+}
+
+.growth-pin b {
+  position: absolute;
+  top: 0;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(11 42 63 / 0.1), 0 8px 18px -10px rgb(11 42 63 / 0.4);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transform: translateY(-50%);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.growth-pin b small { color: var(--blue); font-size: inherit; font-weight: 500; }
+.growth-pin[data-side="left"] b { right: 14px; left: auto; }
+.growth-pin.is-active b { background: var(--ink); color: #fff; }
+.growth-pin.is-active b small { color: var(--cyan); }
+
+/* Stacked: heading and stats, then the map, then the list */
+@media (max-width: 1100px) {
+  .growth { grid-template-columns: minmax(0, 1fr); }
+  .growth-copy { display: contents; }
+  .growth-title, .growth-lead { max-width: 40rem; }
+  .growth-map { order: 1; justify-self: center; margin-top: 40px; }
+  .growth-cities { order: 2; max-width: 40rem; }
+}
+
+@media (max-width: 560px) {
+  .growth-map { margin-top: 28px; }
+  .growth-cities { grid-template-columns: minmax(0, 1fr); }
+  .growth-pin b { padding: 4px 8px; font-size: 0.6875rem; }
+  .growth-pin i { top: -5px; left: -5px; width: 10px; height: 10px; border-width: 2px; }
+  .growth-pin b { left: 10px; }
+  .growth-pin[data-side="left"] b { right: 10px; left: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .growth-arcs path, .growth-pin { transition: none; }
+  .growth-pin.is-active i::after { animation: none; }
+}

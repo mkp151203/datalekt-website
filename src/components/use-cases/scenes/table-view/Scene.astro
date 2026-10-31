@@ -1,0 +1,46 @@
+---
+// Use case 2: the Table Information System. Based on the product
+// recording (video2): tonight's bookings with their tables; staff tick
+// a guest in, the floor plan turns their tables from reserved to seated,
+// and "Who's here" shows everyone in the room.
+// scene.ts plays it; UseCases.astro shows it in the switcher.
+import './scene.css';
+---
+
+<div class="t-wrap" data-scene="table-view">
+  <div class="t-scene" role="img" aria-label="Datalekt's Live Table: staff check in Sanya Suri, Aariya Sawant and Kshitij Rekhi; their tables turn from reserved to seated on the floor plan and the Who's here count rises to 9 guests.">
+    <p class="t-chip t-chip-1"><i></i>Check in with one tap</p>
+    <p class="t-chip t-chip-2"><i></i>Floor plan updates live</p>
+    <p class="t-chip t-chip-3"><i></i>Returning guests flagged</p>
+
+    <div class="t-window">
+      <div class="t-chrome"><img src="/brand/datalekt-mark.svg" alt="">Datalekt<i></i><i></i><i></i></div>
+      <div class="t-appbar"><span class="grid"><b></b><b></b><b></b><b></b></span><span class="pill">Live Table</span><span class="bell"></span></div>
+
+      <div class="t-body">
+        <div class="t-list">
+          <div class="t-list-head"><h5>Today’s reservations</h5><span class="t-select">Full day ▾</span></div>
+          <div class="t-summary"><span><b>6</b>bookings</span><span><b>19</b>guests</span><span><b>9</b>tables</span></div>
+          <div class="t-filter"><span>Show who’s here only</span><span class="t-switch"></span></div>
+          <div class="t-rows"></div>
+        </div>
+
+        <div class="t-floor">
+          <div class="t-floor-head"><h5>AASMANA · Tonight</h5><span class="t-here">Who’s here <b class="t-count">0</b> guests</span></div>
+          <svg class="t-plan" viewBox="0 0 520 380" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+          <div class="t-legend"><span><i style="background:#4cc38a"></i>Seated</span><span><i style="background:#f6b7a3"></i>Reserved</span><span><i style="background:#dbe5ec"></i>Free</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="t-toast"><i>✓</i><span><span class="t-toast-title">Reservation updated</span><small class="t-toast-sub"></small></span></p>
+    <svg class="t-cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 1.5v19l5-4.6 3.4 7.6 3.3-1.5-3.4-7.4 6.9-.4z" fill="#fff" stroke="#0b2a3f" stroke-width="1.5" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<script>
+  import { initAll } from '../../../../scripts/lib/in-view';
+  import { initScene } from './scene';
+
+  initAll('[data-scene="table-view"]', initScene);
+</script>

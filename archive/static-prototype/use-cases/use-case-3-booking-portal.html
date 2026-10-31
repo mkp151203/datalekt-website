@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Use case 3 · Reservation Booking Portal</title>
+  <link rel="stylesheet" href="../styles.css?v=5">
+  <script src="uc-embed.js?v=1"></script>
+  <style>
+    /* Use case 3: the Reservation Booking Portal. Based on the product
+       recording (video3): a guest books on the hotel's own booking page,
+       staff approve the request in Datalekt with one click, and the guest
+       gets a branded confirmation ticket on WhatsApp. */
+
+    .uc { padding: clamp(56px, 8vw, 104px) var(--edge); }
+
+    .uc-label { color: var(--blue); font-size: 0.9375rem; font-weight: 500; }
+
+    .uc-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 24px clamp(32px, 5vw, 80px);
+      align-items: end;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .uc-title {
+      margin: 8px 0 0;
+      font-size: clamp(1.75rem, 1rem + 2vw, 2.75rem);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .uc-title em {
+      font-family: var(--serif);
+      font-size: 1.06em;
+      font-style: italic;
+      font-weight: 500;
+      font-variation-settings: "opsz" 11;
+      letter-spacing: -0.02em;
+    }
+
+    .uc-copy { color: var(--ink-soft); font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem); line-height: 1.55; }
+
+    .uc-points { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .uc-points span { padding: 6px 12px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); font-size: 0.875rem; font-weight: 500; }
+
+    /* The scene: drawn at a fixed size and scaled to fit */
+    .b-wrap { position: relative; max-width: 1100px; height: calc(var(--h, 650px) * var(--s, 1)); margin: 36px auto 0; }
+
+    .b-scene {
+      --sw: 1100px;
+      --sh: 650px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: var(--sw);
+      height: var(--sh);
+      transform: translateX(-50%) scale(var(--s, 1));
+      transform-origin: top center;
+      font-size: 13px;
+    }
+
+    .b-scene.is-stack { --sw: 680px; --sh: 940px; }
+    .b-scene > * { position: absolute; }
+
+    .b-links { inset: 0; width: var(--sw); height: var(--sh); overflow: visible; pointer-events: none; }
+    .b-links path { fill: none; stroke: var(--cyan); stroke-width: 1.6; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+    .b-links path.is-drawn { stroke-dashoffset: 0; }
+    .b-links-stack, .b-packet-stack { display: none; }
+    .is-stack .b-links-wide, .is-stack .b-packet-wide { display: none; }
+    .is-stack .b-links-stack, .is-stack .b-packet-stack { display: block; }
+
+    .b-packet { z-index: 7; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 5px rgb(69 187 206 / 0.25); opacity: 0; offset-rotate: 0deg; }
+    .b-packet.is-moving { animation: b-travel 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+    @keyframes b-travel {
+      0% { offset-distance: 0%; opacity: 0; }
+      12%, 88% { opacity: 1; }
+      100% { offset-distance: 100%; opacity: 0; }
+    }
+
+    /* Browser: the hotel's own booking page */
+    .b-browser { z-index: 2; left: 0; top: 50px; width: 640px; height: 500px; overflow: hidden; border-radius: 14px; background: var(--surface); box-shadow: 0 1px 2px rgb(11 42 63 / 0.08), 0 40px 70px -30px rgb(11 42 63 / 0.45), 0 0 0 1px var(--line); }
+    .is-stack .b-browser { left: 20px; top: 20px; }
+    .b-tabs { display: flex; align-items: flex-end; gap: 6px; height: 34px; padding: 0 12px; background: #dfe7ed; }
+    .b-tab { display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 14px; border-radius: 8px 8px 0 0; background: var(--surface); font-size: 11px; }
+    .b-tab i { width: 9px; height: 9px; border-radius: 50%; background: #b9c9d5; }
+    .b-url { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; background: var(--surface); border-bottom: 1px solid var(--line); font-size: 11.5px; }
+    .b-url span { flex: 1; padding: 5px 12px; border-radius: 999px; background: var(--tint); color: var(--ink-soft); }
+    .b-url b { font-weight: 500; color: var(--ink); }
+
+    .b-page { position: relative; height: calc(100% - 68px); }
+    .b-hero { position: absolute; inset: 0; overflow: hidden; }
+    .b-hero img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.25); filter: blur(5px) saturate(0.9); }
+    .b-hero::after { content: ""; position: absolute; inset: 0; background: rgb(11 27 38 / 0.55); }
+    .b-brand { position: absolute; top: 18px; left: 0; right: 0; z-index: 1; color: #fff; text-align: center; font-family: var(--serif); letter-spacing: 0.08em; }
+    .b-brand b { display: block; font-size: 18px; font-weight: 500; }
+    .b-brand small { font-family: var(--sans); font-size: 10px; letter-spacing: 0.2em; opacity: 0.8; }
+
+    /* The booking overlay */
+    .b-overlay { position: absolute; top: 74px; left: 50%; z-index: 2; width: 420px; margin-left: -210px; padding: 18px 20px 16px; border-radius: 16px; background: var(--surface); box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.5); }
+    .b-overlay h5 { margin: 0 0 12px; font-size: 15px; font-weight: 500; }
+    .b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 12px; }
+    .b-field { position: relative; padding: 6px 10px; border-radius: 9px; background: var(--tint); font-size: 12px; min-height: 40px; }
+    .b-field small { display: block; color: var(--ink-muted); font-size: 9.5px; }
+    .b-field.wide { grid-column: 1 / -1; }
+    .b-field .val { font-weight: 500; }
+    .b-field .ph { color: #9fb2c0; }
+    .b-field.is-focus { box-shadow: inset 0 0 0 1.5px var(--blue); background: var(--surface); }
+    .b-list { position: absolute; top: 100%; left: 0; right: 0; z-index: 3; margin-top: 4px; padding: 4px; border-radius: 9px; background: var(--surface); box-shadow: 0 16px 30px -12px rgb(11 42 63 / 0.4), 0 0 0 1px var(--line); opacity: 0; transform: translateY(-6px); transition: opacity 0.2s ease, transform 0.25s ease; pointer-events: none; }
+    .b-list.is-open { opacity: 1; transform: none; }
+    .b-list span { display: block; padding: 6px 8px; border-radius: 6px; font-size: 11.5px; }
+    .b-list span.is-hit { background: var(--ink); color: #fff; }
+    .b-chips { display: flex; gap: 4px; margin-top: 2px; }
+    .b-chips span { padding: 2px 8px; border-radius: 999px; background: var(--surface); font-size: 11px; transition: background-color 0.25s ease, color 0.25s ease; }
+    .b-chips span.on { background: var(--ink); color: #fff; }
+    .b-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+    .b-btn { padding: 9px 20px; border-radius: 999px; font-size: 12.5px; font-weight: 500; transition: transform 0.15s ease, background-color 0.3s ease; }
+    .b-btn.ghost { box-shadow: inset 0 0 0 1px var(--line); }
+    .b-btn.submit { background: var(--ink); color: #fff; }
+    .b-btn.is-pressed { transform: scale(0.93); }
+    .b-btn.is-done { background: #0e8a6a; }
+    .b-caret { display: inline-block; width: 1.5px; height: 13px; margin-left: 1px; vertical-align: -2px; background: var(--blue); animation: b-blink 1s steps(1) infinite; }
+    @keyframes b-blink { 50% { opacity: 0; } }
+
+    .b-thanks { position: absolute; top: 74px; left: 50%; z-index: 3; width: 420px; margin-left: -210px; padding: 12px 14px; border-radius: 12px; background: #e3f6ec; color: #1f6a49; font-size: 12px; line-height: 1.45; box-shadow: 0 12px 24px -12px rgb(0 0 0 / 0.3); opacity: 0; transform: translateY(-10px); transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+    .b-thanks.is-in { opacity: 1; transform: translateY(-58px); }
+    .b-thanks b { font-weight: 500; }
+
+    /* Staff tablet: Datalekt notifications */
+    .b-tablet { z-index: 2; left: 680px; top: 50px; width: 410px; height: 214px; padding: 10px; border-radius: 22px; background: #0d1b26; box-shadow: 0 30px 50px -24px rgb(11 42 63 / 0.45); }
+    .is-stack .b-tablet { left: 20px; top: 556px; width: 400px; }
+    .b-screen { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 13px; background: var(--ground); }
+    .b-bar { display: flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; background: var(--ink); color: #fff; font-size: 11.5px; }
+    .b-bar img { width: 13px; }
+    .b-bell { position: relative; margin-left: auto; width: 18px; height: 18px; border-radius: 50%; background: #2c3e4c; }
+    .b-bell::after { content: "1"; position: absolute; top: -5px; right: -6px; display: grid; place-items: center; width: 14px; height: 14px; border-radius: 50%; background: var(--cyan); color: #06303a; font-size: 9px; font-weight: 600; transform: scale(0); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .b-tablet.has-note .b-bell::after { transform: scale(1); }
+    .b-notes { padding: 12px; }
+    .b-notes h6 { margin: 0 0 8px; color: var(--ink-muted); font-size: 11px; font-weight: 500; }
+    .b-empty { color: #9fb2c0; font-size: 12px; }
+    .b-note { padding: 11px 12px; border-radius: 12px; background: var(--surface); box-shadow: var(--float); opacity: 0; transform: translateY(10px) scale(0.97); transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+    .b-tablet.has-note .b-note { opacity: 1; transform: none; }
+    .b-tablet.has-note .b-empty { display: none; }
+    .b-note b { font-size: 12.5px; font-weight: 500; }
+    .b-note b span { padding: 1px 7px; margin-left: 4px; border-radius: 999px; background: var(--tint); font-size: 10px; }
+    .b-note p { margin: 3px 0 9px; color: var(--ink-muted); font-size: 11px; }
+    .b-note .row { display: flex; gap: 6px; }
+    .b-note .row span { padding: 6px 14px; border-radius: 999px; font-size: 11.5px; font-weight: 500; transition: transform 0.15s ease, background-color 0.3s ease; }
+    .b-note .cancel { box-shadow: inset 0 0 0 1px var(--line); }
+    .b-note .reserve { background: var(--blue); color: #fff; }
+    .b-note .reserve.is-pressed { transform: scale(0.92); }
+    .b-note .reserve.is-done { background: #0e8a6a; }
+
+    /* Guest phone: WhatsApp confirmation ticket */
+    .b-phone { z-index: 3; left: 770px; top: 296px; width: 196px; height: 344px; padding: 8px; border-radius: 30px; background: #0d1b26; box-shadow: 0 40px 60px -24px rgb(11 42 63 / 0.55); }
+    .is-stack .b-phone { left: 456px; top: 560px; }
+    .b-phone::before { content: ""; position: absolute; top: 12px; left: 50%; z-index: 4; width: 50px; height: 7px; margin-left: -25px; border-radius: 7px; background: #0d1b26; }
+    .b-wa { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 23px; background: #efeae2; }
+    .b-wa-top { display: flex; align-items: center; gap: 6px; height: 46px; padding: 16px 10px 0; background: #008069; color: #fff; font-size: 11px; font-weight: 500; }
+    .b-wa-top i { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #fff; font-style: normal; }
+    .b-wa-top i img { width: 11px; }
+    .b-wa-top em { display: grid; place-items: center; width: 11px; height: 11px; border-radius: 50%; background: #53bdeb; font-size: 8px; font-style: normal; }
+    .b-chat { padding: 8px; }
+    .b-ticket { padding: 7px; border-radius: 8px; background: #fff; opacity: 0; transform: translateY(26px); clip-path: inset(0 0 100% 0); transition: opacity 0.2s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), clip-path 0.9s cubic-bezier(0.22, 1, 0.36, 1); }
+    .b-ticket.is-in { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+    .b-tk { border-radius: 5px; background: #eceff2; }
+    .b-tk-head { display: flex; justify-content: space-between; align-items: center; padding: 6px 7px; border-bottom: 1.5px dashed #c5ced5; font-size: 7.5px; font-weight: 600; line-height: 1.2; }
+    .b-tk-head span:last-child { font-family: var(--serif); font-size: 7px; letter-spacing: 0.06em; text-align: right; }
+    .b-tk-row { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 4px 5px; }
+    .b-tk-cell { padding: 4px 5px; border-radius: 3px; background: #fff; font-size: 8.5px; font-weight: 600; }
+    .b-tk-cell.wide { grid-column: 1 / -1; }
+    .b-tk-cell small { display: block; color: #8796a3; font-size: 6.5px; font-weight: 400; }
+    .b-tk-qr { display: flex; align-items: flex-end; justify-content: space-between; padding: 5px 7px 6px; border-top: 1.5px dashed #c5ced5; font-size: 6.5px; color: #8796a3; }
+    .b-tk-qr canvas { width: 42px; height: 42px; image-rendering: pixelated; }
+    .b-tk-qr img { width: 11px; }
+    .b-msg { margin-top: 6px; padding: 7px 8px; border-radius: 8px; background: #fff; font-size: 9.5px; line-height: 1.4; opacity: 0; transform: translateY(8px); transition: opacity 0.35s ease, transform 0.45s ease; }
+    .b-msg.is-in { opacity: 1; transform: none; }
+    .b-msg b { font-weight: 600; }
+
+    /* Cursor, chips and labels */
+    .b-cursor { z-index: 9; left: 0; top: 0; width: 22px; transform: translate(var(--cx, 560px), var(--cy, 520px)); transition: transform 0.7s cubic-bezier(0.45, 0, 0.2, 1); filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.25)); }
+    .b-cursor.is-click { transform: translate(var(--cx), var(--cy)) scale(0.85); transition-duration: 0.12s; }
+
+    .b-chip { z-index: 6; display: flex; align-items: center; gap: 7px; padding: 7px 12px 7px 9px; border-radius: 999px; background: var(--surface); box-shadow: var(--float); font-size: 12px; font-weight: 500; white-space: nowrap; opacity: 0; transform: translateY(8px) scale(0.92); transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .b-chip.is-in { opacity: 1; transform: none; }
+    .b-chip i { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #dff3f7; }
+    .b-chip i::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }
+    .b-chip-1 { left: 210px; top: 0; }
+    .b-chip-2 { left: 780px; top: 6px; }
+    .b-chip-3 { left: 520px; top: 600px; }
+    .is-stack .b-chip-1 { left: 230px; top: 532px; }
+    .is-stack .b-chip-2 { left: 40px; top: 790px; }
+    .is-stack .b-chip-3 { left: 400px; top: 908px; }
+
+    .b-label { z-index: 4; color: var(--ink-muted); font-size: 12px; font-weight: 500; }
+    .b-label-site { left: 250px; top: 560px; }
+    .b-label-staff { left: 694px; top: 272px; }
+    .is-stack .b-label-site, .is-stack .b-label-staff { display: none; }
+
+    @media (max-width: 760px) {
+      .uc-head { grid-template-columns: minmax(0, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <section class="uc" aria-labelledby="uc3-title">
+    <div class="uc-head">
+      <div>
+        <p class="uc-label">Reservation Booking Portal</p>
+        <h2 class="uc-title" id="uc3-title">Book in a blink, <em>on your own page.</em></h2>
+      </div>
+      <div>
+        <p class="uc-copy">A self-booking overlay on the hotel’s own site lets guests reserve in seconds. Staff approve the request in Datalekt with one click, and the guest receives a branded confirmation on WhatsApp.</p>
+        <div class="uc-points"><span>Your branding</span><span>One-click approval</span><span>WhatsApp confirmation</span></div>
+      </div>
+    </div>
+
+    <div class="b-wrap">
+      <div class="b-scene" role="img" aria-label="A guest books UKIYO for 5 on the hotel's own booking page; the request appears in Datalekt, staff click Reserve, and the guest receives a branded reservation confirmation with a payment QR code on WhatsApp.">
+        <svg class="b-links b-links-wide" viewBox="0 0 1100 650" aria-hidden="true">
+          <path pathLength="1" d="M640 180 C 660 180, 662 150, 690 150"/>
+          <path pathLength="1" d="M885 264 C 885 280, 868 282, 868 300"/>
+        </svg>
+        <svg class="b-links b-links-stack" viewBox="0 0 680 940" aria-hidden="true">
+          <path pathLength="1" d="M200 520 C 200 540, 220 545, 220 566"/>
+          <path pathLength="1" d="M420 660 C 440 660, 440 650, 458 650"/>
+        </svg>
+        <span class="b-packet b-packet-wide" style="offset-path: path('M640 180 C 660 180, 662 150, 690 150')"></span>
+        <span class="b-packet b-packet-wide" style="offset-path: path('M885 264 C 885 280, 868 282, 868 300')"></span>
+        <span class="b-packet b-packet-stack" style="offset-path: path('M200 520 C 200 540, 220 545, 220 566')"></span>
+        <span class="b-packet b-packet-stack" style="offset-path: path('M420 660 C 440 660, 440 650, 458 650')"></span>
+
+        <!-- Guest: the hotel's booking page -->
+        <div class="b-browser">
+          <div class="b-tabs"><span class="b-tab"><i></i>Paradise · Reservations</span></div>
+          <div class="b-url"><span><b>reserve.datalekt.com</b>/paradise</span></div>
+          <div class="b-page">
+            <div class="b-hero"><img src="../assets/img/partners/ritz-carlton-pune.jpg" alt=""></div>
+            <p class="b-brand"><b>THE RITZ-CARLTON</b><small>PUNE</small></p>
+
+            <div class="b-overlay">
+              <h5>Reserve a table</h5>
+              <div class="b-grid">
+                <div class="b-field wide b-restaurant"><small>Restaurant</small><span class="val">AASMANA</span>
+                  <div class="b-list"><span>AASMANA</span><span>3K</span><span class="b-ukiyo">UKIYO</span><span>RCTL</span><span>ALTA VIDA</span></div>
+                </div>
+                <div class="b-field b-name"><small>Name</small><span class="val"></span><span class="ph">Your name</span></div>
+                <div class="b-field b-phone-field"><small>Mobile</small><span class="val"></span><span class="ph">+91</span></div>
+                <div class="b-field"><small>Guests</small><span class="val b-pax">2</span></div>
+                <div class="b-field"><small>Date and time</small><div class="b-chips"><span class="b-date">Fri 24 Jan</span><span class="b-time">8:00 pm</span></div></div>
+                <div class="b-field wide b-note-field"><small>Special comments</small><span class="val"></span><span class="ph">Anything we should know?</span></div>
+              </div>
+              <div class="b-actions"><span class="b-btn ghost">Cancel</span><span class="b-btn submit">Submit</span></div>
+            </div>
+
+            <p class="b-thanks"><b>Thank you!</b> Your reservation request has been submitted. Confirmation will be shared shortly on your phone number.</p>
+          </div>
+        </div>
+
+        <!-- Staff: the request arrives in Datalekt -->
+        <div class="b-tablet">
+          <div class="b-screen">
+            <div class="b-bar"><img src="../assets/img/datalekt-mark.svg" alt="">Datalekt<span class="b-bell"></span></div>
+            <div class="b-notes">
+              <h6>Notifications</h6>
+              <p class="b-empty">No new requests</p>
+              <div class="b-note">
+                <b>Booking · Elisha Suri <span>UKIYO</span></b>
+                <p>Fri 24 Jan · 8:00 pm · 5 guests · Corner table</p>
+                <div class="row"><span class="cancel">Cancel</span><span class="reserve">Reserve</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guest: the confirmation on WhatsApp -->
+        <div class="b-phone">
+          <div class="b-wa">
+            <div class="b-wa-top"><i><img src="../assets/img/datalekt-mark.svg" alt=""></i>Datalekt <em>✓</em></div>
+            <div class="b-chat">
+              <div class="b-ticket">
+                <div class="b-tk">
+                  <div class="b-tk-head"><span>RESERVATION<br>CONFIRMATION</span><span>THE RITZ-CARLTON<br>PUNE</span></div>
+                  <div class="b-tk-row">
+                    <div class="b-tk-cell wide"><small>Restaurant</small>UKIYO</div>
+                    <div class="b-tk-cell wide"><small>Guest name</small>ELISHA SURI · 5 PAX</div>
+                    <div class="b-tk-cell"><small>Date</small>24 JAN</div>
+                    <div class="b-tk-cell"><small>Time</small>8:00 PM</div>
+                  </div>
+                  <div class="b-tk-qr"><span>Payment QR code<br><canvas class="b-qr" width="21" height="21"></canvas></span><span>Powered by <img src="../assets/img/datalekt-mark.svg" alt="Datalekt"></span></div>
+                </div>
+              </div>
+              <p class="b-msg">Dear Elisha, your reservation is confirmed. <b>We’ll hold your table for 30 minutes.</b></p>
+            </div>
+          </div>
+        </div>
+
+        <p class="b-chip b-chip-1"><i></i>Request sent to the hotel</p>
+        <p class="b-chip b-chip-2"><i></i>Approved in one click</p>
+        <p class="b-chip b-chip-3"><i></i>Branded confirmation on WhatsApp</p>
+        <p class="b-label b-label-site">The hotel’s booking page</p>
+        <p class="b-label b-label-staff">Hotel staff · Datalekt</p>
+
+        <svg class="b-cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 1.5v19l5-4.6 3.4 7.6 3.3-1.5-3.4-7.4 6.9-.4z" fill="#fff" stroke="#0b2a3f" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const wrap = document.querySelector('.b-wrap');
+      const scene = wrap.querySelector('.b-scene');
+      const $ = (s) => scene.querySelector(s);
+      const $$ = (s) => [...scene.querySelectorAll(s)];
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // A small QR-style pattern for the payment code
+      (() => {
+        const qr = $('.b-qr').getContext('2d');
+        qr.fillStyle = '#fff';
+        qr.fillRect(0, 0, 21, 21);
+        qr.fillStyle = '#111';
+        let seed = 7;
+        const rand = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+        for (let y = 0; y < 21; y++) for (let x = 0; x < 21; x++) if (rand() > 0.55) qr.fillRect(x, y, 1, 1);
+        [[0, 0], [14, 0], [0, 14]].forEach(([x, y]) => {
+          qr.fillStyle = '#111'; qr.fillRect(x, y, 7, 7);
+          qr.fillStyle = '#fff'; qr.fillRect(x + 1, y + 1, 5, 5);
+          qr.fillStyle = '#111'; qr.fillRect(x + 2, y + 2, 3, 3);
+        });
+      })();
+
+      const restaurant = $('.b-restaurant');
+      const list = $('.b-list');
+      const ukiyo = $('.b-ukiyo');
+      const fields = {
+        name: $('.b-name'),
+        phone: $('.b-phone-field'),
+        note: $('.b-note-field'),
+      };
+      const pax = $('.b-pax');
+      const date = $('.b-date');
+      const time = $('.b-time');
+      const submit = $('.b-btn.submit');
+      const thanks = $('.b-thanks');
+      const tablet = $('.b-tablet');
+      const reserve = $('.b-note .reserve');
+      const ticket = $('.b-ticket');
+      const msg = $('.b-msg');
+      const cursor = $('.b-cursor');
+      const chips = $$('.b-chip');
+
+      // Side by side when there is room, stacked on phones
+      let stacked = null;
+      let W = 1100;
+      function layout() {
+        const stack = wrap.clientWidth < 760;
+        if (stack !== stacked) {
+          stacked = stack;
+          scene.classList.toggle('is-stack', stack);
+          W = stack ? 680 : 1100;
+          wrap.style.setProperty('--h', stack ? '940px' : '650px');
+        }
+        wrap.style.setProperty('--s', Math.min(1, wrap.clientWidth / W).toFixed(4));
+      }
+      layout();
+      new ResizeObserver(layout).observe(wrap);
+
+      const links = () => $$(stacked ? '.b-links-stack path' : '.b-links-wide path');
+      const packets = () => $$(stacked ? '.b-packet-stack' : '.b-packet-wide');
+
+      function aimAt(target) {
+        const s = scene.getBoundingClientRect();
+        const b = target.getBoundingClientRect();
+        const k = s.width / W;
+        scene.style.setProperty('--cx', `${(b.left + b.width / 2 - s.left) / k - 4}px`);
+        scene.style.setProperty('--cy', `${(b.top + b.height / 2 - s.top) / k - 2}px`);
+      }
+
+      function click(target, at, ms) {
+        at(ms, () => aimAt(target));
+        at(ms + 750, () => { cursor.classList.add('is-click'); target.classList.add('is-pressed'); });
+        at(ms + 880, () => { cursor.classList.remove('is-click'); target.classList.remove('is-pressed'); });
+      }
+
+      // Type into a field, one character at a time
+      function type(field, text, at, start, step = 70) {
+        const val = field.querySelector('.val');
+        const ph = field.querySelector('.ph');
+        at(start, () => {
+          field.classList.add('is-focus');
+          if (ph) ph.style.display = 'none';
+          val.innerHTML = '<i class="b-caret"></i>';
+        });
+        [...text].forEach((ch, i) => at(start + 80 + i * step, () => {
+          val.innerHTML = `${text.slice(0, i + 1)}<i class="b-caret"></i>`;
+        }));
+        at(start + 80 + text.length * step + 150, () => {
+          field.classList.remove('is-focus');
+          val.textContent = text;
+        });
+      }
+
+      let timers = [];
+      let visible = false;
+      let idle = true;
+
+      function reset() {
+        timers.forEach(clearTimeout);
+        timers = [];
+        restaurant.querySelector('.val').textContent = 'AASMANA';
+        list.classList.remove('is-open');
+        ukiyo.classList.remove('is-hit');
+        Object.values(fields).forEach((f) => {
+          f.classList.remove('is-focus');
+          f.querySelector('.val').textContent = '';
+          const ph = f.querySelector('.ph');
+          if (ph) ph.style.display = '';
+        });
+        pax.textContent = '2';
+        date.classList.remove('on');
+        time.classList.remove('on');
+        submit.classList.remove('is-done');
+        submit.textContent = 'Submit';
+        thanks.classList.remove('is-in');
+        tablet.classList.remove('has-note');
+        reserve.classList.remove('is-done');
+        reserve.textContent = 'Reserve';
+        ticket.classList.remove('is-in');
+        msg.classList.remove('is-in');
+        chips.forEach((c) => c.classList.remove('is-in'));
+        $$('.b-links path').forEach((p) => p.classList.remove('is-drawn'));
+        $$('.b-packet').forEach((p) => p.classList.remove('is-moving'));
+      }
+
+      function play() {
+        reset();
+        const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+        const [linkIn, linkOut] = links();
+        const [packetIn, packetOut] = packets();
+
+        // 1. The guest fills the booking overlay
+        click(restaurant, at, 200);
+        at(1000, () => list.classList.add('is-open'));
+        at(1450, () => ukiyo.classList.add('is-hit'));
+        at(1700, () => { list.classList.remove('is-open'); restaurant.querySelector('.val').textContent = 'UKIYO'; });
+        type(fields.name, 'Elisha Suri', at, 1900);
+        type(fields.phone, '+91 97232 32356', at, 2950, 55);
+        [3, 4, 5].forEach((n, i) => at(4000 + i * 180, () => { pax.textContent = String(n); }));
+        at(4600, () => date.classList.add('on'));
+        at(4850, () => time.classList.add('on'));
+        type(fields.note, 'Corner table', at, 5100);
+        click(submit, at, 5700);
+        at(6600, () => { submit.classList.add('is-done'); submit.textContent = 'Sent ✓'; });
+        at(6800, () => thanks.classList.add('is-in'));
+
+        // 2. The request reaches the hotel; staff approve it
+        at(6900, () => linkIn.classList.add('is-drawn'));
+        at(7100, () => packetIn.classList.add('is-moving'));
+        at(7800, () => { tablet.classList.add('has-note'); chips[0].classList.add('is-in'); });
+        click(reserve, at, 8100);
+        at(9000, () => { reserve.classList.add('is-done'); reserve.textContent = 'Reserved ✓'; chips[1].classList.add('is-in'); });
+
+        // 3. The guest gets a branded confirmation on WhatsApp
+        at(9200, () => linkOut.classList.add('is-drawn'));
+        at(9400, () => packetOut.classList.add('is-moving'));
+        at(10100, () => ticket.classList.add('is-in'));
+        at(10900, () => { msg.classList.add('is-in'); chips[2].classList.add('is-in'); });
+
+        ucEmbed.loop(15000);
+
+        at(15000, () => {
+          if (ucEmbed.done()) idle = true;
+          else if (visible && !reduce) play();
+          else idle = true;
+        });
+      }
+
+      ucEmbed.register(() => { idle = false; play(); });
+
+
+      new IntersectionObserver(([e]) => {
+        visible = e.isIntersecting;
+        if (visible && idle && !reduce) { idle = false; play(); }
+      }, { threshold: 0.35 }).observe(wrap);
+    })();
+  </script>
+</body>
+</html>

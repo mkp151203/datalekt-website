@@ -1,0 +1,22 @@
+---
+// Home page: the sections in order. Each lives in its own folder under
+// src/components/ with its markup, styles and script.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/hero/Hero.astro';
+import Partners from '../components/partners/Partners.astro';
+import ProductFlow from '../components/product/ProductFlow.astro';
+import UseCases from '../components/use-cases/UseCases.astro';
+import Features from '../components/features/Features.astro';
+import Growth from '../components/growth/Growth.astro';
+import ClosingCta from '../components/cta/ClosingCta.astro';
+---
+
+<BaseLayout>
+  <Hero />
+  <Partners />
+  <ProductFlow />
+  <UseCases />
+  <Features />
+  <Growth />
+  <ClosingCta />
+</BaseLayout>

@@ -1,0 +1,70 @@
+---
+// Sticky site header: logo, section links, Log in menu, Schedule a demo,
+// and a menu button that replaces the links below 1100px.
+import { mainNav } from '../../data/navigation';
+import { links, logins } from '../../data/site';
+import './header.css';
+---
+
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a class="nav-logo" href="/" aria-label="Datalekt home">
+      <img src="/brand/datalekt-wordmark.png" width="410" height="126" alt="Datalekt" />
+    </a>
+
+    <ul class="nav-links">
+      {mainNav.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+    </ul>
+
+    <div class="nav-actions">
+      <details class="login" data-dismiss>
+        <summary>
+          Log in
+          <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"
+            ><path
+              d="M2.5 4.5 6 8l3.5-3.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path></svg
+          >
+        </summary>
+        <div class="login-menu">
+          {
+            logins.map((login) => (
+              <a href={login.href}>
+                <strong>{login.label}</strong>
+                <span>{login.description}</span>
+              </a>
+            ))
+          }
+        </div>
+      </details>
+      <a class="button button-primary nav-cta" href={links.demo}>Schedule a demo</a>
+
+      <details class="nav-mobile" data-dismiss>
+        <summary aria-label="Open menu">
+          <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"
+            ><path d="M3 7h16M3 15h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg
+          >
+        </summary>
+        <div class="nav-mobile-panel">
+          {mainNav.map((link) => <a href={link.href}>{link.label}</a>)}
+          <p class="nav-mobile-group">Log in</p>
+          {logins.map((login) => <a href={login.href}>{login.label}</a>)}
+          <a class="button button-primary" href={links.demo}>Schedule a demo</a>
+        </div>
+      </details>
+    </div>
+  </nav>
+</header>
+
+<script>
+  import { initMenus } from './menus';
+  import { initStickyHeader } from './header';
+
+  initMenus();
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (header) initStickyHeader(header);
+</script>

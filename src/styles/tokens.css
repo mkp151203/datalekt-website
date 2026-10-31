@@ -1,0 +1,28 @@
+/* Design tokens: brand colours, type, layout and the shared float shadow.
+   Breakpoints used across the components: 1100px (tablet, stacked layouts),
+   760px (small tablet) and 560px (phone). */
+
+:root {
+  /* Brand, light theme */
+  --ground: #fbfdfe;
+  --field: #e4eff6;
+  --surface: #ffffff;
+  --tint: #f1f6f9;
+  --ink: #0b2a3f;
+  --ink-soft: #3b5467;
+  --ink-muted: #5f7688;
+  --blue: #116bae;
+  --blue-press: #0c5994;
+  --cyan: #45bbce;
+  --line: #e6eef4;
+
+  --serif: "Bodoni Moda", Georgia, serif;
+  --sans: "Neue Montreal", "Helvetica Neue", Arial, sans-serif;
+
+  --max: 1320px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --edge: max(var(--gutter), calc((100% - var(--max)) / 2));
+  --nav-h: 76px;
+
+  --float: 0 1px 2px rgb(11 42 63 / 0.06), 0 18px 40px -14px rgb(11 42 63 / 0.24);
+}

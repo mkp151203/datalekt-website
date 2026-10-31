@@ -1,0 +1,65 @@
+---
+// "Trusted by finest hotels": one large photo that changes hotel through a
+// dot ripple (partners-showcase.ts). The hotels come from data/partners.ts.
+import { getImage } from 'astro:assets';
+import { getPartners } from '../../data/partners';
+import './partners.css';
+
+const partners = getPartners();
+// WebP at the photos' own width; the script draws them into a canvas
+const photos = await Promise.all(
+  partners.map((partner) => getImage({ src: partner.image, format: 'webp', quality: 82 })),
+);
+const [first] = partners;
+const label = (name: string, city: string) => (city ? `${name}, ${city}` : name);
+---
+
+<section class="partners" id="clients" aria-labelledby="partners-title">
+  <h2 class="partners-title" id="partners-title">Trusted by finest hotels.</h2>
+
+  <p class="partner-caption" aria-hidden="true">
+    <span class="caption-line"><span class="caption-text caption-name">{first.name}</span></span>
+    <span class="caption-line"><span class="caption-text caption-city">{first.cityLabel}</span></span>
+  </p>
+
+  <div class="partners-nav">
+    <div class="partners-dots" role="group" aria-label="Choose a hotel"></div>
+    <div class="partners-controls">
+      <button class="partners-arrow" type="button" data-step="-1" aria-label="Previous hotel">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"></path></svg>
+      </button>
+      <button class="partners-arrow" type="button" data-step="1" aria-label="Next hotel">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"></path></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="partners-view" role="img" aria-label={label(first.name, first.cityLabel)}>
+    <img
+      class="partners-still"
+      src={photos[0].src}
+      width={first.image.width}
+      height={first.image.height}
+      alt=""
+      decoding="async"
+    />
+    <canvas class="partners-canvas" aria-hidden="true"></canvas>
+  </div>
+
+  <ul class="partners-roster visually-hidden" aria-label="Partner hotels">
+    {
+      partners.map((partner, i) => (
+        <li data-image={photos[i].src} data-city={partner.cityLabel}>
+          {partner.name}
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<script>
+  import { initAll } from '../../scripts/lib/in-view';
+  import { initPartnersShowcase } from './partners-showcase';
+
+  initAll('.partners', initPartnersShowcase);
+</script>

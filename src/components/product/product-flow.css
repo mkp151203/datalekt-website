@@ -1,0 +1,350 @@
+/* About: one booking, every system. The guest taps Book on their phone,
+   the hotel is notified, the front desk gets the profile and WhatsApp
+   confirms back. assets/js/about-scene.js plays it. */
+
+.about {
+  position: relative;
+  padding: clamp(56px, 8vw, 104px) var(--edge);
+  overflow: hidden;
+}
+
+.about-head {
+  max-width: 52rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about-title {
+  margin: 0;
+  font-size: clamp(2.25rem, 1rem + 3.4vw, 4rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.about-title em {
+  font-family: var(--serif);
+  font-size: 1.06em;
+  font-style: italic;
+  font-weight: 500;
+  font-variation-settings: "opsz" 11;
+  letter-spacing: -0.02em;
+}
+
+.about-lead {
+  max-width: 36rem;
+  margin: 20px auto 0;
+  color: var(--ink-soft);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.about-lead strong { color: var(--ink); font-weight: 500; }
+
+/* The scene is drawn at a fixed size and scaled to fit the screen:
+   1100 × 640 side by side, or 720 × 860 as a pyramid on phones */
+.scene-wrap {
+  position: relative;
+  max-width: 1100px;
+  height: calc(var(--h, 640px) * var(--s, 1));
+  margin: 28px auto 0;
+}
+
+.scene {
+  --sw: 1100px;
+  --sh: 640px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--sw);
+  height: var(--sh);
+  transform: translateX(-50%) scale(var(--s, 1));
+  transform-origin: top center;
+  font-size: 13px;
+}
+
+.scene.is-stack { --sw: 720px; --sh: 860px; }
+
+.scene > * { position: absolute; }
+
+.ripple { inset: 0; width: var(--sw); height: var(--sh); pointer-events: none; }
+
+/* Connector lines with data travelling along them */
+.links { inset: 0; width: var(--sw); height: var(--sh); overflow: visible; pointer-events: none; }
+.links-stack, .packet-stack { display: none; }
+.is-stack .links-wide, .is-stack .packet-wide { display: none; }
+.is-stack .links-stack { display: block; }
+.is-stack .packet-stack { display: block; }
+.links path {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 1.6;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.links path.is-drawn { stroke-dashoffset: 0; }
+
+.packet {
+  z-index: 3;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 4px rgb(69 187 206 / 0.25);
+  opacity: 0;
+  offset-rotate: 0deg;
+}
+.packet.is-moving { animation: travel 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+@keyframes travel {
+  0% { offset-distance: 0%; opacity: 0; }
+  15%, 85% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* Devices, drawn in CSS */
+.device { z-index: 2; }
+
+.laptop { left: 20px; top: 150px; width: 420px; }
+.laptop .screen {
+  height: 262px;
+  padding: 9px;
+  border-radius: 14px 14px 4px 4px;
+  background: #0d1b26;
+  box-shadow: 0 30px 50px -24px rgb(11 42 63 / 0.45);
+}
+.laptop .base {
+  position: relative;
+  left: -34px;
+  width: 488px;
+  height: 14px;
+  border-radius: 2px 2px 12px 12px;
+  background: linear-gradient(#dfe6eb, #b9c4cc);
+  box-shadow: 0 14px 24px -10px rgb(11 42 63 / 0.35);
+}
+
+.tablet { left: 820px; top: 180px; width: 220px; height: 296px; padding: 10px; border-radius: 22px; background: #0d1b26; box-shadow: 0 30px 50px -24px rgb(11 42 63 / 0.45); }
+
+.phone { z-index: 3; left: 470px; top: 92px; width: 190px; height: 380px; padding: 9px; border-radius: 30px; background: #0d1b26; box-shadow: 0 40px 60px -24px rgb(11 42 63 / 0.55); }
+.phone::before { content: ""; position: absolute; top: 13px; left: 50%; z-index: 4; width: 50px; height: 7px; margin-left: -25px; border-radius: 7px; background: #0d1b26; }
+
+.ui { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 8px; background: var(--ground); }
+.tablet .ui { border-radius: 13px; }
+.phone .ui { border-radius: 22px; }
+
+.ui-top { display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; background: var(--ink); color: #fff; font-size: 11px; }
+.ui-top img { width: 13px; }
+.ui-top span { opacity: 0.7; margin-left: auto; }
+
+/* Laptop: the hotel's Live Table */
+.live-floor { position: relative; height: calc(100% - 28px); padding: 14px; }
+.live-floor h5 { margin: 0 0 10px; font-size: 13px; font-weight: 500; }
+.tables { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px 10px; justify-items: center; }
+.t { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 500; background: var(--ink); transition: background-color 0.4s ease, box-shadow 0.4s ease, color 0.4s ease; }
+.t.r { background: var(--blue); }
+.t.f { background: var(--surface); color: var(--ink-muted); box-shadow: inset 0 0 0 1.5px #c3d6e2; }
+.t7.is-booked { background: var(--blue); color: #fff; box-shadow: 0 0 0 5px rgb(69 187 206 / 0.35); }
+.legend { display: flex; gap: 12px; margin-top: 14px; color: var(--ink-muted); font-size: 10px; }
+.legend i { display: inline-block; width: 8px; height: 8px; margin-right: 4px; border-radius: 50%; background: var(--ink); }
+.legend i.r { background: var(--blue); }
+.legend i.f { background: var(--surface); box-shadow: inset 0 0 0 1.5px #c3d6e2; }
+
+.notify {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  gap: 9px;
+  width: 220px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 12px 28px -10px rgb(11 42 63 / 0.35), 0 0 0 1px var(--line);
+  font-size: 11px;
+  line-height: 1.35;
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.notify.is-in { opacity: 1; transform: none; }
+.notify .bell { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 8px; background: #dff3f7; color: #0b6676; font-size: 13px; }
+.notify b { display: block; font-weight: 500; font-size: 12px; }
+.notify span { color: var(--ink-muted); }
+
+/* Tablet: front-desk profile */
+.profile { padding: 12px; }
+.skeleton i { display: block; height: 10px; margin: 10px 0; border-radius: 6px; background: #e2ebf1; }
+.skeleton i:nth-child(2) { width: 70%; }
+.skeleton i:nth-child(3) { width: 85%; }
+.filled { position: absolute; inset: 28px 0 0; padding: 12px; background: transparent; transition: background-color 0.3s ease; }
+.tablet.is-live .filled { background: var(--ground); }
+.filled > * { opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+.tablet.is-live .filled > * { opacity: 1; transform: none; }
+.tablet.is-live .filled > *:nth-child(2) { transition-delay: 0.08s; }
+.tablet.is-live .filled > *:nth-child(3) { transition-delay: 0.16s; }
+.tablet.is-live .filled > *:nth-child(4) { transition-delay: 0.24s; }
+.tablet.is-live .filled > *:nth-child(5) { transition-delay: 0.32s; }
+.p-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.p-avatar { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--field); font-weight: 500; }
+.p-head b { display: block; font-weight: 500; }
+.p-head small { color: var(--ink-muted); font-size: 10px; }
+.p-row { display: flex; justify-content: space-between; padding: 6px 0; border-top: 1px solid var(--line); font-size: 11.5px; }
+.p-row em { font-style: normal; color: var(--blue); font-size: 10px; font-weight: 500; }
+.p-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.p-tags span { padding: 2px 7px; border-radius: 999px; background: var(--tint); font-size: 10px; }
+
+/* Phone: the guest's booking screen, then WhatsApp */
+.screen-pane {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.4s ease;
+}
+.book-pane { background: var(--surface); }
+.chat-pane { background: #efeae2; transform: translateX(100%); }
+.phone.is-chat .book-pane { transform: translateX(-30%); opacity: 0; }
+.phone.is-chat .chat-pane { transform: none; }
+
+.book-hero { height: 92px; padding: 34px 14px 0; background: var(--ink); color: #fff; }
+.book-hero small { display: block; opacity: 0.65; font-size: 10px; }
+.book-hero b { font-size: 15px; font-weight: 500; }
+.book-body { padding: 12px 12px 0; }
+.book-label { margin: 8px 0 5px; color: var(--ink-muted); font-size: 10px; }
+.pills { display: flex; gap: 5px; }
+.pills span { flex: 1; padding: 6px 0; border-radius: 8px; background: var(--tint); font-size: 11px; text-align: center; }
+.pills span.on { background: var(--ink); color: #fff; }
+.book-field { display: flex; justify-content: space-between; padding: 7px 9px; border-radius: 8px; background: var(--tint); font-size: 11px; }
+
+.book-btn {
+  position: absolute;
+  right: 12px;
+  bottom: 16px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 8px 16px -8px rgb(17 107 174 / 0.8);
+  transition: transform 0.15s ease, background-color 0.3s ease;
+}
+.book-btn svg { width: 13px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; display: none; }
+.book-btn.is-pressed { transform: scale(0.94); }
+.book-btn.is-booked { background: #0e8a6a; }
+.book-btn.is-booked svg { display: block; }
+
+.wa-top { display: flex; align-items: center; gap: 6px; height: 50px; padding: 18px 10px 0; background: #008069; color: #fff; font-size: 11px; }
+.wa-top i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #fff; color: #008069; font-style: normal; font-size: 10px; font-weight: 500; }
+.wa-top small { display: block; opacity: 0.8; font-size: 9px; }
+.chat { display: flex; flex-direction: column; gap: 6px; padding: 10px 8px; }
+.day { align-self: center; padding: 2px 8px; border-radius: 6px; background: rgb(255 255 255 / 0.8); color: #54656f; font-size: 9px; }
+.msg { max-width: 90%; padding: 6px 8px 4px; border-radius: 8px; font-size: 10.5px; line-height: 1.35; opacity: 0; transform: translateY(10px) scale(0.96); transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+.msg.is-in { opacity: 1; transform: none; }
+.msg.biz { align-self: flex-start; background: #fff; border-top-left-radius: 2px; transform-origin: left bottom; }
+.msg.me { align-self: flex-end; background: #d9fdd3; border-top-right-radius: 2px; transform-origin: right bottom; }
+.msg small { display: block; color: #667781; font-size: 9px; text-align: right; }
+.ticks { color: #8696a0; transition: color 0.3s ease; }
+.ticks.is-read { color: #53bdeb; }
+
+/* Finger tap */
+.tap {
+  z-index: 6;
+  left: 0;
+  top: 0;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  background: rgb(11 42 63 / 0.18);
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.9);
+  opacity: 0;
+  transform: translate(var(--tx, 565px), var(--ty, 440px)) scale(1.4);
+  transition: opacity 0.3s ease, transform 0.35s ease;
+}
+.tap.is-down { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(0.8); }
+
+/* Status chips */
+.chip {
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px 7px 9px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--float);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.chip.is-in { opacity: 1; transform: none; }
+.chip i { width: 18px; height: 18px; border-radius: 50%; background: #dff3f7; display: grid; place-items: center; }
+.chip i::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }
+.chip-notified { left: 40px; top: 104px; }
+.chip-table { left: 150px; top: 452px; }
+.chip-profile { left: 830px; top: 132px; }
+.chip-whatsapp { left: 700px; top: 498px; }
+.chip-reminder { left: 330px; top: 520px; }
+
+.side-label { z-index: 4; color: var(--ink-muted); font-size: 12px; font-weight: 500; }
+.label-hotel { left: 150px; top: 430px; }
+.label-guest { left: 525px; top: 482px; }
+.label-desk { left: 880px; top: 484px; }
+
+/* Phone pyramid: the guest's phone on top, hotel laptop and front
+   desk tablet side by side underneath */
+.is-stack .phone { left: 265px; top: 24px; }
+.is-stack .laptop { left: 34px; top: 486px; }
+.is-stack .tablet { left: 478px; top: 470px; }
+.is-stack .label-guest { left: 318px; top: 414px; }
+.is-stack .label-hotel { left: 168px; top: 772px; }
+.is-stack .label-desk { left: 548px; top: 776px; }
+.is-stack .chip-reminder { left: 20px; top: 150px; }
+.is-stack .chip-whatsapp { left: 470px; top: 150px; }
+.is-stack .chip-notified { left: 20px; top: 236px; }
+.is-stack .chip-profile { left: 470px; top: 236px; }
+.is-stack .chip-table { left: 34px; top: 806px; }
+
+/* The headline's last word loops, letter by letter */
+.about-title .cycle {
+  display: block;
+  height: 1.15em;
+  perspective: 600px;
+}
+
+.cycle .word { display: inline-block; white-space: nowrap; }
+.cycle .word.is-leaving { position: absolute; left: 50%; transform: translateX(-50%); }
+.cycle { position: relative; }
+
+.cycle .ch {
+  display: inline-block;
+  transform-origin: 50% 80%;
+  animation: letter-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i) * 45ms);
+}
+
+.cycle .is-leaving .ch {
+  animation: letter-out 0.45s cubic-bezier(0.55, 0, 0.75, 0.2) both;
+  animation-delay: calc(var(--i) * 30ms);
+}
+
+@keyframes letter-in {
+  from { opacity: 0; transform: translateY(0.45em) rotateX(-85deg); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+
+@keyframes letter-out {
+  to { opacity: 0; transform: translateY(-0.35em) rotateX(75deg); filter: blur(6px); }
+}
