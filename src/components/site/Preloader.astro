@@ -1,0 +1,98 @@
+---
+// Full-screen preloader: the Datalekt mark divides cell by cell into shape
+// (preloader.ts), then the screen lifts once the page has loaded. The mask
+// starts with one cell so something shows before the script runs.
+---
+
+<div class="preloader" aria-hidden="true">
+  <div class="preloader-inner">
+    <svg class="preloader-mark" viewBox="0 0 500 500">
+      <defs>
+        <linearGradient id="preloader-gradient" gradientUnits="userSpaceOnUse" x1="60" y1="440" x2="440" y2="60">
+          <stop offset="0%" stop-color="#116bae"></stop>
+          <stop offset="42%" stop-color="#1e8ec7"></stop>
+          <stop offset="78%" stop-color="#36b8da"></stop>
+          <stop offset="100%" stop-color="#4fd0e3"></stop>
+        </linearGradient>
+        <!-- Blur then sharpen the alpha so touching cells melt together -->
+        <filter
+          id="preloader-goo"
+          color-interpolation-filters="sRGB"
+          x="-40%"
+          y="-40%"
+          width="180%"
+          height="180%"
+        >
+          <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="blur"></feGaussianBlur>
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
+          ></feColorMatrix>
+        </filter>
+        <mask id="preloader-mask">
+          <g transform="rotate(45, 250, 250)" filter="url(#preloader-goo)" fill="#fff" data-cells>
+            <circle cx="250" cy="250" r="40"></circle>
+          </g>
+        </mask>
+      </defs>
+      <rect width="500" height="500" fill="url(#preloader-gradient)" mask="url(#preloader-mask)"></rect>
+    </svg>
+    <img class="preloader-word" src="/brand/datalekt-wordmark.png" width="410" height="126" alt="" />
+  </div>
+</div>
+
+<noscript><style>.preloader { display: none; }</style></noscript>
+
+<style is:global>
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(40% 40% at 50% 46%, rgb(69 187 206 / 0.12), transparent 70%),
+      var(--ground);
+    transition:
+      opacity 0.6s ease,
+      visibility 0.6s;
+  }
+
+  .preloader-inner {
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+    transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .preloader-mark { width: clamp(180px, 30vw, 260px); height: auto; margin-bottom: -4%; overflow: visible; }
+
+  /* The wordmark's own logo is cropped off; only the name shows, under the mark */
+  .preloader-word {
+    width: clamp(130px, 18vw, 170px);
+    height: auto;
+    clip-path: inset(0 0 0 27%);
+    opacity: 0;
+    /* -13.5% centres the part that shows */
+    transform: translate(-13.5%, 8px);
+    transition:
+      opacity 0.4s ease,
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .preloader.is-formed .preloader-word { opacity: 1; transform: translateX(-13.5%); }
+
+  /* Still loading: the mark breathes */
+  .preloader.is-waiting .preloader-mark { animation: preloader-breathe 1.6s ease-in-out infinite; }
+  @keyframes preloader-breathe {
+    50% { transform: scale(0.94); opacity: 0.8; }
+  }
+
+  .preloader.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+  .preloader.is-done .preloader-inner { transform: scale(0.92) translateY(-12px); }
+</style>
+
+<script>
+  import { initPreloader } from './preloader';
+
+  const root = document.querySelector<HTMLElement>('.preloader');
+  if (root) initPreloader(root);
+</script>

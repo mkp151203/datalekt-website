@@ -150,3 +150,14 @@
 
   .nav-logo img { height: 30px; }
 }
+
+/* Hidden (but still holding its space) while the hero shows the same button */
+.nav-cta { transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s, box-shadow 0.15s ease, background-color 0.15s ease; }
+.nav-cta.is-away { opacity: 0; transform: translateY(-6px); visibility: hidden; pointer-events: none; }
+
+/* The section on screen */
+.nav-links a { position: relative; transition: color 0.2s ease; }
+.nav-links a::after { content: ""; position: absolute; right: 0; bottom: -6px; left: 0; height: 2px; border-radius: 2px; background: var(--blue); transform: scaleX(0); transition: transform 0.3s ease; }
+.nav-links a.is-current { color: var(--blue); }
+.nav-links a.is-current::after { transform: scaleX(1); }
+.nav-mobile-panel a.is-current { color: var(--blue); }

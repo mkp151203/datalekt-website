@@ -8,10 +8,11 @@ export interface NavLink {
 }
 
 export const mainNav: NavLink[] = [
+  { label: 'Clients', href: '/#clients' },
   { label: 'Product', href: '/#product' },
   { label: 'Use cases', href: '/#use-cases' },
   { label: 'Features', href: '/#features' },
-  { label: 'Clients', href: '/#clients' },
+  { label: 'Locations', href: '/#locations' },
 ];
 
 export const footerNav: { heading: string; links: NavLink[] }[] = [

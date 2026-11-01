@@ -29,6 +29,29 @@ const stats = getPartnerStats();
         <dd>{stats.states}</dd>
       </div>
     </dl>
+    <div class="growth-current" aria-live="polite">
+      <p class="growth-current-kicker">Now showing</p>
+      <p class="growth-current-name"><span data-current-name></span><b data-current-count></b></p>
+      <p class="growth-current-hotels" data-current-hotels></p>
+      <button class="growth-all-btn" type="button" data-open-all>Show all cities</button>
+    </div>
+  </div>
+
+  <div class="growth-map" aria-hidden="true">
+    <canvas class="growth-dots"></canvas>
+    <svg class="growth-lines" viewBox="0 0 1000 1114" preserveAspectRatio="none">
+      <g class="growth-states"></g>
+    </svg>
+    <div class="growth-pins"></div>
+  </div>
+</section>
+
+<dialog class="growth-modal" aria-labelledby="growth-modal-title">
+  <div class="growth-modal-head">
+    <h3 id="growth-modal-title">All partner cities</h3>
+    <button class="growth-modal-close" type="button" aria-label="Close" data-close-all>×</button>
+  </div>
+  <p class="growth-modal-sub">{stats.hotels} hotels across {stats.cities} cities in {stats.states} states.</p>
     <ul class="growth-cities" aria-label="Partner hotels by city">
       {cities.map((city) => (
         <li>
@@ -50,17 +73,7 @@ const stats = getPartnerStats();
         </li>
       ))}
     </ul>
-  </div>
-
-  <div class="growth-map" aria-hidden="true">
-    <canvas class="growth-dots"></canvas>
-    <svg class="growth-lines" viewBox="0 0 1000 1114" preserveAspectRatio="none">
-      <g class="growth-states"></g>
-      <g class="growth-arcs"></g>
-    </svg>
-    <div class="growth-pins"></div>
-  </div>
-</section>
+</dialog>
 
 <script>
   import { initAll } from '../../scripts/lib/in-view';

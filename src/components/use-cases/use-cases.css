@@ -7,11 +7,10 @@
   overflow-x: clip;
 }
 
-.cases-label { color: var(--blue); font-size: 0.9375rem; font-weight: 500; }
-
 .cases-title {
   max-width: 40rem;
-  margin: 8px 0 0;
+  margin: 0 auto;
+  text-align: center;
   font-size: clamp(2rem, 1rem + 2.6vw, 3.25rem);
   font-weight: 500;
   line-height: 1.06;
@@ -20,8 +19,11 @@
 }
 
 .cases-title em {
+  display: block;
+  margin-top: 0.08em;
   font-family: var(--script);
   font-size: 1.2em;
+  line-height: 1.15;
   font-style: normal;
   font-weight: 600;
   letter-spacing: 0;
@@ -29,8 +31,7 @@
 
 .cases-body {
   display: grid;
-  grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
-  column-gap: clamp(32px, 4vw, 64px);
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
   margin-top: clamp(32px, 4vw, 56px);
 }
@@ -111,40 +112,42 @@
 .case-panel.is-on { opacity: 1; }
 .case-panel[hidden] { display: none; }
 
-@media (max-width: 1100px) {
-  .cases-body { grid-template-columns: minmax(0, 1fr); }
+/* Tabs sit in a row above the scene so the scene gets the full width and
+   keeps its text at a readable size */
+.cases-body { grid-template-columns: minmax(0, 1fr); }
 
-  /* Tabs become a wrapping row of pills */
-  .case-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+/* Tabs become a wrapping row of pills */
+.case-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 
-  .case-tab,
-  .case-tab:last-child {
-    display: block;
-    padding: 9px 16px;
-    border: 0;
-    border-radius: 999px;
-    overflow: hidden;
-    background: var(--surface);
-    box-shadow: inset 0 0 0 1px var(--line);
-    color: var(--ink-soft);
-  }
+.case-tab,
+.case-tab:last-child {
+  display: block;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink-soft);
+}
 
-  .case-num, .case-desc { display: none; }
-  .case-name { position: relative; z-index: 1; font-size: 0.9375rem; }
+.case-num, .case-desc { display: none; }
+.case-name { position: relative; z-index: 1; font-size: 0.9375rem; }
 
-  .case-tab[aria-selected="true"] { background: var(--ink); box-shadow: none; color: #fff; }
+.case-tab[aria-selected="true"] { background: var(--ink); box-shadow: none; color: #fff; }
 
-  .case-progress { inset: 0; height: auto; }
-  .case-progress i { background: rgb(255 255 255 / 0.16); }
+.case-progress { inset: 0; height: auto; }
+.case-progress i { background: rgb(255 255 255 / 0.16); }
 
-  .case-note {
-    display: block;
-    min-height: 3em;
-    margin: 20px 0;
-    color: var(--ink-soft);
-    font-size: 1.0625rem;
-    line-height: 1.5;
-  }
+.case-note {
+  display: block;
+  max-width: 44rem;
+  min-height: 3em;
+  margin: 20px auto;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 1.0625rem;
+  line-height: 1.5;
 }
 
 @media (max-width: 560px) {

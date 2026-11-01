@@ -7,7 +7,7 @@ import './stage.css';
 <div
   class="stage"
   role="img"
-  aria-label="Datalekt’s Live Table view of a hotel terrace restaurant. Table 7 is reserved for Ananya Rao at 7:30 pm; her guest profile shows her room from Oracle Opera and her last bill from Infrasys, and an automated WhatsApp message has confirmed her table."
+  aria-label="Datalekt’s Live Table view of a hotel terrace restaurant. A table is reserved for Ananya Rao at 7:30 pm; her guest profile shows her room from Oracle Opera and her last bill from Infrasys, and an automated WhatsApp message confirms it. The view then moves on to the next table booking."
 >
   <div class="stage-field"></div>
 
@@ -108,8 +108,8 @@ import './stage.css';
           Mehta, 8:00
         </text>
       </g>
-      <!-- T3 free -->
-      <g class="free">
+      <!-- T3 free, can be booked -->
+      <g class="free bookable" data-table="t3">
         <circle class="chair" cx="300" cy="62" r="6.5" />
         <circle class="chair" cx="300" cy="128" r="6.5" />
         <circle class="chair" cx="267" cy="95" r="6.5" />
@@ -117,6 +117,9 @@ import './stage.css';
         <circle class="table" cx="300" cy="95" r="21" />
         <text class="t-label" x="300" y="95">
           T3
+        </text>
+        <text class="t-name t-name-strong" x="300" y="156">
+          Iyer, 9:00
         </text>
       </g>
       <!-- T4 seated, long table -->
@@ -146,10 +149,10 @@ import './stage.css';
           Kapoor, 7:15
         </text>
       </g>
-      <!-- T7 reserved, selected -->
-      <circle class="t7-ping" cx="360" cy="215" r="44" fill="none" stroke="#45bbce" stroke-width="2" />
+      <!-- T7 reserved, selected; the ring and ping move to whichever table is booked -->
+      <circle class="book-ping" cx="360" cy="215" r="44" fill="none" stroke="#45bbce" stroke-width="2" />
       <circle
-        class="t7-ring"
+        class="book-ring"
         cx="360"
         cy="215"
         r="44"
@@ -158,7 +161,7 @@ import './stage.css';
         stroke="#45bbce"
         stroke-width="2.5"
       />
-      <g class="reserved t7">
+      <g class="reserved bookable" data-table="t7">
         <circle class="chair" cx="360" cy="182" r="6.5" />
         <circle class="chair" cx="360" cy="248" r="6.5" />
         <circle class="chair" cx="327" cy="215" r="6.5" />
@@ -195,13 +198,16 @@ import './stage.css';
           T12
         </text>
       </g>
-      <!-- T8 free -->
-      <g class="free">
+      <!-- T8 free, can be booked -->
+      <g class="free bookable" data-table="t8">
         <circle class="chair" cx="221" cy="325" r="6.5" />
         <circle class="chair" cx="279" cy="325" r="6.5" />
         <circle class="table" cx="250" cy="325" r="17" />
         <text class="t-label" x="250" y="325">
           T8
+        </text>
+        <text class="t-name t-name-strong" x="250" y="361">
+          Shah, 8:15
         </text>
       </g>
       <!-- T13 free -->
@@ -277,7 +283,7 @@ import './stage.css';
     </div>
   </div>
 
-  <!-- Link from table 7 to its guest -->
+  <!-- Link from the booked table to its guest -->
   <svg class="stage-link" viewBox="0 0 800 620" aria-hidden="true">
     <defs>
       <mask id="link-mask-wide" maskUnits="userSpaceOnUse" x="0" y="0" width="800" height="620">
@@ -303,6 +309,7 @@ import './stage.css';
     </defs>
     <g class="link-wide">
       <path
+        class="link-line"
         d="M456 320 H420 V372 H304"
         fill="none"
         stroke="#45bbce"
@@ -314,6 +321,7 @@ import './stage.css';
     </g>
     <g class="link-narrow">
       <path
+        class="link-line"
         d="M416 320 H382 V374 H304"
         fill="none"
         stroke="#45bbce"
@@ -328,12 +336,12 @@ import './stage.css';
   <!-- Guest profile -->
   <div class="guest-card">
     <div class="guest-head">
-      <span class="guest-avatar">AR</span>
+      <span class="guest-avatar" data-g="initials">AR</span>
       <div>
-        <p class="guest-name">Ananya Rao</p>
-        <p class="guest-sub">Returning guest, 6th visit</p>
+        <p class="guest-name" data-g="name">Ananya Rao</p>
+        <p class="guest-sub" data-g="sub">Returning guest, 6th visit</p>
       </div>
-      <span class="guest-status">In-house</span>
+      <span class="guest-status" data-g="status">In-house</span>
     </div>
     <ul class="guest-facts">
       <li>
@@ -341,7 +349,7 @@ import './stage.css';
           <path d="M2.5 15V5M2.5 12h15v3M17.5 12V9.5a2 2 0 0 0-2-2H9v4.5" />
           <circle cx="5.8" cy="9.5" r="1.6" />
         </svg>
-        <span>Room 1204, checks out Monday</span>
+        <span data-g="room">Room 1204, checks out Monday</span>
         <em>Opera</em>
       </li>
       <li>
@@ -352,7 +360,7 @@ import './stage.css';
           <circle cx="3.2" cy="10" r="1.3" />
           <circle cx="16.8" cy="10" r="1.3" />
         </svg>
-        <span>Table 7, 7:30 pm, 4 guests</span>
+        <span data-g="table">Table 7, 7:30 pm, 4 guests</span>
         <em>Datalekt</em>
       </li>
       <li>
@@ -360,11 +368,11 @@ import './stage.css';
           <path d="M5 2.5h10v15l-2-1.3-1.5 1.3-1.5-1.3-1.5 1.3L7 16.2l-2 1.3z" />
           <path d="M8 7h4M8 10.5h4" />
         </svg>
-        <span>Last visit 12 Oct, ₹14,800</span>
+        <span data-g="bill">Last visit 12 Oct, ₹14,800</span>
         <em>Infrasys</em>
       </li>
     </ul>
-    <div class="guest-tags">
+    <div class="guest-tags" data-g="tags">
       <span>Window seat</span>
       <span>No shellfish</span>
       <span>Anniversary 14 Nov</span>
@@ -382,8 +390,10 @@ import './stage.css';
     </div>
     <div class="wa-chat">
       <p class="wa-bubble wa-out wa-confirm">
-        Hi Ananya, your table for 4 on the Terrace is confirmed for 7:30 pm tonight. We’ve kept your usual
-        window seat.
+        <span data-g="wa-text">
+          Hi Ananya, your table for 4 on the Terrace is confirmed for 7:30 pm tonight. We’ve kept your usual
+          window seat.
+        </span>
         <span class="wa-meta">
           6:02 pm
           <svg class="wa-ticks" viewBox="0 0 16 10">
@@ -399,7 +409,7 @@ import './stage.css';
           <i></i>
         </p>
         <p class="wa-bubble wa-in wa-reply">
-          Lovely, thank you! See you then.
+          <span data-g="wa-reply">Lovely, thank you! See you then.</span>
           <span class="wa-meta">6:04 pm</span>
         </p>
       </div>

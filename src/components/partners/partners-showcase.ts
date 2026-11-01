@@ -12,8 +12,8 @@ interface Hotel {
   image: string;
 }
 
-const holdTime = 4200; // ms a hotel stays before the next reveal
-const revealTime = 1700; // ms for the ripple to cross the photo
+const holdTime = 2200; // ms a hotel stays before the next reveal
+const revealTime = 1100; // ms for the ripple to cross the photo
 const pushIn = 0.05; // how far the photo slowly zooms while shown
 const crop = 0.09; // trims the white corners baked into the photographs
 const spacing = 15; // dot grid, CSS px

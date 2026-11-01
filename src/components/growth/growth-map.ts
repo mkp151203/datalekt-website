@@ -1,9 +1,9 @@
 // Empowering growth: India as a fine dot grid (data/india-map.json, built by
 // tools/build-india-map.py) with the partner cities from the list beside it.
 // The map data loads only when the section nears the screen. On first view
-// the dots spread out from the first city, then the cities light up one by
-// one, each linked to the last. A ripple runs through the dots from the
-// active city.
+// the dots spread out from the first city, then the cities light up one at a
+// time in a loop, each showing its name and hotel count while active. A
+// ripple runs through the dots from the active city.
 import { prefersReducedMotion } from '../../scripts/lib/motion';
 import { createTimeline } from '../../scripts/lib/timeline';
 
@@ -29,7 +29,6 @@ interface MapCity {
   state: string;
   side: string;
   pin?: HTMLElement;
-  arc?: SVGPathElement;
 }
 
 interface MapDot {
@@ -71,11 +70,19 @@ function buildMap(section: HTMLElement, map: HTMLElement, data: IndiaMap): void 
   const canvas = map.querySelector<HTMLCanvasElement>('.growth-dots');
   const ctx = canvas?.getContext('2d');
   const statesGroup = map.querySelector('.growth-states');
-  const arcsGroup = map.querySelector('.growth-arcs');
   const pinsLayer = map.querySelector('.growth-pins');
-  if (!canvas || !ctx || !statesGroup || !arcsGroup || !pinsLayer) return;
+  if (!canvas || !ctx || !statesGroup || !pinsLayer) return;
 
-  const buttons = [...section.querySelectorAll<HTMLElement>('.growth-city')];
+  const currentName = section.querySelector<HTMLElement>('[data-current-name]');
+  const currentCount = section.querySelector<HTMLElement>('[data-current-count]')!;
+  const currentHotels = section.querySelector<HTMLElement>('[data-current-hotels]')!;
+  const modal = document.querySelector<HTMLDialogElement>('.growth-modal');
+  section.querySelector('[data-open-all]')?.addEventListener('click', () => modal?.showModal());
+  modal?.querySelector('[data-close-all]')?.addEventListener('click', () => modal.close());
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) modal.close(); // backdrop
+  });
+  const buttons = [...document.querySelectorAll<HTMLElement>('.growth-city')];
   const reduce = prefersReducedMotion();
   const { width: W, height: H, spacing: S, rowHeight: RH, projection: P } = data;
 
@@ -150,25 +157,6 @@ function buildMap(section: HTMLElement, map: HTMLElement, data: IndiaMap): void 
     city.pin = pin;
   });
 
-  // Arcs from each city to the next, bowed to the left of travel
-  cities.forEach((city, i) => {
-    if (!i) return;
-    const from = cities[i - 1];
-    const dx = city.x - from.x;
-    const dy = city.y - from.y;
-    const bow = 0.24;
-    const cx = (from.x + city.x) / 2 + dy * bow;
-    const cy = (from.y + city.y) / 2 - dx * bow;
-    const path = document.createElementNS(NS, 'path');
-    path.setAttribute('d', `M${from.x} ${from.y}Q${cx} ${cy} ${city.x} ${city.y}`);
-    path.setAttribute('pathLength', '1');
-    arcsGroup.append(path);
-    city.arc = path;
-  });
-  const packet = document.createElementNS(NS, 'circle');
-  packet.setAttribute('r', '5');
-  arcsGroup.append(packet);
-
   // Canvas: the resting dots are drawn once to an offscreen layer
   const base = document.createElement('canvas');
   const baseCtx = base.getContext('2d')!;
@@ -211,7 +199,6 @@ function buildMap(section: HTMLElement, map: HTMLElement, data: IndiaMap): void 
   // Animation state
   let introStart: number | null = null;
   let ripple: { x: number; y: number; start: number } | null = null;
-  let flight: { path: SVGPathElement; start: number } | null = null;
   let frame = 0;
 
   function paint(now: number): boolean {
@@ -237,7 +224,7 @@ function buildMap(section: HTMLElement, map: HTMLElement, data: IndiaMap): void 
       if (life <= 0) {
         ripple = null;
       } else if (radius < 0) {
-        busy = true; // waiting for the arc to land
+        busy = true;
       } else {
         busy = true;
         const size = dotRadius();
@@ -256,17 +243,6 @@ function buildMap(section: HTMLElement, map: HTMLElement, data: IndiaMap): void 
       }
     }
 
-    if (flight) {
-      const t = Math.min((now - flight.start) / 1000, 1);
-      const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
-      const length = flight.path.getTotalLength();
-      const point = flight.path.getPointAtLength(eased * length);
-      packet.setAttribute('cx', String(point.x));
-      packet.setAttribute('cy', String(point.y));
-      packet.style.opacity = t < 1 ? '1' : '0';
-      if (t < 1) busy = true;
-      else flight = null;
-    }
     return busy;
   }
 
@@ -279,30 +255,24 @@ function buildMap(section: HTMLElement, map: HTMLElement, data: IndiaMap): void 
 
   // Cities
   let active = -1;
-  function activate(i: number, { arc = false } = {}) {
+  function activate(i: number) {
     active = i;
     cities.forEach((city, j) => {
       city.pin?.classList.toggle('is-active', j === i);
       city.button.setAttribute('aria-pressed', String(j === i));
     });
     const city = cities[i];
-    city.pin?.classList.add('is-in');
-    if (reduce) return;
-    if (arc && city.arc) {
-      city.arc.classList.add('is-drawn');
-      flight = { path: city.arc, start: performance.now() };
+    if (currentName) {
+      currentName.textContent = city.name;
+      currentCount.textContent = `${city.count} ${city.count === '1' ? 'hotel' : 'hotels'}`;
+      currentHotels.textContent = city.button.querySelector('.growth-city-hotels')?.textContent ?? '';
     }
-    ripple = { x: city.x, y: city.y, start: performance.now() + (arc && city.arc ? 700 : 0) };
+    if (reduce) return;
+    ripple = { x: city.x, y: city.y, start: performance.now() };
     wake();
   }
 
   const timeline = createTimeline();
-  const showWholeNetwork = () =>
-    cities.forEach((city) => {
-      city.pin?.classList.add('is-in');
-      city.arc?.classList.add('is-drawn');
-    });
-
   function cycle(from: number) {
     timeline.clear();
     timeline.at(cycleMs, () => {
@@ -316,17 +286,19 @@ function buildMap(section: HTMLElement, map: HTMLElement, data: IndiaMap): void 
     started = true;
     introStart = performance.now();
     wake();
-    // First pass: each city joins the network in turn
-    cities.forEach((_, i) => timeline.at(introMs * 0.6 + i * stepMs, () => activate(i, { arc: true })));
-    timeline.at(introMs * 0.6 + (cities.length - 1) * stepMs, () => cycle(cities.length - 1));
+    // Once the dots have spread, the cities light up one at a time, in a loop
+    timeline.at(introMs * 0.6, () => {
+      cities.forEach((city) => city.pin?.classList.add('is-in'));
+      activate(0);
+      cycle(0);
+    });
   }
 
   buttons.forEach((button, i) =>
     button.addEventListener('click', () => {
+      modal?.close();
       if (!started) return;
-      // Mid first pass, finish building the network at once
       timeline.clear();
-      showWholeNetwork();
       activate(i);
       if (!reduce) cycle(i);
     }),
@@ -337,7 +309,7 @@ function buildMap(section: HTMLElement, map: HTMLElement, data: IndiaMap): void 
   if (reduce) {
     introStart = -Infinity;
     started = true;
-    showWholeNetwork();
+    cities.forEach((city) => city.pin?.classList.add('is-in'));
     activate(0);
     return;
   }
@@ -348,10 +320,8 @@ function buildMap(section: HTMLElement, map: HTMLElement, data: IndiaMap): void 
         if (!started) start();
         else if (!timeline.size) cycle(active);
       } else if (started && timeline.size) {
-        // Out of view, stop moving between cities; the first pass, if still
-        // running, finishes building the network at once
+        // Out of view, stop moving between cities
         timeline.clear();
-        showWholeNetwork();
       }
     },
     { threshold: 0.3 },

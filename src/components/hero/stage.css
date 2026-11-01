@@ -395,20 +395,21 @@
 /* Reservation sequence. The markup's resting state is the finished
    picture; .animated hides each part until its step class arrives. */
 
-.stage.animated .t7 .table,
-.stage.animated .t7 .chair,
-.stage.animated .t7 .t-label { transition: fill 0.5s ease, stroke 0.5s ease; }
+.stage.animated .bookable .table,
+.stage.animated .bookable .chair,
+.stage.animated .bookable .t-label { transition: fill 0.5s ease, stroke 0.5s ease; }
 
-.stage.animated .t7-ring,
-.stage.animated .t7-ping {
+.stage.animated .book-ring,
+.stage.animated .book-ping {
   transform-box: fill-box;
   transform-origin: center;
 }
 
-.stage.animated .t7-ring,
-.stage.animated .t7 .t-name,
+.stage.animated .book-ring,
+.stage.animated .bookable .t-name,
 .stage.animated .link-end,
 .stage.animated .guest-card,
+.stage.animated .wa-card,
 .stage.animated .auto-chip,
 .stage.animated .wa-confirm,
 .stage.animated .wa-reply,
@@ -426,21 +427,30 @@
 
 .stage.animated .wa-ticks path { transition: stroke 0.3s ease, opacity 0.3s ease; }
 
-.t7-ping { opacity: 0; }
+.book-ping { opacity: 0; }
 
-.stage.animated.show-table .t7-ping { animation: table-ping 1.1s ease-out 1; }
+.stage.animated.show-table .book-ping { animation: table-ping 1.1s ease-out 1; }
 
 @keyframes table-ping {
   from { opacity: 0.9; transform: scale(0.85); }
   to   { opacity: 0;   transform: scale(1.6); }
 }
 
-/* Table 7 before it is booked */
-.stage.animated:not(.show-table) .t7 .table { fill: var(--surface); stroke: #c3d6e2; }
-.stage.animated:not(.show-table) .t7 .chair { stroke: #c3d6e2; }
-.stage.animated:not(.show-table) .t7 .t-label { fill: #7c92a3; }
-.stage.animated:not(.show-table) .t7 .t-name { opacity: 0; }
-.stage.animated:not(.show-table) .t7-ring { opacity: 0; transform: scale(0.7); }
+/* A bookable table is free until the sequence books it */
+.stage.animated .bookable .table { fill: var(--surface); stroke: #c3d6e2; }
+.stage.animated .bookable .chair { stroke: #c3d6e2; }
+.stage.animated .bookable .t-label { fill: #7c92a3; }
+.stage.animated .bookable .t-name { opacity: 0; }
+.stage.animated .book-ring { opacity: 0; transform: scale(0.7); }
+
+.stage.animated .bookable.is-booked .table { fill: var(--blue); stroke: var(--blue); }
+.stage.animated .bookable.is-booked .chair { stroke: #8fbbdc; }
+.stage.animated .bookable.is-booked .t-label { fill: var(--surface); }
+.stage.animated .bookable.is-booked .t-name { opacity: 1; }
+.stage.animated.show-table .book-ring { opacity: 1; transform: none; }
+
+/* Free tables that are not the one on show hide their booking name */
+.floor .bookable:not(.reserved) .t-name { opacity: 0; }
 
 .stage.animated:not(.show-link) .link-reveal { stroke-dashoffset: 1; }
 .stage.animated:not(.show-link) .link-end { opacity: 0; }
@@ -448,6 +458,12 @@
 .stage.animated:not(.show-guest) .guest-card {
   opacity: 0;
   transform: translateY(1.6em);
+}
+
+.stage.animated:not(.show-wa) .wa-card {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(1.6em) scale(0.97);
 }
 
 .stage.animated:not(.show-message) .wa-confirm,

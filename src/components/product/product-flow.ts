@@ -77,6 +77,9 @@ export function initProductFlow(section: HTMLElement): void {
   let W = 1100;
   let H = 640;
   let stacked: boolean | null = null;
+  // The ripple canvas reaches past the scene to the edges of the section
+  let ex = 0;
+  let maxR = 1300;
   const origin = { x: 565, y: 440 };
   const spacing = 20;
   let dots: { x: number; y: number }[] = [];
@@ -84,22 +87,28 @@ export function initProductFlow(section: HTMLElement): void {
   // Side by side when there is room, a pyramid on phones
   function layout() {
     const stack = wrap.clientWidth < 760;
-    if (stack !== stacked) {
+    const w = stack ? 720 : 1100;
+    const k = Math.min(1, wrap.clientWidth / w);
+    const extra = Math.ceil(Math.max(0, (section.clientWidth / k - w) / 2));
+    if (stack !== stacked || extra !== ex) {
       stacked = stack;
+      ex = extra;
       scene.classList.toggle('is-stack', stack);
-      W = stack ? 720 : 1100;
+      W = w;
       H = stack ? 860 : 640;
       wrap.style.setProperty('--h', `${H}px`);
+      canvas.style.left = `${-ex}px`;
+      canvas.style.width = `${W + ex * 2}px`;
       const ratio = Math.min(devicePixelRatio || 1, 2);
-      canvas.width = W * ratio;
+      canvas.width = (W + ex * 2) * ratio;
       canvas.height = H * ratio;
-      ctx!.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx!.setTransform(ratio, 0, 0, ratio, ex * ratio, 0);
       dots = [];
       for (let y = 10, row = 0; y < H; y += spacing, row++) {
-        for (let x = row % 2 ? spacing / 2 : 0; x < W; x += spacing) dots.push({ x, y });
+        for (let x = (row % 2 ? spacing / 2 : 0) - ex; x < W + ex; x += spacing) dots.push({ x, y });
       }
     }
-    wrap.style.setProperty('--s', Math.min(1, wrap.clientWidth / W).toFixed(4));
+    wrap.style.setProperty('--s', k.toFixed(4));
   }
 
   const activeLinks = () => [...scene.querySelectorAll(stacked ? '.links-stack path' : '.links-wide path')];
@@ -116,12 +125,14 @@ export function initProductFlow(section: HTMLElement): void {
   const timeline = createTimeline();
 
   function drawRipple(now: number) {
-    ctx!.clearRect(0, 0, W, H);
+    ctx!.clearRect(-ex, 0, W + ex * 2, H);
     const t = (now - rippleStart) / 1000;
-    if (rippleStart < 0 || t > 2.8) return false;
-    const radius = t * 460;
+    const dur = 3.2;
+    if (rippleStart < 0 || t > dur) return false;
+    maxR = Math.hypot(Math.max(origin.x + ex, W + ex - origin.x), Math.max(origin.y, H - origin.y)) + 140;
+    const radius = (t / dur) * maxR;
     const band = 70;
-    const fade = Math.max(0, 1 - t / 2.8);
+    const fade = Math.max(0, 1 - 0.7 * (t / dur));
     for (const d of dots) {
       const dist = Math.hypot(d.x - origin.x, d.y - origin.y);
       let e = 0;
@@ -133,8 +144,8 @@ export function initProductFlow(section: HTMLElement): void {
       e *= fade;
       if (e < 0.03) continue;
       ctx!.beginPath();
-      ctx!.arc(d.x, d.y, 1.2 + e * 3, 0, Math.PI * 2);
-      ctx!.fillStyle = `rgba(17, 107, 174, ${Math.min(e, 1) * 0.55})`;
+      ctx!.arc(d.x, d.y, 1.3 + e * 3.4, 0, Math.PI * 2);
+      ctx!.fillStyle = `rgba(17, 107, 174, ${Math.sqrt(Math.min(e, 1)) * 0.95})`;
       ctx!.fill();
     }
     return true;

@@ -35,9 +35,9 @@ interface Rect {
 // Grid and dot appearance
 const spacingX = 46;
 const spacingY = 23;
-const minRadius = 1.1;
-const maxExtraRadius = 2.8;
-const maxAlpha = 0.55;
+const minRadius = 1.3;
+const maxExtraRadius = 3.4;
+const maxAlpha = 0.95;
 const maxDrops = 14;
 const quietPadding = 6; // fully clear this close to text
 const quietFeather = 14; // then fade back in over this distance
@@ -61,6 +61,10 @@ function ripple(canvas: HTMLCanvasElement): void {
   let height = 0;
   let frame = 0;
   let lastMoveDrop = 0;
+  let lastMoveX = -1e4;
+  let lastMoveY = -1e4;
+  const MOVE_COOLDOWN = 450; // ms between hover waves
+  const MOVE_MIN_DISTANCE = 36; // px the pointer must travel to start another
 
   // Rendered boxes of the section's text, relative to the canvas
   function quietRects(): Rect[] {
@@ -167,7 +171,7 @@ function ripple(canvas: HTMLCanvasElement): void {
 
       ctx!.beginPath();
       ctx!.arc(dot.x, dot.y, minRadius + waveEffect * maxExtraRadius, 0, Math.PI * 2);
-      ctx!.fillStyle = `rgba(${ink}, ${Math.min(waveEffect, 1) * maxAlpha})`;
+      ctx!.fillStyle = `rgba(${ink}, ${Math.sqrt(Math.min(waveEffect, 1)) * maxAlpha})`;
       ctx!.fill();
     }
   }
@@ -187,11 +191,15 @@ function ripple(canvas: HTMLCanvasElement): void {
   }
 
   host.addEventListener('pointermove', (event) => {
+    // Wait for the last wave to settle and ignore tiny movements
     const now = performance.now();
-    if (now - lastMoveDrop > 180) {
-      createDrop(...pointFrom(event), 0.7);
-      lastMoveDrop = now;
-    }
+    if (now - lastMoveDrop < MOVE_COOLDOWN) return;
+    const [x, y] = pointFrom(event);
+    if (Math.hypot(x - lastMoveX, y - lastMoveY) < MOVE_MIN_DISTANCE) return;
+    createDrop(x, y, 0.7);
+    lastMoveDrop = now;
+    lastMoveX = x;
+    lastMoveY = y;
   });
   host.addEventListener('pointerdown', (event) => createDrop(...pointFrom(event), 1.2));
 
