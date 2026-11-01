@@ -13,8 +13,8 @@ dist/
 .vscode/
 .idea/
 
-# Claude Code local settings
-.claude/settings.local.json
+# Claude Code local files
+.claude/
 
 # Test output
 test-results/
