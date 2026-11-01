@@ -62,14 +62,23 @@ export function initScene(root: HTMLElement): void {
     const s = scene.getBoundingClientRect();
     const b = target.getBoundingClientRect();
     const k = s.width / W;
-    scene.style.setProperty(`--${prop}x`, `${(b.left + b.width / 2 - s.left) / k - (prop === 'c' ? 4 : 0)}px`);
+    scene.style.setProperty(
+      `--${prop}x`,
+      `${(b.left + b.width / 2 - s.left) / k - (prop === 'c' ? 4 : 0)}px`,
+    );
     scene.style.setProperty(`--${prop}y`, `${(b.top + b.height / 2 - s.top) / k - (prop === 'c' ? 2 : 0)}px`);
   }
 
   function click(target: Element, at: At, ms: number) {
     at(ms, () => pointAt(target, 'c'));
-    at(ms + 700, () => { cursor.classList.add('is-click'); target.classList.add('is-pressed'); });
-    at(ms + 830, () => { cursor.classList.remove('is-click'); target.classList.remove('is-pressed'); });
+    at(ms + 700, () => {
+      cursor.classList.add('is-click');
+      target.classList.add('is-pressed');
+    });
+    at(ms + 830, () => {
+      cursor.classList.remove('is-click');
+      target.classList.remove('is-pressed');
+    });
     return ms + 830;
   }
 
@@ -110,16 +119,28 @@ export function initScene(root: HTMLElement): void {
 
     // 1. Staff add a New Year's Eve poster
     let t = click(addBtn, at, 900);
-    at(t, () => { thumbNew.classList.add('is-in'); publish.classList.remove('is-idle'); chips[0].classList.add('is-in'); });
+    at(t, () => {
+      thumbNew.classList.add('is-in');
+      publish.classList.remove('is-idle');
+      chips[0].classList.add('is-in');
+    });
 
     // 2. And a New Year's Eve offer for UKIYO
     t = click(input, at, t + 300);
-    at(t, () => { input.classList.add('is-focus'); typed.innerHTML = '<i class="w-caret"></i>'; });
-    [...offerText].forEach((_, i) => at(t + 100 + i * 38, () => {
-      typed.innerHTML = `${offerText.slice(0, i + 1)}<i class="w-caret"></i>`;
-    }));
+    at(t, () => {
+      input.classList.add('is-focus');
+      typed.innerHTML = '<i class="w-caret"></i>';
+    });
+    [...offerText].forEach((_, i) =>
+      at(t + 100 + i * 38, () => {
+        typed.innerHTML = `${offerText.slice(0, i + 1)}<i class="w-caret"></i>`;
+      }),
+    );
     t += 100 + offerText.length * 38 + 200;
-    at(t, () => { input.classList.remove('is-focus'); typed.textContent = offerText; });
+    at(t, () => {
+      input.classList.remove('is-focus');
+      typed.textContent = offerText;
+    });
 
     // 3. One click publishes both to the guest's page
     t = click(publish, at, t + 200);
@@ -134,13 +155,29 @@ export function initScene(root: HTMLElement): void {
     const packet = $(stacked ? '.w-packet-stack' : '.w-packet-wide');
     at(t + 100, () => link.classList.add('is-drawn'));
     at(t + 300, () => packet.classList.add('is-moving'));
-    at(t + 1000, () => { posterNew.classList.remove('is-hidden'); dots[3].classList.remove('is-hidden'); slideTo(3); });
-    at(t + 2300, () => { page.style.transform = 'translateY(-266px)'; });
+    at(t + 1000, () => {
+      posterNew.classList.remove('is-hidden');
+      dots[3].classList.remove('is-hidden');
+      slideTo(3);
+    });
+    at(t + 2300, () => {
+      page.style.transform = 'translateY(-266px)';
+    });
     at(t + 3200, () => offerNew.classList.add('is-in'));
 
     // 4. The guest reserves straight from the page
-    at(t + 4400, () => { pointAt(reserve, 't'); tap.classList.add('is-down'); reserve.classList.add('is-pressed'); });
-    at(t + 4650, () => { tap.classList.remove('is-down'); reserve.classList.remove('is-pressed'); dim.classList.add('is-on'); sheet.classList.add('is-open'); chips[2].classList.add('is-in'); });
+    at(t + 4400, () => {
+      pointAt(reserve, 't');
+      tap.classList.add('is-down');
+      reserve.classList.add('is-pressed');
+    });
+    at(t + 4650, () => {
+      tap.classList.remove('is-down');
+      reserve.classList.remove('is-pressed');
+      dim.classList.add('is-on');
+      sheet.classList.add('is-open');
+      chips[2].classList.add('is-in');
+    });
 
     ucEmbed.loop(t + 8200);
 
@@ -152,11 +189,19 @@ export function initScene(root: HTMLElement): void {
   }
 
   reset();
-  ucEmbed.register(() => { idle = false; play(); });
+  ucEmbed.register(() => {
+    idle = false;
+    play();
+  });
 
-  new IntersectionObserver(([e]) => {
-    visible = e.isIntersecting;
-    if (visible && idle && !reduce) { idle = false; play(); }
-  }, { threshold: 0.35 }).observe(wrap);
-
+  new IntersectionObserver(
+    ([e]) => {
+      visible = e.isIntersecting;
+      if (visible && idle && !reduce) {
+        idle = false;
+        play();
+      }
+    },
+    { threshold: 0.35 },
+  ).observe(wrap);
 }

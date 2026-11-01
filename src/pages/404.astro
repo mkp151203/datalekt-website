@@ -1,0 +1,25 @@
+---
+// Not found: a short message and the ways back in
+import PageLayout from '../layouts/PageLayout.astro';
+import { links } from '../data/site';
+import { mainNav } from '../data/navigation';
+---
+
+<PageLayout title="Page not found" description="This page doesn’t exist." noindex>
+  <p>The page you were looking for isn’t here. It may have moved, or the link may be mistyped.</p>
+  <p>
+    <a class="button button-primary" href="/">
+      Go to the home page
+    </a>
+  </p>
+  <p>
+    Or jump to{' '}
+    {mainNav.map((link, i) => (
+      <>
+        {i > 0 && (i === mainNav.length - 1 ? ' or ' : ', ')}
+        <a href={link.href}>{link.label.toLowerCase()}</a>
+      </>
+    ))}
+    , or <a href={links.demo}>schedule a demo</a>.
+  </p>
+</PageLayout>

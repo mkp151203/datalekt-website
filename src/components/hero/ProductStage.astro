@@ -4,166 +4,276 @@
 import './stage.css';
 ---
 
-<div class="stage" role="img" aria-label="Datalekt’s Live Table view of a hotel terrace restaurant. Table 7 is reserved for Ananya Rao at 7:30 pm; her guest profile shows her room from Oracle Opera and her last bill from Infrasys, and an automated WhatsApp message has confirmed her table.">
+<div
+  class="stage"
+  role="img"
+  aria-label="Datalekt’s Live Table view of a hotel terrace restaurant. Table 7 is reserved for Ananya Rao at 7:30 pm; her guest profile shows her room from Oracle Opera and her last bill from Infrasys, and an automated WhatsApp message has confirmed her table."
+>
   <div class="stage-field"></div>
 
   <!-- Live Table window -->
   <div class="app">
     <div class="app-rail">
-      <img class="app-mark" src="/brand/datalekt-mark.svg" alt="">
+      <img class="app-mark" src="/brand/datalekt-mark.svg" alt="" />
       <span class="rail-icon">
-        <svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="11" y="3" width="6" height="6" rx="1.5"/><rect x="3" y="11" width="6" height="6" rx="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5"/></svg>
+        <svg viewBox="0 0 20 20">
+          <rect x="3" y="3" width="6" height="6" rx="1.5" />
+          <rect x="11" y="3" width="6" height="6" rx="1.5" />
+          <rect x="3" y="11" width="6" height="6" rx="1.5" />
+          <rect x="11" y="11" width="6" height="6" rx="1.5" />
+        </svg>
       </span>
       <span class="rail-icon is-active">
-        <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="3.2" r="1.3"/><circle cx="10" cy="16.8" r="1.3"/><circle cx="3.2" cy="10" r="1.3"/><circle cx="16.8" cy="10" r="1.3"/></svg>
+        <svg viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="3.6" />
+          <circle cx="10" cy="3.2" r="1.3" />
+          <circle cx="10" cy="16.8" r="1.3" />
+          <circle cx="3.2" cy="10" r="1.3" />
+          <circle cx="16.8" cy="10" r="1.3" />
+        </svg>
       </span>
       <span class="rail-icon">
-        <svg viewBox="0 0 20 20"><circle cx="7.5" cy="7" r="2.8"/><path d="M2.5 16.5c.6-2.8 2.6-4.3 5-4.3s4.4 1.5 5 4.3"/><circle cx="14" cy="7.8" r="2.2"/><path d="M14.6 12.3c1.6.3 2.6 1.6 3 3.7"/></svg>
+        <svg viewBox="0 0 20 20">
+          <circle cx="7.5" cy="7" r="2.8" />
+          <path d="M2.5 16.5c.6-2.8 2.6-4.3 5-4.3s4.4 1.5 5 4.3" />
+          <circle cx="14" cy="7.8" r="2.2" />
+          <path d="M14.6 12.3c1.6.3 2.6 1.6 3 3.7" />
+        </svg>
       </span>
       <span class="rail-icon">
-        <svg viewBox="0 0 20 20"><rect x="3" y="4.5" width="14" height="12.5" rx="2"/><path d="M3 8.5h14M7 2.8v3.4M13 2.8v3.4"/></svg>
+        <svg viewBox="0 0 20 20">
+          <rect x="3" y="4.5" width="14" height="12.5" rx="2" />
+          <path d="M3 8.5h14M7 2.8v3.4M13 2.8v3.4" />
+        </svg>
       </span>
       <span class="rail-icon">
-        <svg viewBox="0 0 20 20"><path d="M4 4.5h12v8.5H8.5L5 16v-3H4z"/><path d="M7.5 8.7h5"/></svg>
+        <svg viewBox="0 0 20 20">
+          <path d="M4 4.5h12v8.5H8.5L5 16v-3H4z" />
+          <path d="M7.5 8.7h5" />
+        </svg>
       </span>
     </div>
 
     <div class="app-bar">
       <span class="app-title">Live Table</span>
-      <span class="app-outlet">Terrace
-        <svg viewBox="0 0 12 12"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
+      <span class="app-outlet">
+        Terrace
+        <svg viewBox="0 0 12 12">
+          <path d="M2.5 4.5 6 8l3.5-3.5" />
+        </svg>
       </span>
-      <span class="app-covers">Tonight, <span class="covers-count">38</span> of 64 covers</span>
+      <span class="app-covers">
+        Tonight, <span class="covers-count">38</span> of 64 covers
+      </span>
     </div>
 
     <svg class="floor" viewBox="0 0 700 415" aria-hidden="true">
       <defs>
         <pattern id="floor-dots" width="20" height="20" patternUnits="userSpaceOnUse">
-          <circle cx="2" cy="2" r="1" fill="#d6e4ee"/>
+          <circle cx="2" cy="2" r="1" fill="#d6e4ee" />
         </pattern>
       </defs>
-      <rect width="700" height="415" fill="#f6fafc"/>
-      <rect width="700" height="415" fill="url(#floor-dots)"/>
+      <rect width="700" height="415" fill="#f6fafc" />
+      <rect width="700" height="415" fill="url(#floor-dots)" />
 
       <g fill="#c4dcea">
-        <rect x="24" y="14" width="112" height="5" rx="2.5"/>
-        <rect x="146" y="14" width="112" height="5" rx="2.5"/>
-        <rect x="268" y="14" width="112" height="5" rx="2.5"/>
-        <rect x="390" y="14" width="112" height="5" rx="2.5"/>
-        <rect x="512" y="14" width="112" height="5" rx="2.5"/>
+        <rect x="24" y="14" width="112" height="5" rx="2.5" />
+        <rect x="146" y="14" width="112" height="5" rx="2.5" />
+        <rect x="268" y="14" width="112" height="5" rx="2.5" />
+        <rect x="390" y="14" width="112" height="5" rx="2.5" />
+        <rect x="512" y="14" width="112" height="5" rx="2.5" />
       </g>
-      <text class="fp-note" x="24" y="40">Sea-facing windows</text>
+      <text class="fp-note" x="24" y="40">
+        Sea-facing windows
+      </text>
 
       <!-- T1 seated -->
       <g class="seated">
-        <circle class="chair" cx="51" cy="88" r="6.5"/><circle class="chair" cx="109" cy="88" r="6.5"/>
-        <circle class="table" cx="80" cy="88" r="17"/>
-        <text class="t-label" x="80" y="88">T1</text>
+        <circle class="chair" cx="51" cy="88" r="6.5" />
+        <circle class="chair" cx="109" cy="88" r="6.5" />
+        <circle class="table" cx="80" cy="88" r="17" />
+        <text class="t-label" x="80" y="88">
+          T1
+        </text>
       </g>
       <!-- T2 reserved -->
       <g class="reserved">
-        <circle class="chair" cx="151" cy="88" r="6.5"/><circle class="chair" cx="209" cy="88" r="6.5"/>
-        <circle class="table" cx="180" cy="88" r="17"/>
-        <text class="t-label" x="180" y="88">T2</text>
-        <text class="t-name" x="180" y="124">Mehta, 8:00</text>
+        <circle class="chair" cx="151" cy="88" r="6.5" />
+        <circle class="chair" cx="209" cy="88" r="6.5" />
+        <circle class="table" cx="180" cy="88" r="17" />
+        <text class="t-label" x="180" y="88">
+          T2
+        </text>
+        <text class="t-name" x="180" y="124">
+          Mehta, 8:00
+        </text>
       </g>
       <!-- T3 free -->
       <g class="free">
-        <circle class="chair" cx="300" cy="62" r="6.5"/><circle class="chair" cx="300" cy="128" r="6.5"/>
-        <circle class="chair" cx="267" cy="95" r="6.5"/><circle class="chair" cx="333" cy="95" r="6.5"/>
-        <circle class="table" cx="300" cy="95" r="21"/>
-        <text class="t-label" x="300" y="95">T3</text>
+        <circle class="chair" cx="300" cy="62" r="6.5" />
+        <circle class="chair" cx="300" cy="128" r="6.5" />
+        <circle class="chair" cx="267" cy="95" r="6.5" />
+        <circle class="chair" cx="333" cy="95" r="6.5" />
+        <circle class="table" cx="300" cy="95" r="21" />
+        <text class="t-label" x="300" y="95">
+          T3
+        </text>
       </g>
       <!-- T4 seated, long table -->
       <g class="seated">
-        <circle class="chair" cx="62" cy="162" r="6.5"/><circle class="chair" cx="95" cy="162" r="6.5"/><circle class="chair" cx="128" cy="162" r="6.5"/>
-        <circle class="chair" cx="62" cy="228" r="6.5"/><circle class="chair" cx="95" cy="228" r="6.5"/><circle class="chair" cx="128" cy="228" r="6.5"/>
-        <rect class="table" x="40" y="175" width="110" height="40" rx="8"/>
-        <text class="t-label" x="95" y="195">T4</text>
+        <circle class="chair" cx="62" cy="162" r="6.5" />
+        <circle class="chair" cx="95" cy="162" r="6.5" />
+        <circle class="chair" cx="128" cy="162" r="6.5" />
+        <circle class="chair" cx="62" cy="228" r="6.5" />
+        <circle class="chair" cx="95" cy="228" r="6.5" />
+        <circle class="chair" cx="128" cy="228" r="6.5" />
+        <rect class="table" x="40" y="175" width="110" height="40" rx="8" />
+        <text class="t-label" x="95" y="195">
+          T4
+        </text>
       </g>
       <!-- T5 arriving -->
       <g class="arriving">
-        <circle class="chair" cx="240" cy="167" r="6.5"/><circle class="chair" cx="240" cy="233" r="6.5"/>
-        <circle class="chair" cx="207" cy="200" r="6.5"/><circle class="chair" cx="273" cy="200" r="6.5"/>
-        <circle class="table" cx="240" cy="200" r="21"/>
-        <text class="t-label" x="240" y="200">T5</text>
-        <text class="t-name" x="240" y="256">Kapoor, 7:15</text>
+        <circle class="chair" cx="240" cy="167" r="6.5" />
+        <circle class="chair" cx="240" cy="233" r="6.5" />
+        <circle class="chair" cx="207" cy="200" r="6.5" />
+        <circle class="chair" cx="273" cy="200" r="6.5" />
+        <circle class="table" cx="240" cy="200" r="21" />
+        <text class="t-label" x="240" y="200">
+          T5
+        </text>
+        <text class="t-name" x="240" y="256">
+          Kapoor, 7:15
+        </text>
       </g>
       <!-- T7 reserved, selected -->
-      <circle class="t7-ping" cx="360" cy="215" r="44" fill="none" stroke="#45bbce" stroke-width="2"/>
-      <circle class="t7-ring" cx="360" cy="215" r="44" fill="#45bbce" fill-opacity=".14" stroke="#45bbce" stroke-width="2.5"/>
+      <circle class="t7-ping" cx="360" cy="215" r="44" fill="none" stroke="#45bbce" stroke-width="2" />
+      <circle
+        class="t7-ring"
+        cx="360"
+        cy="215"
+        r="44"
+        fill="#45bbce"
+        fill-opacity=".14"
+        stroke="#45bbce"
+        stroke-width="2.5"
+      />
       <g class="reserved t7">
-        <circle class="chair" cx="360" cy="182" r="6.5"/><circle class="chair" cx="360" cy="248" r="6.5"/>
-        <circle class="chair" cx="327" cy="215" r="6.5"/><circle class="chair" cx="393" cy="215" r="6.5"/>
-        <circle class="table" cx="360" cy="215" r="21"/>
-        <text class="t-label" x="360" y="215">T7</text>
-        <text class="t-name t-name-strong" x="360" y="276">Rao, 7:30</text>
+        <circle class="chair" cx="360" cy="182" r="6.5" />
+        <circle class="chair" cx="360" cy="248" r="6.5" />
+        <circle class="chair" cx="327" cy="215" r="6.5" />
+        <circle class="chair" cx="393" cy="215" r="6.5" />
+        <circle class="table" cx="360" cy="215" r="21" />
+        <text class="t-label" x="360" y="215">
+          T7
+        </text>
+        <text class="t-name t-name-strong" x="360" y="276">
+          Rao, 7:30
+        </text>
       </g>
       <!-- T6 seated, long table -->
       <g class="seated">
-        <circle class="chair" cx="462" cy="177" r="6.5"/><circle class="chair" cx="495" cy="177" r="6.5"/><circle class="chair" cx="528" cy="177" r="6.5"/>
-        <circle class="chair" cx="462" cy="243" r="6.5"/><circle class="chair" cx="495" cy="243" r="6.5"/><circle class="chair" cx="528" cy="243" r="6.5"/>
-        <rect class="table" x="440" y="190" width="110" height="40" rx="8"/>
-        <text class="t-label" x="495" y="210">T6</text>
+        <circle class="chair" cx="462" cy="177" r="6.5" />
+        <circle class="chair" cx="495" cy="177" r="6.5" />
+        <circle class="chair" cx="528" cy="177" r="6.5" />
+        <circle class="chair" cx="462" cy="243" r="6.5" />
+        <circle class="chair" cx="495" cy="243" r="6.5" />
+        <circle class="chair" cx="528" cy="243" r="6.5" />
+        <rect class="table" x="440" y="190" width="110" height="40" rx="8" />
+        <text class="t-label" x="495" y="210">
+          T6
+        </text>
       </g>
       <!-- T12 seated -->
       <g class="seated">
-        <circle class="chair" cx="95" cy="267" r="6.5"/><circle class="chair" cx="95" cy="333" r="6.5"/>
-        <circle class="chair" cx="62" cy="300" r="6.5"/><circle class="chair" cx="128" cy="300" r="6.5"/>
-        <circle class="table" cx="95" cy="300" r="21"/>
-        <text class="t-label" x="95" y="300">T12</text>
+        <circle class="chair" cx="95" cy="267" r="6.5" />
+        <circle class="chair" cx="95" cy="333" r="6.5" />
+        <circle class="chair" cx="62" cy="300" r="6.5" />
+        <circle class="chair" cx="128" cy="300" r="6.5" />
+        <circle class="table" cx="95" cy="300" r="21" />
+        <text class="t-label" x="95" y="300">
+          T12
+        </text>
       </g>
       <!-- T8 free -->
       <g class="free">
-        <circle class="chair" cx="221" cy="325" r="6.5"/><circle class="chair" cx="279" cy="325" r="6.5"/>
-        <circle class="table" cx="250" cy="325" r="17"/>
-        <text class="t-label" x="250" y="325">T8</text>
+        <circle class="chair" cx="221" cy="325" r="6.5" />
+        <circle class="chair" cx="279" cy="325" r="6.5" />
+        <circle class="table" cx="250" cy="325" r="17" />
+        <text class="t-label" x="250" y="325">
+          T8
+        </text>
       </g>
       <!-- T13 free -->
       <g class="free">
-        <circle class="chair" cx="161" cy="385" r="6.5"/><circle class="chair" cx="219" cy="385" r="6.5"/>
-        <circle class="table" cx="190" cy="385" r="17"/>
-        <text class="t-label" x="190" y="385">T13</text>
+        <circle class="chair" cx="161" cy="385" r="6.5" />
+        <circle class="chair" cx="219" cy="385" r="6.5" />
+        <circle class="table" cx="190" cy="385" r="17" />
+        <text class="t-label" x="190" y="385">
+          T13
+        </text>
       </g>
       <!-- T9 seated -->
       <g class="seated">
-        <circle class="chair" cx="350" cy="303" r="6.5"/><circle class="chair" cx="380" cy="303" r="6.5"/>
-        <circle class="chair" cx="350" cy="369" r="6.5"/><circle class="chair" cx="380" cy="369" r="6.5"/>
-        <rect class="table" x="330" y="316" width="70" height="40" rx="8"/>
-        <text class="t-label" x="365" y="336">T9</text>
+        <circle class="chair" cx="350" cy="303" r="6.5" />
+        <circle class="chair" cx="380" cy="303" r="6.5" />
+        <circle class="chair" cx="350" cy="369" r="6.5" />
+        <circle class="chair" cx="380" cy="369" r="6.5" />
+        <rect class="table" x="330" y="316" width="70" height="40" rx="8" />
+        <text class="t-label" x="365" y="336">
+          T9
+        </text>
       </g>
       <!-- T10 reserved -->
       <g class="reserved">
-        <circle class="chair" cx="470" cy="287" r="6.5"/><circle class="chair" cx="470" cy="353" r="6.5"/>
-        <circle class="chair" cx="437" cy="320" r="6.5"/><circle class="chair" cx="503" cy="320" r="6.5"/>
-        <circle class="table" cx="470" cy="320" r="21"/>
-        <text class="t-label" x="470" y="320">T10</text>
+        <circle class="chair" cx="470" cy="287" r="6.5" />
+        <circle class="chair" cx="470" cy="353" r="6.5" />
+        <circle class="chair" cx="437" cy="320" r="6.5" />
+        <circle class="chair" cx="503" cy="320" r="6.5" />
+        <circle class="table" cx="470" cy="320" r="21" />
+        <text class="t-label" x="470" y="320">
+          T10
+        </text>
       </g>
       <!-- T11 seated -->
       <g class="seated">
-        <circle class="chair" cx="565" cy="287" r="6.5"/><circle class="chair" cx="565" cy="353" r="6.5"/>
-        <circle class="chair" cx="532" cy="320" r="6.5"/><circle class="chair" cx="598" cy="320" r="6.5"/>
-        <circle class="table" cx="565" cy="320" r="21"/>
-        <text class="t-label" x="565" y="320">T11</text>
+        <circle class="chair" cx="565" cy="287" r="6.5" />
+        <circle class="chair" cx="565" cy="353" r="6.5" />
+        <circle class="chair" cx="532" cy="320" r="6.5" />
+        <circle class="chair" cx="598" cy="320" r="6.5" />
+        <circle class="table" cx="565" cy="320" r="21" />
+        <text class="t-label" x="565" y="320">
+          T11
+        </text>
       </g>
       <!-- Bar -->
-      <text class="fp-note" x="616" y="150">Bar</text>
-      <rect x="640" y="162" width="30" height="236" rx="7" fill="#dce8f0"/>
+      <text class="fp-note" x="616" y="150">
+        Bar
+      </text>
+      <rect x="640" y="162" width="30" height="236" rx="7" fill="#dce8f0" />
       <g>
-        <circle class="stool on" cx="624" cy="182" r="6"/>
-        <circle class="stool on" cx="624" cy="214" r="6"/>
-        <circle class="stool" cx="624" cy="246" r="6"/>
-        <circle class="stool on" cx="624" cy="278" r="6"/>
-        <circle class="stool" cx="624" cy="342" r="6"/>
-        <circle class="stool on" cx="624" cy="374" r="6"/>
+        <circle class="stool on" cx="624" cy="182" r="6" />
+        <circle class="stool on" cx="624" cy="214" r="6" />
+        <circle class="stool" cx="624" cy="246" r="6" />
+        <circle class="stool on" cx="624" cy="278" r="6" />
+        <circle class="stool" cx="624" cy="342" r="6" />
+        <circle class="stool on" cx="624" cy="374" r="6" />
       </g>
     </svg>
 
     <div class="app-legend">
-      <span><i class="dot dot-seated"></i>Seated</span>
-      <span><i class="dot dot-reserved"></i>Reserved</span>
-      <span><i class="dot dot-arriving"></i>Arriving</span>
-      <span><i class="dot dot-free"></i>Free</span>
+      <span>
+        <i class="dot dot-seated"></i>Seated
+      </span>
+      <span>
+        <i class="dot dot-reserved"></i>Reserved
+      </span>
+      <span>
+        <i class="dot dot-arriving"></i>Arriving
+      </span>
+      <span>
+        <i class="dot dot-free"></i>Free
+      </span>
     </div>
   </div>
 
@@ -171,19 +281,47 @@ import './stage.css';
   <svg class="stage-link" viewBox="0 0 800 620" aria-hidden="true">
     <defs>
       <mask id="link-mask-wide" maskUnits="userSpaceOnUse" x="0" y="0" width="800" height="620">
-        <path class="link-reveal" d="M456 320 H420 V372 H304" fill="none" stroke="#fff" stroke-width="8" pathLength="1"/>
+        <path
+          class="link-reveal"
+          d="M456 320 H420 V372 H304"
+          fill="none"
+          stroke="#fff"
+          stroke-width="8"
+          pathLength="1"
+        />
       </mask>
       <mask id="link-mask-narrow" maskUnits="userSpaceOnUse" x="0" y="0" width="800" height="620">
-        <path class="link-reveal" d="M416 320 H382 V374 H304" fill="none" stroke="#fff" stroke-width="8" pathLength="1"/>
+        <path
+          class="link-reveal"
+          d="M416 320 H382 V374 H304"
+          fill="none"
+          stroke="#fff"
+          stroke-width="8"
+          pathLength="1"
+        />
       </mask>
     </defs>
     <g class="link-wide">
-      <path d="M456 320 H420 V372 H304" fill="none" stroke="#45bbce" stroke-width="2" stroke-dasharray="5 5" mask="url(#link-mask-wide)"/>
-      <circle class="link-end" cx="304" cy="372" r="4.5" fill="#45bbce"/>
+      <path
+        d="M456 320 H420 V372 H304"
+        fill="none"
+        stroke="#45bbce"
+        stroke-width="2"
+        stroke-dasharray="5 5"
+        mask="url(#link-mask-wide)"
+      />
+      <circle class="link-end" cx="304" cy="372" r="4.5" fill="#45bbce" />
     </g>
     <g class="link-narrow">
-      <path d="M416 320 H382 V374 H304" fill="none" stroke="#45bbce" stroke-width="2" stroke-dasharray="5 5" mask="url(#link-mask-narrow)"/>
-      <circle class="link-end" cx="304" cy="374" r="4.5" fill="#45bbce"/>
+      <path
+        d="M416 320 H382 V374 H304"
+        fill="none"
+        stroke="#45bbce"
+        stroke-width="2"
+        stroke-dasharray="5 5"
+        mask="url(#link-mask-narrow)"
+      />
+      <circle class="link-end" cx="304" cy="374" r="4.5" fill="#45bbce" />
     </g>
   </svg>
 
@@ -199,17 +337,29 @@ import './stage.css';
     </div>
     <ul class="guest-facts">
       <li>
-        <svg viewBox="0 0 20 20"><path d="M2.5 15V5M2.5 12h15v3M17.5 12V9.5a2 2 0 0 0-2-2H9v4.5"/><circle cx="5.8" cy="9.5" r="1.6"/></svg>
+        <svg viewBox="0 0 20 20">
+          <path d="M2.5 15V5M2.5 12h15v3M17.5 12V9.5a2 2 0 0 0-2-2H9v4.5" />
+          <circle cx="5.8" cy="9.5" r="1.6" />
+        </svg>
         <span>Room 1204, checks out Monday</span>
         <em>Opera</em>
       </li>
       <li>
-        <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="3.2" r="1.3"/><circle cx="10" cy="16.8" r="1.3"/><circle cx="3.2" cy="10" r="1.3"/><circle cx="16.8" cy="10" r="1.3"/></svg>
+        <svg viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="3.6" />
+          <circle cx="10" cy="3.2" r="1.3" />
+          <circle cx="10" cy="16.8" r="1.3" />
+          <circle cx="3.2" cy="10" r="1.3" />
+          <circle cx="16.8" cy="10" r="1.3" />
+        </svg>
         <span>Table 7, 7:30 pm, 4 guests</span>
         <em>Datalekt</em>
       </li>
       <li>
-        <svg viewBox="0 0 20 20"><path d="M5 2.5h10v15l-2-1.3-1.5 1.3-1.5-1.3-1.5 1.3L7 16.2l-2 1.3z"/><path d="M8 7h4M8 10.5h4"/></svg>
+        <svg viewBox="0 0 20 20">
+          <path d="M5 2.5h10v15l-2-1.3-1.5 1.3-1.5-1.3-1.5 1.3L7 16.2l-2 1.3z" />
+          <path d="M8 7h4M8 10.5h4" />
+        </svg>
         <span>Last visit 12 Oct, ₹14,800</span>
         <em>Infrasys</em>
       </li>
@@ -231,14 +381,25 @@ import './stage.css';
       </div>
     </div>
     <div class="wa-chat">
-      <p class="wa-bubble wa-out wa-confirm">Hi Ananya, your table for 4 on the Terrace is confirmed for 7:30 pm tonight. We’ve kept your usual window seat.
-        <span class="wa-meta">6:02 pm
-          <svg class="wa-ticks" viewBox="0 0 16 10"><path class="tick-sent" d="M1 5.5 3.8 8 9 2"/><path class="tick-delivered" d="M6.5 7.6 7 8l6-6"/></svg>
+      <p class="wa-bubble wa-out wa-confirm">
+        Hi Ananya, your table for 4 on the Terrace is confirmed for 7:30 pm tonight. We’ve kept your usual
+        window seat.
+        <span class="wa-meta">
+          6:02 pm
+          <svg class="wa-ticks" viewBox="0 0 16 10">
+            <path class="tick-sent" d="M1 5.5 3.8 8 9 2" />
+            <path class="tick-delivered" d="M6.5 7.6 7 8l6-6" />
+          </svg>
         </span>
       </p>
       <div class="wa-slot">
-        <p class="wa-bubble wa-in wa-typing"><i></i><i></i><i></i></p>
-        <p class="wa-bubble wa-in wa-reply">Lovely, thank you! See you then.
+        <p class="wa-bubble wa-in wa-typing">
+          <i></i>
+          <i></i>
+          <i></i>
+        </p>
+        <p class="wa-bubble wa-in wa-reply">
+          Lovely, thank you! See you then.
           <span class="wa-meta">6:04 pm</span>
         </p>
       </div>
@@ -246,7 +407,9 @@ import './stage.css';
   </div>
 
   <p class="auto-chip">
-    <svg viewBox="0 0 20 20"><path d="M11 2 4.5 11.2H10L9 18l6.5-9.2H10z"/></svg>
+    <svg viewBox="0 0 20 20">
+      <path d="M11 2 4.5 11.2H10L9 18l6.5-9.2H10z" />
+    </svg>
     Sent automatically, 90 min before arrival
   </p>
 </div>

@@ -1,0 +1,28 @@
+---
+// Simple text pages (privacy policy, 404): a heading block over a readable
+// column, on the site's base layout.
+import BaseLayout from './BaseLayout.astro';
+import './page.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Small line under the heading, such as "Last updated …" */
+  meta?: string;
+  noindex?: boolean;
+}
+
+const { title, description, meta, noindex } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} noindex={noindex}>
+  <article class="page">
+    <header class="page-head">
+      <h1 class="page-title">{title}</h1>
+      {meta && <p class="page-meta">{meta}</p>}
+    </header>
+    <div class="page-body">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

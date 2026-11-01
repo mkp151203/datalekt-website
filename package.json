@@ -14,10 +14,11 @@
     "check": "astro check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "playwright test",
+    "test": "astro build && playwright test smoke",
     "reference": "python3 -m http.server 4174 --bind 0.0.0.0 --directory archive/static-prototype",
     "map": "python3 -I tools/build-india-map.py",
-    "og": "node tools/render-og-image.mjs"
+    "og": "node tools/render-og-image.mjs",
+    "test:parity": "REFERENCE=1 playwright test parity && python3 -I tools/compare-parity.py"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",

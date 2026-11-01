@@ -58,7 +58,9 @@ export function initGrowthMap(section: HTMLElement): void {
     ([entry]) => {
       if (!entry.isIntersecting) return;
       loader.disconnect();
-      import('../../data/india-map.json').then((module) => buildMap(section, map, module.default as IndiaMap));
+      import('../../data/india-map.json').then((module) =>
+        buildMap(section, map, module.default as IndiaMap),
+      );
     },
     { rootMargin: '800px 0px' },
   );
@@ -88,7 +90,15 @@ function buildMap(section: HTMLElement, map: HTMLElement, data: IndiaMap): void 
     const nameEl = button.querySelector('.growth-city-name');
     const name = nameEl?.firstChild?.textContent?.trim() ?? '';
     const count = nameEl?.querySelector('b')?.textContent ?? '';
-    return { button, x, y, name, count, state: button.dataset.state ?? '', side: button.dataset.side ?? 'right' };
+    return {
+      button,
+      x,
+      y,
+      name,
+      count,
+      state: button.dataset.state ?? '',
+      side: button.dataset.side ?? 'right',
+    };
   });
   if (!cities.length) return;
   const partnerStates = new Set(cities.map((c) => c.state));

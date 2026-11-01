@@ -61,7 +61,10 @@ export function initScene(root: HTMLElement): void {
     scene.style.setProperty('--ty', `${(b.top + b.height / 2 - s.top) / k}px`);
     tap.classList.add('is-down');
     el.classList.add('is-pressed');
-    setTimeout(() => { tap.classList.remove('is-down'); el.classList.remove('is-pressed'); }, 220);
+    setTimeout(() => {
+      tap.classList.remove('is-down');
+      el.classList.remove('is-pressed');
+    }, 220);
   }
 
   function show(set: Record<string, HTMLElement>, name: string) {
@@ -83,7 +86,9 @@ export function initScene(root: HTMLElement): void {
     Object.values(posPanes).forEach((p) => p.classList.remove('is-on'));
     posPanes.checks.classList.add('is-on');
     typed.textContent = '';
-    [result, newCheck, spend, synced, chipBook, chipBill, ...items].forEach((el) => el.classList.remove('is-in'));
+    [result, newCheck, spend, synced, chipBook, chipBill, ...items].forEach((el) =>
+      el.classList.remove('is-in'),
+    );
     t4.classList.remove('is-picked');
     submit.classList.remove('is-done');
     submit.textContent = 'Submit';
@@ -100,39 +105,64 @@ export function initScene(root: HTMLElement): void {
     const [packetBook, packetBill] = packets();
 
     // 1. Staff find the guest by mobile number
-    [...number].forEach((ch, i) => at(300 + i * 75, () => { typed.textContent += ch; }));
+    [...number].forEach((ch, i) =>
+      at(300 + i * 75, () => {
+        typed.textContent += ch;
+      }),
+    );
     at(1300, () => result.classList.add('is-in'));
     at(2000, () => tapOn(reserve));
 
     // 2. Reserve UKIYO, table 4, and submit
     at(2300, () => show(panes, 'book'));
-    at(3100, () => { tapOn(t4); t4.classList.add('is-picked'); });
+    at(3100, () => {
+      tapOn(t4);
+      t4.classList.add('is-picked');
+    });
     at(3800, () => tapOn(submit));
-    at(4000, () => { submit.classList.add('is-done'); submit.textContent = 'Saved ✓'; });
+    at(4000, () => {
+      submit.classList.add('is-done');
+      submit.textContent = 'Saved ✓';
+    });
 
     // 3. The booking opens the table on the POS
     at(4100, () => linkBook.classList.add('is-drawn'));
     at(4300, () => packetBook.classList.add('is-moving'));
-    at(5000, () => { newCheck.classList.add('is-in'); chipBook.classList.add('is-in'); });
-    at(5200, () => { show(panes, 'dash'); today.textContent = '4'; });
+    at(5000, () => {
+      newCheck.classList.add('is-in');
+      chipBook.classList.add('is-in');
+    });
+    at(5200, () => {
+      show(panes, 'dash');
+      today.textContent = '4';
+    });
 
     // 4. The order is rung up on the POS
-    at(6300, () => { posPanes.checks.classList.remove('is-on'); posPanes.ticket.classList.add('is-on'); });
+    at(6300, () => {
+      posPanes.checks.classList.remove('is-on');
+      posPanes.ticket.classList.add('is-on');
+    });
     let running = 0;
-    items.forEach((item, i) => at(6900 + i * 520, () => {
-      const tile = $(`.uc-menu [data-hit="${i}"]`);
-      tile.classList.add('is-hit');
-      setTimeout(() => tile.classList.remove('is-hit'), 220);
-      item.classList.add('is-in');
-      running += prices[i];
-      sum.textContent = running.toLocaleString('en-IN');
-    }));
+    items.forEach((item, i) =>
+      at(6900 + i * 520, () => {
+        const tile = $(`.uc-menu [data-hit="${i}"]`);
+        tile.classList.add('is-hit');
+        setTimeout(() => tile.classList.remove('is-hit'), 220);
+        item.classList.add('is-in');
+        running += prices[i];
+        sum.textContent = running.toLocaleString('en-IN');
+      }),
+    );
     at(9200, () => tapOn(send));
 
     // 5. The bill comes back to the guest's profile
     at(9400, () => linkBill.classList.add('is-drawn'));
     at(9600, () => packetBill.classList.add('is-moving'));
-    at(10400, () => { spend.classList.add('is-in'); synced.classList.add('is-in'); chipBill.classList.add('is-in'); });
+    at(10400, () => {
+      spend.classList.add('is-in');
+      synced.classList.add('is-in');
+      chipBill.classList.add('is-in');
+    });
 
     ucEmbed.loop(14500);
 
@@ -143,12 +173,19 @@ export function initScene(root: HTMLElement): void {
     });
   }
 
-  ucEmbed.register(() => { idle = false; play(); });
+  ucEmbed.register(() => {
+    idle = false;
+    play();
+  });
 
-
-  new IntersectionObserver(([e]) => {
-    visible = e.isIntersecting;
-    if (visible && idle) { idle = false; play(); }
-  }, { threshold: 0.35 }).observe(wrap);
-
+  new IntersectionObserver(
+    ([e]) => {
+      visible = e.isIntersecting;
+      if (visible && idle) {
+        idle = false;
+        play();
+      }
+    },
+    { threshold: 0.35 },
+  ).observe(wrap);
 }

@@ -1,0 +1,89 @@
+---
+// Schedule a demo form. Fields match the original site's form; demo-form.ts
+// checks them and send-demo-request.ts delivers the request.
+import { site } from '../../data/site';
+import { demoEndpoint } from './send-demo-request';
+import './demo-form.css';
+
+interface FieldSpec {
+  name: string;
+  label: string;
+  type: 'text' | 'email' | 'tel' | 'date';
+  autocomplete?: string;
+  wide?: boolean;
+}
+
+const fields: FieldSpec[] = [
+  { name: 'firstName', label: 'First name', type: 'text', autocomplete: 'given-name' },
+  { name: 'lastName', label: 'Last name', type: 'text', autocomplete: 'family-name' },
+  { name: 'email', label: 'Email address', type: 'email', autocomplete: 'email', wide: true },
+  { name: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel' },
+  { name: 'property', label: 'Hotel or restaurant', type: 'text', autocomplete: 'organization' },
+  { name: 'availability', label: 'Preferred date', type: 'date', wide: true },
+];
+
+// Without script the form still sends: to the form service, or by email
+const action = demoEndpoint || `mailto:${site.email}?subject=Demo%20request`;
+---
+
+<div class="demo-card">
+  <form
+    class="demo-form"
+    action={action}
+    method="post"
+    enctype={demoEndpoint ? undefined : 'text/plain'}
+    aria-describedby="demo-status"
+    data-endpoint={demoEndpoint}
+  >
+    <div class="demo-grid">
+      {fields.map((field) => (
+        <div class:list={['demo-field', { 'is-wide': field.wide }]}>
+          <label for={`demo-${field.name}`}>{field.label}</label>
+          <input
+            id={`demo-${field.name}`}
+            name={field.name}
+            type={field.type}
+            autocomplete={field.autocomplete}
+            required
+            aria-describedby={`demo-${field.name}-error`}
+          />
+          <p class="demo-error" id={`demo-${field.name}-error`} data-error={field.name} />
+        </div>
+      ))}
+
+      <fieldset class="demo-field is-wide" aria-describedby="demo-takesReservations-error">
+        <legend>Do you take reservations?</legend>
+        <div class="demo-choice">
+          <label>
+            <input type="radio" name="takesReservations" value="Yes" required /> Yes
+          </label>
+          <label>
+            <input type="radio" name="takesReservations" value="No" /> No
+          </label>
+        </div>
+        <p class="demo-error" id="demo-takesReservations-error" data-error="takesReservations"></p>
+      </fieldset>
+    </div>
+
+    <button class="button button-primary demo-submit" type="submit">
+      Schedule a demo
+    </button>
+    <p class="demo-status" id="demo-status" aria-live="polite"></p>
+  </form>
+
+  <div class="demo-success" tabindex="-1" hidden>
+    <h2>
+      Thanks, <span data-name>there</span>.
+    </h2>
+    <p>We’ve got your request and will be in touch to confirm your demo.</p>
+    <a class="button button-primary" href="/">
+      Back to the home page
+    </a>
+  </div>
+</div>
+
+<script>
+  import { initDemoForm } from './demo-form';
+
+  document.querySelectorAll<HTMLFormElement>('.demo-form').forEach(initDemoForm);
+</script>

@@ -14,9 +14,36 @@ export function initScene(root: HTMLElement): void {
 
   // Tonight's bookings and tables, from the product recording
   const guests = [
-    { id: 'sanya', name: 'Sanya Suri', initials: 'SS', time: '8:00 pm', pax: 2, tables: ['1', 'A12'], badge: ['ret', 'Returning'], note: '4th visit · prefers table 1' },
-    { id: 'kshitij', name: 'Kshitij Rekhi', initials: 'KR', time: '8:00 pm', pax: 3, tables: ['A1', 'A2'], badge: ['vip', 'VIP'], note: 'VIP · birthday this month' },
-    { id: 'aariya', name: 'Aariya Sawant', initials: 'AS', time: '8:00 pm', pax: 4, tables: ['BB', 'AB12'], badge: ['ret', 'Returning'], note: '2nd visit this month' },
+    {
+      id: 'sanya',
+      name: 'Sanya Suri',
+      initials: 'SS',
+      time: '8:00 pm',
+      pax: 2,
+      tables: ['1', 'A12'],
+      badge: ['ret', 'Returning'],
+      note: '4th visit · prefers table 1',
+    },
+    {
+      id: 'kshitij',
+      name: 'Kshitij Rekhi',
+      initials: 'KR',
+      time: '8:00 pm',
+      pax: 3,
+      tables: ['A1', 'A2'],
+      badge: ['vip', 'VIP'],
+      note: 'VIP · birthday this month',
+    },
+    {
+      id: 'aariya',
+      name: 'Aariya Sawant',
+      initials: 'AS',
+      time: '8:00 pm',
+      pax: 4,
+      tables: ['BB', 'AB12'],
+      badge: ['ret', 'Returning'],
+      note: '2nd visit this month',
+    },
     { id: 'kamal', name: 'Kamal Harris', initials: 'KH', time: '8:00 pm', pax: 5, tables: ['A'] },
     { id: 'vansh', name: 'Vansh Adwani', initials: 'VA', time: '8:00 pm', pax: 3, tables: ['2', '3'] },
     { id: 'elisa', name: 'Elisa Chopra', initials: 'EC', time: '6:00 pm', pax: 2, tables: [] },
@@ -25,10 +52,18 @@ export function initScene(root: HTMLElement): void {
 
   // Floor plan: square 4-tops and long 6-tops, in plan coordinates
   const tables = [
-    { id: '1', x: 70, y: 190, long: false }, { id: '2', x: 70, y: 260, long: false }, { id: '3', x: 70, y: 330, long: false },
-    { id: 'A', x: 160, y: 190, long: false }, { id: 'A1', x: 160, y: 260, long: false }, { id: 'A2', x: 160, y: 330, long: false },
-    { id: 'C', x: 290, y: 190, long: true }, { id: 'A12', x: 290, y: 260, long: true }, { id: 'AB12', x: 290, y: 330, long: true },
-    { id: 'BB', x: 430, y: 190, long: true }, { id: 'D1', x: 430, y: 260, long: true }, { id: 'D2', x: 430, y: 330, long: true },
+    { id: '1', x: 70, y: 190, long: false },
+    { id: '2', x: 70, y: 260, long: false },
+    { id: '3', x: 70, y: 330, long: false },
+    { id: 'A', x: 160, y: 190, long: false },
+    { id: 'A1', x: 160, y: 260, long: false },
+    { id: 'A2', x: 160, y: 330, long: false },
+    { id: 'C', x: 290, y: 190, long: true },
+    { id: 'A12', x: 290, y: 260, long: true },
+    { id: 'AB12', x: 290, y: 330, long: true },
+    { id: 'BB', x: 430, y: 190, long: true },
+    { id: 'D1', x: 430, y: 260, long: true },
+    { id: 'D2', x: 430, y: 330, long: true },
   ];
 
   const plan = $('.t-plan');
@@ -172,11 +207,16 @@ export function initScene(root: HTMLElement): void {
 
     // Show only who's here
     at(6500, () => aimAt(toggle));
-    at(7300, () => { cursor.classList.add('is-click'); toggle.classList.add('is-on'); });
+    at(7300, () => {
+      cursor.classList.add('is-click');
+      toggle.classList.add('is-on');
+    });
     at(7430, () => cursor.classList.remove('is-click'));
-    at(7550, () => guests.forEach((g) => {
-      if (!rows[g.id].classList.contains('is-seated')) rows[g.id].classList.add('is-hidden');
-    }));
+    at(7550, () =>
+      guests.forEach((g) => {
+        if (!rows[g.id].classList.contains('is-seated')) rows[g.id].classList.add('is-hidden');
+      }),
+    );
     at(10200, () => {
       toggle.classList.remove('is-on');
       guests.forEach((g) => rows[g.id].classList.remove('is-hidden'));
@@ -192,11 +232,19 @@ export function initScene(root: HTMLElement): void {
   }
 
   reset();
-  ucEmbed.register(() => { idle = false; play(); });
+  ucEmbed.register(() => {
+    idle = false;
+    play();
+  });
 
-  new IntersectionObserver(([e]) => {
-    visible = e.isIntersecting;
-    if (visible && idle && !reduce) { idle = false; play(); }
-  }, { threshold: 0.35 }).observe(wrap);
-
+  new IntersectionObserver(
+    ([e]) => {
+      visible = e.isIntersecting;
+      if (visible && idle && !reduce) {
+        idle = false;
+        play();
+      }
+    },
+    { threshold: 0.35 },
+  ).observe(wrap);
 }

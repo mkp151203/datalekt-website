@@ -20,23 +20,25 @@ const visuals: Record<Feature['id'], typeof SecureVisual> = {
 
 <section class="eff" id="features" aria-labelledby="eff-title">
   <div class="eff-head">
-    <h2 class="eff-title" id="eff-title">Where data meets <em>efficiency.</em></h2>
-    <p class="eff-lead">Everything your outlets know about a guest, kept safe, kept in sync and put to work.</p>
+    <h2 class="eff-title" id="eff-title">
+      Where data meets <em>efficiency.</em>
+    </h2>
+    <p class="eff-lead">
+      Everything your outlets know about a guest, kept safe, kept in sync and put to work.
+    </p>
   </div>
 
   <div class="eff-grid">
-    {
-      getFeatures().map((feature) => {
-        const Visual = visuals[feature.id];
-        return (
-          <article class={`eff-card eff-${feature.id}`}>
-            <Visual />
-            <h3>{feature.title}</h3>
-            <p>{feature.text}</p>
-          </article>
-        );
-      })
-    }
+    {getFeatures().map((feature) => {
+      const Visual = visuals[feature.id];
+      return (
+        <article class={`eff-card eff-${feature.id}`}>
+          <Visual />
+          <h3>{feature.title}</h3>
+          <p>{feature.text}</p>
+        </article>
+      );
+    })}
   </div>
 </section>
 

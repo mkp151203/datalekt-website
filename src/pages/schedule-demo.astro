@@ -1,0 +1,28 @@
+---
+// Schedule a demo: a short pitch and the contact line beside the form.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DemoForm from '../components/demo/DemoForm.astro';
+import { site } from '../data/site';
+import '../components/demo/demo-page.css';
+---
+
+<BaseLayout
+  title="Schedule a demo"
+  description="Book a Datalekt demo for your hotel's restaurants and bars. Your first 30 days are free."
+>
+  <section class="demo-page" aria-labelledby="demo-title">
+    <div class="demo-intro">
+      <p class="demo-label">Schedule a demo</p>
+      <h1 class="demo-title" id="demo-title">
+        Get a handle on operations, <em>marketing and beyond.</em>
+      </h1>
+      <p class="demo-lead">
+        Tell us about your property and pick a day that suits you. Your first 30 days are free.
+      </p>
+      <p class="demo-contact">
+        Need to get in touch with our team? Email us at <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+    </div>
+    <DemoForm />
+  </section>
+</BaseLayout>

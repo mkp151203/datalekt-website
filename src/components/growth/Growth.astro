@@ -11,35 +11,44 @@ const stats = getPartnerStats();
 
 <section class="growth" id="locations" aria-labelledby="growth-title">
   <div class="growth-copy">
-    <h2 class="growth-title" id="growth-title">Empowering growth, <em>one partnership at a time.</em></h2>
+    <h2 class="growth-title" id="growth-title">
+      Empowering growth, <em>one partnership at a time.</em>
+    </h2>
     <p class="growth-lead">Some of India’s finest hotels run their restaurants on Datalekt.</p>
     <dl class="growth-stats">
-      <div><dt>Partner hotels</dt><dd>{stats.hotels}</dd></div>
-      <div><dt>Cities</dt><dd>{stats.cities}</dd></div>
-      <div><dt>States</dt><dd>{stats.states}</dd></div>
+      <div>
+        <dt>Partner hotels</dt>
+        <dd>{stats.hotels}</dd>
+      </div>
+      <div>
+        <dt>Cities</dt>
+        <dd>{stats.cities}</dd>
+      </div>
+      <div>
+        <dt>States</dt>
+        <dd>{stats.states}</dd>
+      </div>
     </dl>
     <ul class="growth-cities" aria-label="Partner hotels by city">
-      {
-        cities.map((city) => (
-          <li>
-            <button
-              class="growth-city"
-              type="button"
-              data-lat={city.lat}
-              data-lon={city.lon}
-              data-state={city.state}
-              data-side={city.labelSide}
-              aria-pressed="false"
-            >
-              <span class="growth-city-name">
-                {city.name}
-                <b>{city.hotels.length}</b>
-              </span>
-              <span class="growth-city-hotels">{city.hotels.join(' · ')}</span>
-            </button>
-          </li>
-        ))
-      }
+      {cities.map((city) => (
+        <li>
+          <button
+            class="growth-city"
+            type="button"
+            data-lat={city.lat}
+            data-lon={city.lon}
+            data-state={city.state}
+            data-side={city.labelSide}
+            aria-pressed="false"
+          >
+            <span class="growth-city-name">
+              {city.name}
+              <b>{city.hotels.length}</b>
+            </span>
+            <span class="growth-city-hotels">{city.hotels.join(' · ')}</span>
+          </button>
+        </li>
+      ))}
     </ul>
   </div>
 

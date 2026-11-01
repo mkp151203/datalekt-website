@@ -30,7 +30,12 @@ const partners: Partner[] = [
   { name: 'St. Regis', cityLabel: 'Mumbai', location: 'mumbai', image: stRegisMumbai },
   { name: 'The Ritz-Carlton', cityLabel: 'Pune', location: 'pune', image: ritzCarltonPune },
   { name: 'JW Marriott', cityLabel: 'Pune', location: 'pune', image: jwMarriottPune },
-  { name: 'The Leela Bhartiya City', cityLabel: 'Bengaluru', location: 'bengaluru', image: leelaBhartiyaCity },
+  {
+    name: 'The Leela Bhartiya City',
+    cityLabel: 'Bengaluru',
+    location: 'bengaluru',
+    image: leelaBhartiyaCity,
+  },
   { name: 'Conrad', cityLabel: 'Pune', location: 'pune', image: conradPune },
   { name: 'Sheraton Grand', cityLabel: 'Chennai', location: 'chennai', image: sheratonGrandChennai },
   { name: 'The Ritz-Carlton', cityLabel: 'Bangalore', location: 'bengaluru', image: ritzCarltonBangalore },

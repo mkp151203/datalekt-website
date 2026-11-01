@@ -1,9 +1,11 @@
-// Close the Log in and mobile menus on outside click or Escape.
+// Close the Log in and mobile menus on outside click, on choosing one of
+// their links, or on Escape.
 export function initMenus(): void {
   const menus = document.querySelectorAll<HTMLDetailsElement>('details[data-dismiss]');
   document.addEventListener('click', (event) => {
+    const target = event.target as Element;
     menus.forEach((menu) => {
-      if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
+      if (menu.open && (!menu.contains(target) || target.closest('a'))) menu.open = false;
     });
   });
   document.addEventListener('keydown', (event) => {

@@ -15,21 +15,31 @@ const label = (name: string, city: string) => (city ? `${name}, ${city}` : name)
 ---
 
 <section class="partners" id="clients" aria-labelledby="partners-title">
-  <h2 class="partners-title" id="partners-title">Trusted by finest hotels.</h2>
+  <h2 class="partners-title" id="partners-title">
+    Trusted by finest hotels.
+  </h2>
 
   <p class="partner-caption" aria-hidden="true">
-    <span class="caption-line"><span class="caption-text caption-name">{first.name}</span></span>
-    <span class="caption-line"><span class="caption-text caption-city">{first.cityLabel}</span></span>
+    <span class="caption-line">
+      <span class="caption-text caption-name">{first.name}</span>
+    </span>
+    <span class="caption-line">
+      <span class="caption-text caption-city">{first.cityLabel}</span>
+    </span>
   </p>
 
   <div class="partners-nav">
     <div class="partners-dots" role="group" aria-label="Choose a hotel"></div>
     <div class="partners-controls">
       <button class="partners-arrow" type="button" data-step="-1" aria-label="Previous hotel">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"></path></svg>
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M10 3 5 8l5 5"></path>
+        </svg>
       </button>
       <button class="partners-arrow" type="button" data-step="1" aria-label="Next hotel">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"></path></svg>
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="m6 3 5 5-5 5"></path>
+        </svg>
       </button>
     </div>
   </div>
@@ -47,13 +57,11 @@ const label = (name: string, city: string) => (city ? `${name}, ${city}` : name)
   </div>
 
   <ul class="partners-roster visually-hidden" aria-label="Partner hotels">
-    {
-      partners.map((partner, i) => (
-        <li data-image={photos[i].src} data-city={partner.cityLabel}>
-          {partner.name}
-        </li>
-      ))
-    }
+    {partners.map((partner, i) => (
+      <li data-image={photos[i].src} data-city={partner.cityLabel}>
+        {partner.name}
+      </li>
+    ))}
   </ul>
 </section>
 

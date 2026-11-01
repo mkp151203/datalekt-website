@@ -1,11 +1,21 @@
 // Visual parity with the archived prototype: screenshots each home-page
 // section on both sites with reduced motion (so scenes show their finished
 // state) into tests/screenshots/parity/, for tools/compare-parity.py to diff.
-// Run only when the reference is being served:  REFERENCE=1 npx playwright test parity
+// Run with the prototype served (npm run reference):  npm run test:parity
 import { test, type Page } from '@playwright/test';
 
 const referenceURL = process.env.REFERENCE_URL ?? 'http://localhost:4174/';
-const sections = ['.site-header', '.hero', '.partners', '.about', '.cases', '.eff', '.growth', '.cta', '.site-footer'];
+const sections = [
+  '.site-header',
+  '.hero',
+  '.partners',
+  '.about',
+  '.cases',
+  '.eff',
+  '.growth',
+  '.cta',
+  '.site-footer',
+];
 
 test.skip(!process.env.REFERENCE, 'Set REFERENCE=1 with the prototype served on port 4174');
 

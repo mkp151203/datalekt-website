@@ -20,12 +20,19 @@ export function initScene(root: HTMLElement): void {
     qr.fillRect(0, 0, 21, 21);
     qr.fillStyle = '#111';
     let seed = 7;
-    const rand = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+    const rand = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
     for (let y = 0; y < 21; y++) for (let x = 0; x < 21; x++) if (rand() > 0.55) qr.fillRect(x, y, 1, 1);
-    [[0, 0], [14, 0], [0, 14]].forEach(([x, y]) => {
-      qr.fillStyle = '#111'; qr.fillRect(x, y, 7, 7);
-      qr.fillStyle = '#fff'; qr.fillRect(x + 1, y + 1, 5, 5);
-      qr.fillStyle = '#111'; qr.fillRect(x + 2, y + 2, 3, 3);
+    [
+      [0, 0],
+      [14, 0],
+      [0, 14],
+    ].forEach(([x, y]) => {
+      qr.fillStyle = '#111';
+      qr.fillRect(x, y, 7, 7);
+      qr.fillStyle = '#fff';
+      qr.fillRect(x + 1, y + 1, 5, 5);
+      qr.fillStyle = '#111';
+      qr.fillRect(x + 2, y + 2, 3, 3);
     });
   })();
 
@@ -78,8 +85,14 @@ export function initScene(root: HTMLElement): void {
 
   function click(target: Element, at: At, ms: number) {
     at(ms, () => aimAt(target));
-    at(ms + 750, () => { cursor.classList.add('is-click'); target.classList.add('is-pressed'); });
-    at(ms + 880, () => { cursor.classList.remove('is-click'); target.classList.remove('is-pressed'); });
+    at(ms + 750, () => {
+      cursor.classList.add('is-click');
+      target.classList.add('is-pressed');
+    });
+    at(ms + 880, () => {
+      cursor.classList.remove('is-click');
+      target.classList.remove('is-pressed');
+    });
   }
 
   // Type into a field, one character at a time
@@ -91,9 +104,11 @@ export function initScene(root: HTMLElement): void {
       if (ph) ph.style.display = 'none';
       val.innerHTML = '<i class="b-caret"></i>';
     });
-    [...text].forEach((_, i) => at(start + 80 + i * step, () => {
-      val.innerHTML = `${text.slice(0, i + 1)}<i class="b-caret"></i>`;
-    }));
+    [...text].forEach((_, i) =>
+      at(start + 80 + i * step, () => {
+        val.innerHTML = `${text.slice(0, i + 1)}<i class="b-caret"></i>`;
+      }),
+    );
     at(start + 80 + text.length * step + 150, () => {
       field.classList.remove('is-focus');
       val.textContent = text;
@@ -142,29 +157,49 @@ export function initScene(root: HTMLElement): void {
     click(restaurant, at, 200);
     at(1000, () => list.classList.add('is-open'));
     at(1450, () => ukiyo.classList.add('is-hit'));
-    at(1700, () => { list.classList.remove('is-open'); (restaurant.querySelector('.val') as HTMLElement).textContent = 'UKIYO'; });
+    at(1700, () => {
+      list.classList.remove('is-open');
+      (restaurant.querySelector('.val') as HTMLElement).textContent = 'UKIYO';
+    });
     type(fields.name, 'Elisha Suri', at, 1900);
     type(fields.phone, '+91 97232 32356', at, 2950, 55);
-    [3, 4, 5].forEach((n, i) => at(4000 + i * 180, () => { pax.textContent = String(n); }));
+    [3, 4, 5].forEach((n, i) =>
+      at(4000 + i * 180, () => {
+        pax.textContent = String(n);
+      }),
+    );
     at(4600, () => date.classList.add('on'));
     at(4850, () => time.classList.add('on'));
     type(fields.note, 'Corner table', at, 5100);
     click(submit, at, 5700);
-    at(6600, () => { submit.classList.add('is-done'); submit.textContent = 'Sent ✓'; });
+    at(6600, () => {
+      submit.classList.add('is-done');
+      submit.textContent = 'Sent ✓';
+    });
     at(6800, () => thanks.classList.add('is-in'));
 
     // 2. The request reaches the hotel; staff approve it
     at(6900, () => linkIn.classList.add('is-drawn'));
     at(7100, () => packetIn.classList.add('is-moving'));
-    at(7800, () => { tablet.classList.add('has-note'); chips[0].classList.add('is-in'); });
+    at(7800, () => {
+      tablet.classList.add('has-note');
+      chips[0].classList.add('is-in');
+    });
     click(reserve, at, 8100);
-    at(9000, () => { reserve.classList.add('is-done'); reserve.textContent = 'Reserved ✓'; chips[1].classList.add('is-in'); });
+    at(9000, () => {
+      reserve.classList.add('is-done');
+      reserve.textContent = 'Reserved ✓';
+      chips[1].classList.add('is-in');
+    });
 
     // 3. The guest gets a branded confirmation on WhatsApp
     at(9200, () => linkOut.classList.add('is-drawn'));
     at(9400, () => packetOut.classList.add('is-moving'));
     at(10100, () => ticket.classList.add('is-in'));
-    at(10900, () => { msg.classList.add('is-in'); chips[2].classList.add('is-in'); });
+    at(10900, () => {
+      msg.classList.add('is-in');
+      chips[2].classList.add('is-in');
+    });
 
     ucEmbed.loop(15000);
 
@@ -175,12 +210,19 @@ export function initScene(root: HTMLElement): void {
     });
   }
 
-  ucEmbed.register(() => { idle = false; play(); });
+  ucEmbed.register(() => {
+    idle = false;
+    play();
+  });
 
-
-  new IntersectionObserver(([e]) => {
-    visible = e.isIntersecting;
-    if (visible && idle && !reduce) { idle = false; play(); }
-  }, { threshold: 0.35 }).observe(wrap);
-
+  new IntersectionObserver(
+    ([e]) => {
+      visible = e.isIntersecting;
+      if (visible && idle && !reduce) {
+        idle = false;
+        play();
+      }
+    },
+    { threshold: 0.35 },
+  ).observe(wrap);
 }

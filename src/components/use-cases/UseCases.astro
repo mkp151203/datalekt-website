@@ -25,52 +25,52 @@ const useCases = getUseCases();
 <section class="cases" id="use-cases" aria-labelledby="cases-title">
   <div class="cases-head">
     <p class="cases-label">Use cases</p>
-    <h2 class="cases-title" id="cases-title">One platform, <em>every part of the visit.</em></h2>
+    <h2 class="cases-title" id="cases-title">
+      One platform, <em>every part of the visit.</em>
+    </h2>
   </div>
 
   <div class="cases-body">
     <div class="case-tabs" role="tablist" aria-label="Use cases">
-      {
-        useCases.map((useCase, i) => (
-          <button
-            class="case-tab"
-            type="button"
-            role="tab"
-            id={`case-tab-${i + 1}`}
-            aria-controls={`case-panel-${i + 1}`}
-            aria-selected={i === 0 ? 'true' : 'false'}
-            tabindex={i === 0 ? undefined : '-1'}
-          >
-            <span class="case-num">{String(i + 1).padStart(2, '0')}</span>
-            <span class="case-name">{useCase.name}</span>
-            <span class="case-desc">{useCase.description}</span>
-            <span class="case-progress" aria-hidden="true">
-              <i></i>
-            </span>
-          </button>
-        ))
-      }
+      {useCases.map((useCase, i) => (
+        <button
+          class="case-tab"
+          type="button"
+          role="tab"
+          id={`case-tab-${i + 1}`}
+          aria-controls={`case-panel-${i + 1}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? undefined : '-1'}
+        >
+          <span class="case-num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="case-name">{useCase.name}</span>
+          <span class="case-desc">{useCase.description}</span>
+          <span class="case-progress" aria-hidden="true">
+            <i></i>
+          </span>
+        </button>
+      ))}
     </div>
 
-    <p class="case-note" aria-live="polite">{useCases[0].description}</p>
+    <p class="case-note" aria-live="polite">
+      {useCases[0].description}
+    </p>
 
     <div class="case-stage">
-      {
-        useCases.map((useCase, i) => {
-          const Scene = scenes[useCase.scene];
-          return (
-            <div
-              class:list={['case-panel', { 'is-on': i === 0 }]}
-              id={`case-panel-${i + 1}`}
-              role="tabpanel"
-              aria-labelledby={`case-tab-${i + 1}`}
-              hidden={i !== 0}
-            >
-              <Scene />
-            </div>
-          );
-        })
-      }
+      {useCases.map((useCase, i) => {
+        const Scene = scenes[useCase.scene];
+        return (
+          <div
+            class:list={['case-panel', { 'is-on': i === 0 }]}
+            id={`case-panel-${i + 1}`}
+            role="tabpanel"
+            aria-labelledby={`case-tab-${i + 1}`}
+            hidden={i !== 0}
+          >
+            <Scene />
+          </div>
+        );
+      })}
     </div>
   </div>
 </section>

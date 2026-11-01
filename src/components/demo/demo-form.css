@@ -1,0 +1,78 @@
+/* Schedule a demo form: a white card of labelled fields, two per row on
+   wider screens, with errors under each field */
+
+.demo-card {
+  padding: clamp(24px, 3.5vw, 40px);
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(11 42 63 / 0.05), 0 24px 48px -32px rgb(11 42 63 / 0.35);
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 18px;
+}
+
+.demo-field { display: grid; align-content: start; gap: 8px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.demo-field.is-wide { grid-column: 1 / -1; }
+
+.demo-field > label,
+.demo-field legend { padding: 0; color: var(--ink); font-size: 0.9375rem; font-weight: 500; }
+.demo-field legend { margin-bottom: 8px; }
+
+.demo-field input:not([type="radio"]) {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--tint);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink);
+  font: inherit;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.demo-field input:not([type="radio"]):focus {
+  outline: none;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 2px var(--blue);
+}
+
+.demo-field input[aria-invalid="true"] { box-shadow: inset 0 0 0 2px #c2413a; }
+
+.demo-error { min-height: 1.4em; color: #b3362f; font-size: 0.875rem; }
+
+/* Yes / No as two pills */
+.demo-choice { display: flex; gap: 10px; }
+
+.demo-choice label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 20px 0 16px;
+  border-radius: 999px;
+  background: var(--tint);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.demo-choice label:has(input:checked) { background: var(--field); box-shadow: inset 0 0 0 2px var(--blue); }
+.demo-choice input { width: 18px; height: 18px; margin: 0; accent-color: var(--blue); }
+
+.demo-submit { width: 100%; min-height: 54px; margin-top: 12px; font-size: 1.0625rem; }
+.demo-submit:disabled { opacity: 0.7; cursor: progress; }
+
+.demo-status { min-height: 1.5em; margin-top: 14px; color: var(--ink-soft); text-align: center; }
+
+.demo-success { display: grid; gap: 14px; justify-items: start; outline: none; }
+.demo-success[hidden] { display: none; }
+.demo-success h2 { margin: 0; font-size: 1.75rem; font-weight: 500; letter-spacing: -0.02em; }
+.demo-success p { color: var(--ink-soft); }
+
+@media (max-width: 560px) {
+  .demo-grid { grid-template-columns: minmax(0, 1fr); }
+}

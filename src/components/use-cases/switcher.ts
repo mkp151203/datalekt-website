@@ -21,13 +21,25 @@ export function initUseCaseSwitcher(section: HTMLElement): void {
   if (current < 0) current = 0;
   let inView = false;
 
+  // The stage animates its height only when switching tabs; sizing it to the
+  // first scene, or after a layout change, is instant so nothing below jumps
+  let animateNext = false;
   function fitStage() {
     const height = panels[current].offsetHeight;
-    if (height) stage!.style.height = `${height}px`;
+    if (!height) return;
+    if (!animateNext) {
+      stage!.style.transition = 'none';
+      stage!.style.height = `${height}px`;
+      void stage!.offsetHeight;
+      stage!.style.transition = '';
+    } else {
+      stage!.style.height = `${height}px`;
+    }
+    animateNext = false;
   }
 
   // The active scene's height changes with the layout (side by side or stacked)
-  const sizes = new ResizeObserver(fitStage);
+  const sizes = new ResizeObserver(() => fitStage());
   panels.forEach((panel) => sizes.observe(panel));
 
   function startProgress(ms: number) {
@@ -62,6 +74,7 @@ export function initUseCaseSwitcher(section: HTMLElement): void {
     panel.hidden = false;
     requestAnimationFrame(() => {
       panel.classList.add('is-on');
+      animateNext = true;
       fitStage();
       // Start from the top
       sceneOf(panel)?.dispatchEvent(new CustomEvent('scene:restart'));
@@ -83,7 +96,9 @@ export function initUseCaseSwitcher(section: HTMLElement): void {
   tabs.forEach((tab, i) => {
     tab.addEventListener('click', () => select(i));
     tab.addEventListener('keydown', (event) => {
-      const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[event.key];
+      const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[
+        event.key
+      ];
       if (!step) return;
       event.preventDefault();
       select((current + step + tabs.length) % tabs.length, true);

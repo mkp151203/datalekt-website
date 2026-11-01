@@ -20,14 +20,24 @@ export function initScene(root: HTMLElement): void {
 
   // Client lists, from the product recording
   const allClients = [
-    ['Manusha', 'M', 'U'], ['Ankur Walia', 'AW', 'USCMH'], ['Ashish Ray', 'AR', 'USCMH'],
-    ['Ramandeep', 'R', 'U'], ['Illisha Kala', 'IK', 'AUSCIV'], ['Anirudhya Basu', 'AB', 'UASCMH'],
-    ['Saniya Shriyan', 'SS', 'A'], ['Praveen Singh', 'PS', 'AU'],
+    ['Manusha', 'M', 'U'],
+    ['Ankur Walia', 'AW', 'USCMH'],
+    ['Ashish Ray', 'AR', 'USCMH'],
+    ['Ramandeep', 'R', 'U'],
+    ['Illisha Kala', 'IK', 'AUSCIV'],
+    ['Anirudhya Basu', 'AB', 'UASCMH'],
+    ['Saniya Shriyan', 'SS', 'A'],
+    ['Praveen Singh', 'PS', 'AU'],
   ];
   const filtered = [
-    ['Illisha Kala', 'IK', 'AURSV'], ['Calissa Fernandez', 'CF', 'AUREHV'], ['Jesicca Parti', 'JP', 'AURIV'],
-    ['Nishita D’silva', 'ND', 'AURCSV'], ['Charles James', 'CJ', 'AURSV'], ['Sanya Suri', 'SS', 'KAURVSCMH'],
-    ['Shilpi Khanna', 'SK', 'AURIV'], ['Aarthi Khanna', 'AK', 'AURCV'],
+    ['Illisha Kala', 'IK', 'AURSV'],
+    ['Calissa Fernandez', 'CF', 'AUREHV'],
+    ['Jesicca Parti', 'JP', 'AURIV'],
+    ['Nishita D’silva', 'ND', 'AURCSV'],
+    ['Charles James', 'CJ', 'AURSV'],
+    ['Sanya Suri', 'SS', 'KAURVSCMH'],
+    ['Shilpi Khanna', 'SK', 'AURIV'],
+    ['Aarthi Khanna', 'AK', 'AURCV'],
   ];
   const row = ([name, initials, tags]: string[]) =>
     `<div class="g-row"><span class="g-av">${initials}</span><div><b>${name}</b><span class="g-tags">${[...tags].map((t) => `<i>${t}</i>`).join('')}</span></div></div>`;
@@ -44,7 +54,11 @@ export function initScene(root: HTMLElement): void {
   const sanya = filteredRows[5];
   const profile = $('.g-profile');
   const count = $('.g-count');
-  const stats: [HTMLElement, number][] = [[$('.g-total'), 1098], [$('.g-pending'), 251], [$('.g-completed'), 847]];
+  const stats: [HTMLElement, number][] = [
+    [$('.g-total'), 1098],
+    [$('.g-pending'), 251],
+    [$('.g-completed'), 847],
+  ];
   const chips = $$('.g-chip');
   const cursor = $('.g-cursor');
 
@@ -78,7 +92,7 @@ export function initScene(root: HTMLElement): void {
   // A fixed shuffle, so the same guests survive each filter every loop
   const order = Array.from({ length: TOTAL }, (_, i) => i);
   let seed = 42;
-  const rand = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
+  const rand = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
   for (let i = TOTAL - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));
     [order[i], order[j]] = [order[j], order[i]];
@@ -185,8 +199,14 @@ export function initScene(root: HTMLElement): void {
 
   function click(target: Element, at: At, ms: number, travel = 600) {
     at(ms, () => aimAt(target));
-    at(ms + travel, () => { cursor.classList.add('is-click'); target.classList.add('is-pressed'); });
-    at(ms + travel + 130, () => { cursor.classList.remove('is-click'); target.classList.remove('is-pressed'); });
+    at(ms + travel, () => {
+      cursor.classList.add('is-click');
+      target.classList.add('is-pressed');
+    });
+    at(ms + travel + 130, () => {
+      cursor.classList.remove('is-click');
+      target.classList.remove('is-pressed');
+    });
     return ms + travel + 130;
   }
 
@@ -208,9 +228,16 @@ export function initScene(root: HTMLElement): void {
     filteredRows.forEach((r) => r.classList.remove('in'));
     profile.classList.remove('is-in');
     chips.forEach((c) => c.classList.remove('is-in'));
-    stats.forEach(([el]) => { el.textContent = '0'; });
+    stats.forEach(([el]) => {
+      el.textContent = '0';
+    });
     count.textContent = '0';
-    dots.forEach((d) => { d.v = 0; d.from = 0; d.to = 0; d.start = 0; });
+    dots.forEach((d) => {
+      d.v = 0;
+      d.from = 0;
+      d.to = 0;
+      d.start = 0;
+    });
     shown = 0;
   }
 
@@ -236,7 +263,11 @@ export function initScene(root: HTMLElement): void {
     cats.forEach((cat, i) => {
       t = click(cat, at, t + 250, 480);
       const n = steps[i + 1];
-      at(t, () => { cat.classList.add('on'); setShown(n); countTo(count, n); });
+      at(t, () => {
+        cat.classList.add('on');
+        setShown(n);
+        countTo(count, n);
+      });
     });
     t = click(dnd, at, t + 250);
     at(t, () => {
@@ -255,13 +286,19 @@ export function initScene(root: HTMLElement): void {
       glowStart = performance.now();
       listAll.classList.add('is-off');
       listFiltered.classList.remove('is-off');
-      filteredRows.forEach((r, i) => { r.style.animationDelay = `${i * 60}ms`; r.classList.add('in'); });
+      filteredRows.forEach((r, i) => {
+        r.style.animationDelay = `${i * 60}ms`;
+        r.classList.add('in');
+      });
       chips[2].classList.add('is-in');
     });
 
     // 4. Open one guest's full profile
     t = click(sanya, at, t + 1200);
-    at(t + 100, () => { profile.classList.add('is-in'); chips[3].classList.add('is-in'); });
+    at(t + 100, () => {
+      profile.classList.add('is-in');
+      chips[3].classList.add('is-in');
+    });
 
     ucEmbed.loop(t + 5200);
 
@@ -273,14 +310,23 @@ export function initScene(root: HTMLElement): void {
   }
 
   buildField();
-  new ResizeObserver(() => { buildField(); draw(performance.now()); }).observe(canvas);
+  new ResizeObserver(() => {
+    buildField();
+    draw(performance.now());
+  }).observe(canvas);
 
   if (reduce) {
     // A still picture: the narrowed result
     setShown(steps[5], 0);
-    dots.forEach((d) => { d.v = d.to; d.from = d.to; d.start = 0; });
+    dots.forEach((d) => {
+      d.v = d.to;
+      d.from = d.to;
+      d.start = 0;
+    });
     finalGlow = true;
-    stats.forEach(([el, n]) => { el.textContent = n.toLocaleString('en-IN'); });
+    stats.forEach(([el, n]) => {
+      el.textContent = n.toLocaleString('en-IN');
+    });
     count.textContent = String(steps[5]);
     stars.slice(0, 4).forEach((s) => s.classList.add('on'));
     cats.forEach((c) => c.classList.add('on'));
@@ -294,18 +340,25 @@ export function initScene(root: HTMLElement): void {
     return;
   }
 
-  ucEmbed.register(() => { idle = false; play(); });
+  ucEmbed.register(() => {
+    idle = false;
+    play();
+  });
 
-
-  new IntersectionObserver(([e]) => {
-    visible = e.isIntersecting;
-    if (visible) {
-      if (!frame) frame = requestAnimationFrame(loop);
-      if (idle) { idle = false; play(); }
-    } else {
-      cancelAnimationFrame(frame);
-      frame = 0;
-    }
-  }, { threshold: 0.3 }).observe(wrap);
-
+  new IntersectionObserver(
+    ([e]) => {
+      visible = e.isIntersecting;
+      if (visible) {
+        if (!frame) frame = requestAnimationFrame(loop);
+        if (idle) {
+          idle = false;
+          play();
+        }
+      } else {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      }
+    },
+    { threshold: 0.3 },
+  ).observe(wrap);
 }

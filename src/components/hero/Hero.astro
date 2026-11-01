@@ -7,17 +7,30 @@ import './hero.css';
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <canvas class="hero-wave" data-wave data-quiet=".hero h1 .h1-line, .hero-lead, .hero-actions > *, .hero-note" aria-hidden="true"></canvas>
+  <canvas
+    class="hero-wave"
+    data-wave
+    data-quiet=".hero h1 .h1-line, .hero-lead, .hero-actions > *, .hero-note"
+    aria-hidden="true"
+  ></canvas>
 
   <div class="hero-copy">
     <h1 id="hero-title">
-      <span class="h1-line">Effortless <em>efficiency.</em></span>
-      <span class="h1-line">Elevated <em>experience.</em></span>
+      <span class="h1-line">
+        Effortless <em>efficiency.</em>
+      </span>
+      <span class="h1-line">
+        Elevated <em>experience.</em>
+      </span>
     </h1>
     <p class="hero-lead">From Table Reservations and Elaborate Data Retention to Marketing &amp; Beyond.</p>
     <div class="hero-actions">
-      <a class="button button-primary" href={links.demo}>Schedule a demo</a>
-      <a class="hero-secondary" href="#product">See how it works</a>
+      <a class="button button-primary" href={links.demo}>
+        Schedule a demo
+      </a>
+      <a class="hero-secondary" href="#product">
+        See how it works
+      </a>
     </div>
     <p class="hero-note">Your first 30 days are free.</p>
   </div>
@@ -25,7 +38,6 @@ import './hero.css';
   <div class="hero-visual">
     <ProductStage />
   </div>
-
 </section>
 
 <script>

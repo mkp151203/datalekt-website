@@ -29,6 +29,10 @@ export const logins: LoginLink[] = [
     href: 'https://heaven.datalekt.com/staff',
     description: 'Reservations, Live Table and guest lookup',
   },
-  { label: 'Admin', href: 'https://heaven.datalekt.com/admin', description: 'Outlets, users and automations' },
+  {
+    label: 'Admin',
+    href: 'https://heaven.datalekt.com/admin',
+    description: 'Outlets, users and automations',
+  },
   { label: 'Developers', href: 'https://bang.datalekt.com/', description: 'API and integration docs' },
 ];

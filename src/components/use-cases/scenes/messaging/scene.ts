@@ -15,24 +15,37 @@ export function initScene(root: HTMLElement): void {
 
   // Guests and templates, from the product recording
   const guests = [
-    ['Vansh Adwani', 'VA', 'AURV'], ['Illisha Kala', 'IK', 'AUSCIV'],
-    ['Jesicca Parti', 'JP', 'AURIV'], ['Nishita D’silva', 'ND', 'AURCSV'],
-    ['Sanya Suri', 'SS', 'KAURSC'], ['Shilpi Khanna', 'SK', 'AURIV'],
-    ['Lijo Thankachan', 'LT', 'KAURIV'], ['Aariya Sawant', 'AS', 'KAURAL'],
+    ['Vansh Adwani', 'VA', 'AURV'],
+    ['Illisha Kala', 'IK', 'AUSCIV'],
+    ['Jesicca Parti', 'JP', 'AURIV'],
+    ['Nishita D’silva', 'ND', 'AURCSV'],
+    ['Sanya Suri', 'SS', 'KAURSC'],
+    ['Shilpi Khanna', 'SK', 'AURIV'],
+    ['Lijo Thankachan', 'LT', 'KAURIV'],
+    ['Aariya Sawant', 'AS', 'KAURAL'],
   ];
   // Optimised partner photos by file name, from the component
   const images: Record<string, string> = JSON.parse(wrap.dataset.images ?? '{}');
   const templates = [
-    ['Chef Special', 'jw-marriott-pune.jpg'], ['Marriott Bonvoy Delights', 'jw-marriott-kolkata.jpg'],
-    ['Saturday Sundowner', 'conrad-pune.jpg'], ['Bar Takeover', 'st-regis-mumbai.jpg'],
-    ['Flavors of Italy', 'ritz-carlton-bangalore.jpg'], ['Sea Side Brunch', 'marriott-resort-goa.jpg'],
-    ['Coldplay After-Party', 'hyatt-centric-hebbal-bengaluru.jpg'], ['Chivas Member Exclusive', 'leela-bhartiya-city-bengaluru.jpg'],
+    ['Chef Special', 'jw-marriott-pune.jpg'],
+    ['Marriott Bonvoy Delights', 'jw-marriott-kolkata.jpg'],
+    ['Saturday Sundowner', 'conrad-pune.jpg'],
+    ['Bar Takeover', 'st-regis-mumbai.jpg'],
+    ['Flavors of Italy', 'ritz-carlton-bangalore.jpg'],
+    ['Sea Side Brunch', 'marriott-resort-goa.jpg'],
+    ['Coldplay After-Party', 'hyatt-centric-hebbal-bengaluru.jpg'],
+    ['Chivas Member Exclusive', 'leela-bhartiya-city-bengaluru.jpg'],
   ];
 
-  $('.m-guests').innerHTML = guests.map(([n, i, tags]) =>
-    `<div class="m-guest"><span class="m-box"></span><span class="m-av">${i}</span><div><b>${n}</b><span class="m-dots">${[...tags].map((t) => `<i>${t}</i>`).join('')}</span></div></div>`).join('');
-  $('.m-tpls').innerHTML = templates.map(([n, f]) =>
-    `<span class="m-tpl"><i style="background-image:url('${images[f]}')"></i>${n}</span>`).join('');
+  $('.m-guests').innerHTML = guests
+    .map(
+      ([n, i, tags]) =>
+        `<div class="m-guest"><span class="m-box"></span><span class="m-av">${i}</span><div><b>${n}</b><span class="m-dots">${[...tags].map((t) => `<i>${t}</i>`).join('')}</span></div></div>`,
+    )
+    .join('');
+  $('.m-tpls').innerHTML = templates
+    .map(([n, f]) => `<span class="m-tpl"><i style="background-image:url('${images[f]}')"></i>${n}</span>`)
+    .join('');
 
   // Each phone shows the same template, addressed to that guest
   $$('.m-phone').forEach((phone) => {
@@ -85,8 +98,14 @@ export function initScene(root: HTMLElement): void {
 
   function click(target: Element, at: At, ms: number, travel = 650) {
     at(ms, () => aimAt(target));
-    at(ms + travel, () => { cursor.classList.add('is-click'); target.classList.add('is-pressed'); });
-    at(ms + travel + 130, () => { cursor.classList.remove('is-click'); target.classList.remove('is-pressed'); });
+    at(ms + travel, () => {
+      cursor.classList.add('is-click');
+      target.classList.add('is-pressed');
+    });
+    at(ms + travel + 130, () => {
+      cursor.classList.remove('is-click');
+      target.classList.remove('is-pressed');
+    });
     return ms + travel + 130;
   }
 
@@ -129,7 +148,10 @@ export function initScene(root: HTMLElement): void {
     applyBtn.textContent = 'Apply';
     sendBtn.textContent = 'Send';
     boxAll.classList.remove('on');
-    rows.forEach((r) => { r.classList.remove('on'); r.querySelector('.m-box')!.classList.remove('on'); });
+    rows.forEach((r) => {
+      r.classList.remove('on');
+      r.querySelector('.m-box')!.classList.remove('on');
+    });
     selected.textContent = '0 selected';
     tpls.forEach((t) => t.classList.remove('on'));
     preview.classList.remove('is-in');
@@ -152,40 +174,61 @@ export function initScene(root: HTMLElement): void {
     let t = 1500;
     cats.forEach((cat, i) => {
       const done = click(cat, at, t, 520);
-      at(done - 130, () => { cat.classList.add('on'); countTo(match, i ? counts[i - 1] : 312, counts[i], 420); });
+      at(done - 130, () => {
+        cat.classList.add('on');
+        countTo(match, i ? counts[i - 1] : 312, counts[i], 420);
+      });
       t = done + 80;
     });
     t = click(applyBtn, at, t + 150);
-    at(t, () => { applyBtn.classList.add('is-done'); applyBtn.textContent = 'Applied ✓'; chips[0].classList.add('is-in'); });
+    at(t, () => {
+      applyBtn.classList.add('is-done');
+      applyBtn.textContent = 'Applied ✓';
+      chips[0].classList.add('is-in');
+    });
 
     // 2. Select every matching guest
     at(t + 300, () => show('list', 1));
     t = click(boxAll, at, t + 800);
     at(t, () => boxAll.classList.add('on'));
-    rows.forEach((r, i) => at(t + 60 + i * 55, () => {
-      r.classList.add('on');
-      r.querySelector('.m-box')!.classList.add('on');
-      selected.textContent = `${Math.round(((i + 1) / rows.length) * 19)} selected`;
-    }));
+    rows.forEach((r, i) =>
+      at(t + 60 + i * 55, () => {
+        r.classList.add('on');
+        r.querySelector('.m-box')!.classList.add('on');
+        selected.textContent = `${Math.round(((i + 1) / rows.length) * 19)} selected`;
+      }),
+    );
     t = click(nextBtn, at, t + 650);
 
     // 3. Pick the template and send
     at(t + 150, () => show('tpl', 2));
     t = click(seaside, at, t + 700);
-    at(t, () => { tpls.forEach((x) => x.classList.toggle('on', x === seaside)); preview.classList.add('is-in'); });
+    at(t, () => {
+      tpls.forEach((x) => x.classList.toggle('on', x === seaside));
+      preview.classList.add('is-in');
+    });
     t = click(sendBtn, at, t + 600);
-    at(t, () => { sendBtn.classList.add('is-done'); sendBtn.textContent = 'Sent ✓'; });
+    at(t, () => {
+      sendBtn.classList.add('is-done');
+      sendBtn.textContent = 'Sent ✓';
+    });
 
     // 4. Every guest receives it, by name
     const link = $(stacked ? '.m-links-stack path' : '.m-links-wide path');
     const packet = $(stacked ? '.m-packet-stack' : '.m-packet-wide');
     at(t + 100, () => link.classList.add('is-drawn'));
-    at(t + 300, () => { packet.classList.add('is-moving'); chips[1].classList.add('is-in'); countTo(delivered, 0, 19, 1800); });
-    [1, 0, 2].forEach((p, i) => at(t + 900 + i * 380, () => {
-      phones[p].querySelector('.m-msg')!.classList.add('is-in');
-      phones[p].classList.add('is-ping');
-      setTimeout(() => phones[p].classList.remove('is-ping'), 350);
-    }));
+    at(t + 300, () => {
+      packet.classList.add('is-moving');
+      chips[1].classList.add('is-in');
+      countTo(delivered, 0, 19, 1800);
+    });
+    [1, 0, 2].forEach((p, i) =>
+      at(t + 900 + i * 380, () => {
+        phones[p].querySelector('.m-msg')!.classList.add('is-in');
+        phones[p].classList.add('is-ping');
+        setTimeout(() => phones[p].classList.remove('is-ping'), 350);
+      }),
+    );
 
     ucEmbed.loop(t + 6000);
 
@@ -196,12 +239,19 @@ export function initScene(root: HTMLElement): void {
     });
   }
 
-  ucEmbed.register(() => { idle = false; play(); });
+  ucEmbed.register(() => {
+    idle = false;
+    play();
+  });
 
-
-  new IntersectionObserver(([e]) => {
-    visible = e.isIntersecting;
-    if (visible && idle && !reduce) { idle = false; play(); }
-  }, { threshold: 0.35 }).observe(wrap);
-
+  new IntersectionObserver(
+    ([e]) => {
+      visible = e.isIntersecting;
+      if (visible && idle && !reduce) {
+        idle = false;
+        play();
+      }
+    },
+    { threshold: 0.35 },
+  ).observe(wrap);
 }

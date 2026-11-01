@@ -1,0 +1,45 @@
+/* Text pages: a heading on the pale field, then a readable column */
+
+.page { padding-bottom: clamp(56px, 8vw, 104px); }
+
+/* Full-width band; the heading inside lines up with the text column */
+.page-head {
+  padding: clamp(40px, 6vw, 80px) var(--gutter) clamp(32px, 4vw, 56px);
+  background: var(--field);
+}
+
+.page-title {
+  max-width: 46rem;
+  margin: 0 auto;
+  font-size: clamp(2.25rem, 1rem + 3vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.page-meta { max-width: 46rem; margin: 14px auto 0; color: var(--ink-muted); }
+
+.page-body {
+  max-width: 46rem;
+  margin: clamp(32px, 5vw, 56px) auto 0;
+  padding: 0 var(--gutter);
+  box-sizing: content-box;
+  color: var(--ink-soft);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+.page-body > * + * { margin-top: 1em; }
+
+.page-body h2 {
+  margin-top: 2.2em;
+  color: var(--ink);
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+.page-body h2 + * { margin-top: 0.6em; }
+.page-body strong { color: var(--ink); font-weight: 500; }
+.page-body a:not(.button) { color: var(--blue); }
