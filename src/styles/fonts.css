@@ -25,9 +25,9 @@
 }
 
 @font-face {
-  font-family: "Bodoni Moda";
-  src: url("/fonts/BodoniModa-Italic-Variable.woff2") format("woff2");
-  font-weight: 400 900;
-  font-style: italic;
+  font-family: "Dancing Script";
+  src: url("/fonts/DancingScript-Variable.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
   font-display: swap;
 }

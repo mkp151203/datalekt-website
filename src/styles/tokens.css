@@ -16,7 +16,8 @@
   --cyan: #45bbce;
   --line: #e6eef4;
 
-  --serif: "Bodoni Moda", Georgia, serif;
+  --serif: "Bodoni Moda", Georgia, serif; /* hotel-brand lettering inside the use-case scenes */
+  --script: "Dancing Script", "Brush Script MT", cursive; /* the accent words in headings */
   --sans: "Neue Montreal", "Helvetica Neue", Arial, sans-serif;
 
   --max: 1320px;

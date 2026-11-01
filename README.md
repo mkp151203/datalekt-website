@@ -94,7 +94,7 @@ sitemap.
 
 ## Notes
 
-- Fonts: Bodoni Moda is under the SIL Open Font License (`public/fonts/BodoniModa-OFL.txt`). Neue Montreal was
+- Fonts: Dancing Script (the accent words in headings) and Bodoni Moda (hotel-brand lettering in the use-case scenes) are under the SIL Open Font License (`public/fonts/*-OFL.txt`). Neue Montreal was
   copied from the previous site; its commercial licence has not been confirmed.
 - Map data: [india-official-geojson](https://github.com/AbhinavSwami28/india-official-geojson) (MIT), with Andhra
   Pradesh and Telangana from [DataMeet](http://projects.datameet.org/maps/) via geoBoundaries (CC BY 2.5 IN).

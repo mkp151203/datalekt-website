@@ -24,12 +24,11 @@
 }
 
 .about-title em {
-  font-family: var(--serif);
-  font-size: 1.06em;
-  font-style: italic;
-  font-weight: 500;
-  font-variation-settings: "opsz" 11;
-  letter-spacing: -0.02em;
+  font-family: var(--script);
+  font-size: 1.2em;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 .about-lead {
