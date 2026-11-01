@@ -2,8 +2,8 @@
 // dots rippling out from the chosen dot, the same drop-and-ripple motif as
 // the hero. The hotels come from .partners-roster in the markup (built from
 // data/partners.ts); the dots and caption follow it.
-// Between reveals the photo slowly pushes in. Hovering the section pauses
-// it. Under reduced motion hotels switch instantly and nothing plays.
+// Between reveals the photo slowly pushes in. Keyboard focus in the section
+// pauses it; the mouse never does. Under reduced motion hotels switch instantly and nothing plays.
 import { prefersReducedMotion } from '../../scripts/lib/motion';
 
 interface Hotel {
@@ -76,6 +76,7 @@ export function initPartnersShowcase(section: HTMLElement): void {
   let current = 0;
   let next = -1;
   let pending = -1;
+  let loading = false; // waiting for the next photo to decode
   let shownAt = 0; // when the current photo began to appear
   let revealStart = 0;
   let origin = { x: 0, y: 0 };
@@ -200,7 +201,7 @@ export function initPartnersShowcase(section: HTMLElement): void {
   }
 
   async function go(index: number) {
-    if (next >= 0) {
+    if (next >= 0 || loading) {
       pending = index;
       return;
     }
@@ -208,9 +209,20 @@ export function initPartnersShowcase(section: HTMLElement): void {
 
     const img = images[index];
     if (!img.complete) {
+      loading = true;
       try {
         await img.decode();
       } catch {
+        // A photo that will not load is skipped, not retried every frame
+        loading = false;
+        shownAt = performance.now();
+        pending = -1;
+        return;
+      }
+      loading = false;
+      // Another switch may have started while this one waited
+      if (next >= 0) {
+        pending = index;
         return;
       }
     }
@@ -238,7 +250,7 @@ export function initPartnersShowcase(section: HTMLElement): void {
   }
 
   function tick(now: number) {
-    if (!paused && next < 0 && now - shownAt > holdTime + revealTime) {
+    if (!paused && next < 0 && !loading && now - shownAt > holdTime + revealTime) {
       go((current + 1) % roster.length);
     }
     draw(now);
@@ -275,11 +287,11 @@ export function initPartnersShowcase(section: HTMLElement): void {
     section.classList.add('is-playing');
   }
 
-  section.addEventListener('pointerenter', (event) => {
-    if (event.pointerType === 'mouse') setPaused(true);
+  // Only keyboard focus pauses the rotation. The pointer (or a focus left
+  // behind by a click) never does, so it keeps playing under the cursor.
+  section.addEventListener('focusin', (event) => {
+    if ((event.target as Element).matches(':focus-visible')) setPaused(true);
   });
-  section.addEventListener('pointerleave', () => setPaused(false));
-  section.addEventListener('focusin', () => setPaused(true));
   section.addEventListener('focusout', (event) => {
     if (!section.contains(event.relatedTarget as Node | null)) setPaused(false);
   });

@@ -100,7 +100,12 @@
     padding: 24px var(--gutter) 0;
   }
 
-  .hero-copy { max-width: 40rem; padding-bottom: 40px; }
+  /* Stacked layout: the copy is centred over the product view */
+  .hero-copy { max-width: 40rem; margin-inline: auto; padding-bottom: 40px; text-align: center; }
+
+  .hero-lead { margin-inline: auto; }
+
+  .hero-actions { justify-content: center; }
 
   .hero h1 { font-size: min(calc((100vw - 2 * var(--gutter)) / 9.2), 4.5rem); }
 
@@ -108,5 +113,8 @@
 }
 
 @media (max-width: 560px) {
-  .hero-actions .button { width: 100%; }
+  /* Demo button and "See how it works" share one row, the note sits centred under them */
+  .hero-actions { flex-wrap: nowrap; gap: 16px; }
+  .hero-actions .button { flex: none; padding: 0 22px; }
+  .hero-secondary { white-space: nowrap; }
 }
