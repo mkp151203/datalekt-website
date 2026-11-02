@@ -2,8 +2,9 @@
 // dots rippling out from the chosen dot, the same drop-and-ripple motif as
 // the hero. The hotels come from .partners-roster in the markup (built from
 // data/partners.ts); the dots and caption follow it.
-// Between reveals the photo slowly pushes in. Keyboard focus in the section
-// pauses it; the mouse never does. Under reduced motion hotels switch instantly and nothing plays.
+// Between reveals the photo slowly pushes in. A new choice mid-reveal starts
+// straight away from the frame on screen. Choosing a hotel or keyboard focus
+// pauses the rotation; hovering doesn't. Under reduced motion hotels switch instantly and nothing plays.
 import { prefersReducedMotion } from '../../scripts/lib/motion';
 
 interface Hotel {
@@ -49,7 +50,7 @@ export function initPartnersShowcase(section: HTMLElement): void {
     dot.dataset.name = label(hotel);
     dot.setAttribute('aria-label', `Show ${label(hotel)}`);
     dot.innerHTML = '<span class="partner-ring" aria-hidden="true"></span>';
-    dot.addEventListener('click', () => go(i));
+    dot.addEventListener('click', () => pick(i));
     dotsBox.append(dot);
     return dot;
   });
@@ -58,9 +59,16 @@ export function initPartnersShowcase(section: HTMLElement): void {
     const step = Number(arrow.dataset.step);
     arrow.addEventListener('click', () => {
       const from = pending >= 0 ? pending : next >= 0 ? next : current;
-      go((from + step + roster.length) % roster.length);
+      pick((from + step + roster.length) % roster.length);
     });
   });
+
+  // A hotel the visitor chose stays on screen: the rotation holds until they
+  // move on (focus leaves the section, or it scrolls away and back)
+  function pick(index: number) {
+    setPaused(true);
+    go(index);
+  }
 
   const images = roster.map((hotel) => {
     const img = new Image();
@@ -77,6 +85,7 @@ export function initPartnersShowcase(section: HTMLElement): void {
   let next = -1;
   let pending = -1;
   let loading = false; // waiting for the next photo to decode
+  let base: HTMLCanvasElement | null = null; // a frozen frame under the ripple, after an interruption
   let shownAt = 0; // when the current photo began to appear
   let revealStart = 0;
   let origin = { x: 0, y: 0 };
@@ -96,6 +105,7 @@ export function initPartnersShowcase(section: HTMLElement): void {
     canvas!.width = Math.round(width * ratio);
     canvas!.height = Math.round(height * ratio);
     ctx!.setTransform(ratio, 0, 0, ratio, 0, 0);
+    base = null; // drawn at the old size
 
     // A staggered grid, like the hero's dot field
     grid = [];
@@ -126,7 +136,8 @@ export function initPartnersShowcase(section: HTMLElement): void {
 
   function draw(now: number) {
     ctx!.clearRect(0, 0, width, height);
-    drawPhoto(images[current], zoomFor(now - shownAt));
+    if (base) ctx!.drawImage(base, 0, 0, width, height);
+    else drawPhoto(images[current], zoomFor(now - shownAt));
     if (next < 0) return;
 
     // The ripple front travels from the origin; dots just behind it are
@@ -153,10 +164,25 @@ export function initPartnersShowcase(section: HTMLElement): void {
       current = next;
       shownAt = revealStart;
       next = -1;
+      base = null;
       const queued = pending;
       pending = -1;
       if (queued >= 0 && queued !== current) go(queued);
     }
+  }
+
+  // A new choice mid-reveal starts from the frame on screen: the half-drawn
+  // ripple is frozen as the base and the new one grows over it, so the
+  // visitor never waits for the old reveal to finish
+  function freeze() {
+    const still = document.createElement('canvas');
+    still.width = canvas!.width;
+    still.height = canvas!.height;
+    still.getContext('2d')?.drawImage(canvas!, 0, 0);
+    base = still;
+    current = next;
+    shownAt = revealStart;
+    next = -1;
   }
 
   // The point in the photo closest to a dot, so the ripple starts beside it
@@ -201,11 +227,11 @@ export function initPartnersShowcase(section: HTMLElement): void {
   }
 
   async function go(index: number) {
-    if (next >= 0 || loading) {
+    if (loading) {
       pending = index;
       return;
     }
-    if (index === current) return;
+    if (index === (next >= 0 ? next : current)) return;
 
     const img = images[index];
     if (!img.complete) {
@@ -220,17 +246,16 @@ export function initPartnersShowcase(section: HTMLElement): void {
         return;
       }
       loading = false;
-      // Another switch may have started while this one waited
-      if (next >= 0) {
-        pending = index;
-        return;
-      }
     }
+    if (next >= 0) freeze();
+    if (index === current) return;
+
     // Off screen or with reduced motion there is no ripple to watch: switch
     const instant = reduceMotion || !visible || document.hidden;
     mark(index, !instant);
 
     if (instant) {
+      base = null;
       current = index;
       shownAt = performance.now();
       draw(shownAt);
@@ -287,8 +312,8 @@ export function initPartnersShowcase(section: HTMLElement): void {
     section.classList.add('is-playing');
   }
 
-  // Only keyboard focus pauses the rotation. The pointer (or a focus left
-  // behind by a click) never does, so it keeps playing under the cursor.
+  // Keyboard focus and choosing a hotel pause the rotation; merely pointing
+  // at the section doesn't, so it keeps playing under the cursor.
   section.addEventListener('focusin', (event) => {
     if ((event.target as Element).matches(':focus-visible')) setPaused(true);
   });
@@ -299,6 +324,7 @@ export function initPartnersShowcase(section: HTMLElement): void {
   new IntersectionObserver(([entry]) => {
     const wasVisible = visible;
     visible = entry.isIntersecting;
+    if (!visible) setPaused(false); // a hotel chosen earlier has been seen
     if (visible && !wasVisible && next < 0 && !paused) {
       shownAt = performance.now();
       restartProgress();

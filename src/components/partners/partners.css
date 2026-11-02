@@ -152,7 +152,7 @@
   color: var(--ink);
   box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px rgb(11 42 63 / 0.06);
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .partners-arrow svg {
@@ -164,10 +164,15 @@
   stroke-linejoin: round;
 }
 
-.partners-arrow:hover {
-  background: var(--ink);
-  color: var(--surface);
+@media (hover: hover) {
+  .partners-arrow:hover {
+    background: var(--ink);
+    color: var(--surface);
+  }
 }
+
+/* Pressed: answers on touch-down, before the click lands */
+.partners-arrow:active { transform: scale(0.94); transition-duration: 0.1s; }
 
 /* One dot per hotel; they wrap into rows as partners are added */
 .partners-dots {
@@ -201,7 +206,11 @@
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease;
 }
 
-.partner-dot:hover::before { background: var(--ink-muted); transform: scale(1.25); }
+@media (hover: hover) {
+  .partner-dot:hover::before { background: var(--ink-muted); transform: scale(1.25); }
+}
+
+.partner-dot:active::before { transform: scale(0.85); transition-duration: 0.1s; }
 
 .partner-dot[aria-current="true"]::before {
   background: var(--cyan);
@@ -252,10 +261,16 @@
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.partner-dot:hover::after,
 .partner-dot:focus-visible::after {
   opacity: 1;
   transform: translate(-50%, 0);
+}
+
+@media (hover: hover) {
+  .partner-dot:hover::after {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
 /* Controls only work with script */

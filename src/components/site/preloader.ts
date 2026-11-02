@@ -112,8 +112,9 @@ function frame(t: number): { dots: Dot[]; bars: Bar[] } {
 export function initPreloader(root: HTMLElement): void {
   const cells = root.querySelector('[data-cells]');
   if (!cells) return;
-  // Scrolling is blocked with listeners rather than overflow: hidden, so the
-  // scrollbar stays put and the page doesn't shift when the preloader lifts
+  // The intro always plays to the end. Scrolling is blocked with listeners
+  // rather than overflow: hidden, so the scrollbar stays put and the page
+  // doesn't shift when the preloader lifts
   const keys = new Set([' ', 'PageUp', 'PageDown', 'Home', 'End', 'ArrowUp', 'ArrowDown']);
   const block = (event: Event) => {
     if (event instanceof KeyboardEvent && !keys.has(event.key)) return;
@@ -144,6 +145,12 @@ export function initPreloader(root: HTMLElement): void {
     done = true;
     root.classList.add('is-done');
     blocked.forEach((type) => window.removeEventListener(type, block));
+    // Seen once this visit; Preloader.astro skips it on the next page
+    try {
+      sessionStorage.setItem('datalekt-intro-seen', '1');
+    } catch {
+      // Storage blocked: the preloader simply plays again
+    }
     root.addEventListener('transitionend', () => root.remove(), { once: true });
     setTimeout(() => root.remove(), 1200); // in case the transition never runs
   }

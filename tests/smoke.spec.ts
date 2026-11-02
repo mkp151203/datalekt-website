@@ -64,22 +64,27 @@ test('mobile menu opens and links to a section', async ({ page }, testInfo) => {
   expect(top).toBe(76);
 });
 
-test('use-case tabs switch scenes and move on when a scene ends', async ({ page }) => {
+test('use-case tabs move on by themselves, but a chosen tab stays', async ({ page }) => {
+  test.setTimeout(75_000);
   await page.goto('/');
   const tabs = page.locator('.case-tab');
   await expect(tabs).toHaveCount(6);
   await page.locator('.case-stage').scrollIntoViewIfNeeded();
 
-  // Choosing a tab shows its panel only
-  await tabs.nth(1).click();
-  await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true');
+  // Left alone, the switcher moves on to scene 2 when scene 1 ends
+  await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true', { timeout: 30_000 });
   await expect(page.locator('#case-panel-2')).toBeVisible();
-  await expect(page.locator('#case-panel-1')).toBeHidden();
 
-  // Scene 2 loops in 12.5 s; then the switcher moves on to scene 3
-  await page.locator('.case-stage').scrollIntoViewIfNeeded();
-  await expect(tabs.nth(2)).toHaveAttribute('aria-selected', 'true', { timeout: 20_000 });
+  // Choosing a tab shows its panel only
+  await tabs.nth(2).click();
+  await expect(tabs.nth(2)).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('#case-panel-3')).toBeVisible();
+  await expect(page.locator('#case-panel-2')).toBeHidden();
+
+  // ...and it stays chosen past the end of its scene
+  await page.waitForTimeout(16_000);
+  await expect(tabs.nth(2)).toHaveAttribute('aria-selected', 'true');
+  await expect(tabs.nth(2)).not.toHaveClass(/is-running/);
 });
 
 test('growth map draws the dots and one pin per city', async ({ page }) => {

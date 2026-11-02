@@ -54,26 +54,32 @@
 }
 
 .case-tab:last-child { border-bottom: 1px solid var(--line); }
-.case-tab:hover { color: var(--ink); }
+.case-tab:hover,
+.case-tab:active { color: var(--ink); }
 .case-tab:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
 
 .case-num { padding-top: 4px; font-size: 0.875rem; font-variant-numeric: tabular-nums; }
 .case-name { font-size: 1.25rem; font-weight: 500; letter-spacing: -0.01em; }
 
+/* Opens to the text's real height (a 0fr → 1fr row), so the easing runs
+   over the actual distance rather than a guessed max-height */
 .case-desc {
+  display: grid;
   grid-column: 2;
-  max-height: 0;
-  overflow: hidden;
+  grid-template-rows: 0fr;
   color: var(--ink-soft);
   font-size: 1rem;
   line-height: 1.5;
   opacity: 0;
-  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin-top 0.45s ease;
+  transition: grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
 }
+
+.case-desc > span { min-height: 0; overflow: hidden; }
+.case-desc > span::before { content: ""; display: block; height: 8px; }
 
 .case-tab[aria-selected="true"] { color: var(--ink); }
 .case-tab[aria-selected="true"] .case-num { color: var(--blue); }
-.case-tab[aria-selected="true"] .case-desc { max-height: 6em; margin-top: 8px; opacity: 1; }
+.case-tab[aria-selected="true"] .case-desc { grid-template-rows: 1fr; opacity: 1; }
 
 /* Fills over the length of the scene that is playing */
 .case-progress { position: absolute; top: -1px; right: 0; left: 0; height: 2px; overflow: hidden; }

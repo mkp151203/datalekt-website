@@ -5,14 +5,25 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, -webkit-backdrop-filter 0.3s ease, backdrop-filter 0.3s ease;
 }
 
+/* The frost thickens in with the background, and its lower edge is a soft
+   shade rather than a drawn line */
 .site-header.is-scrolled {
   background: rgb(251 253 254 / 0.84);
-  box-shadow: 0 1px 0 rgb(11 42 63 / 0.08);
+  box-shadow: 0 10px 18px -16px rgb(11 42 63 / 0.35);
   -webkit-backdrop-filter: saturate(1.4) blur(14px);
   backdrop-filter: saturate(1.4) blur(14px);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .site-header.is-scrolled { background: var(--ground); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+@media (prefers-contrast: more) {
+  .site-header.is-scrolled { background: var(--ground); box-shadow: 0 1px 0 var(--ink-muted); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .login-menu { box-shadow: inset 0 0 0 1px var(--ink-muted), var(--float); }
 }
 
 .nav {
@@ -112,7 +123,10 @@
     height: 44px;
     border-radius: 999px;
     background: var(--tint);
+    transition: transform 0.2s ease, background-color 0.2s ease;
   }
+
+  .nav-mobile summary:active { background: var(--field); transform: scale(0.94); transition-duration: 0.1s; }
 
   .nav-actions { margin-left: auto; gap: 12px; }
 
@@ -161,3 +175,28 @@
 .nav-links a.is-current { color: var(--blue); }
 .nav-links a.is-current::after { transform: scaleX(1); }
 .nav-mobile-panel a.is-current { color: var(--blue); }
+
+/* Menus grow out of the button that opened them and fold back into it.
+   ::details-content keeps a menu on screen while it closes, where the
+   browser supports it; elsewhere it closes at once. */
+.login-menu,
+.nav-mobile-panel { transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1); }
+.login-menu { transform-origin: top right; }
+.login:not([open]) .login-menu { opacity: 0; transform: scale(0.96) translateY(-4px); }
+.nav-mobile:not([open]) .nav-mobile-panel { opacity: 0; transform: translateY(-8px); }
+@starting-style {
+  .login[open] .login-menu { opacity: 0; transform: scale(0.96) translateY(-4px); }
+  .nav-mobile[open] .nav-mobile-panel { opacity: 0; transform: translateY(-8px); }
+}
+.login::details-content,
+.nav-mobile::details-content { transition: content-visibility 0.25s allow-discrete; }
+.login summary svg { transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .login:not([open]) .login-menu,
+  .nav-mobile:not([open]) .nav-mobile-panel { transform: none; }
+  @starting-style {
+    .login[open] .login-menu,
+    .nav-mobile[open] .nav-mobile-panel { transform: none; }
+  }
+}

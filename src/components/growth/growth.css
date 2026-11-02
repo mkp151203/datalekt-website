@@ -66,7 +66,8 @@
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.growth-city:hover { background: var(--tint); }
+.growth-city:hover,
+.growth-city:active { background: var(--tint); }
 .growth-city:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 .growth-city[aria-pressed="true"] { background: var(--field); }
 .growth-city[aria-pressed="true"]::before { background: var(--cyan); box-shadow: 0 0 0 4px rgb(69 187 206 / 0.25); }
@@ -156,7 +157,7 @@
   white-space: nowrap;
   opacity: 0;
   transform: translateY(-50%) scale(0.9);
-  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
 }
 
@@ -185,6 +186,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .growth-pin { transition: none; }
+  .growth-pin.is-active i::after { animation: none; }
 }
 
 /* The city on show, and the full list in a dialog */
@@ -198,6 +200,24 @@
 
 .growth-modal { width: min(44rem, calc(100vw - 32px)); max-height: min(80vh, 44rem); padding: 28px; border: 0; border-radius: 22px; background: var(--surface); color: var(--ink); box-shadow: 0 30px 80px -20px rgb(11 42 63 / 0.5); }
 .growth-modal::backdrop { background: rgb(11 42 63 / 0.45); backdrop-filter: blur(3px); }
+
+/* The dialog settles in over a fading backdrop and leaves the same way.
+   overlay and display keep it on screen while it closes. */
+.growth-modal { transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), overlay 0.3s allow-discrete, display 0.3s allow-discrete; }
+.growth-modal::backdrop { transition: opacity 0.25s ease, overlay 0.3s allow-discrete, display 0.3s allow-discrete; }
+.growth-modal:not([open]) { opacity: 0; transform: scale(0.96) translateY(8px); }
+.growth-modal:not([open])::backdrop { opacity: 0; }
+@starting-style {
+  .growth-modal[open] { opacity: 0; transform: scale(0.96) translateY(8px); }
+  .growth-modal[open]::backdrop { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .growth-modal:not([open]) { transform: none; }
+  @starting-style { .growth-modal[open] { transform: none; } }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .growth-modal::backdrop { background: rgb(11 42 63 / 0.6); backdrop-filter: none; }
+}
 .growth-modal-head { display: flex; align-items: center; justify-content: space-between; }
 .growth-modal-head h3 { margin: 0; font-size: 1.5rem; font-weight: 500; letter-spacing: -0.02em; }
 .growth-modal-close { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--tint); color: var(--ink); font-size: 1.4rem; line-height: 1; cursor: pointer; }

@@ -1,7 +1,8 @@
 // Use-case switcher. Each scene sits in its own panel; scenes report through
 // DOM events (kit/scene-kit.ts) when a loop starts and ends. Here we crossfade
 // between panels, size the stage to the active scene, run the tab's progress
-// line, and move on to the next use case when one finishes.
+// line, and move on to the next use case when one finishes, unless the
+// visitor picked a tab themselves.
 import { onVisibility } from '../../scripts/lib/in-view';
 import { prefersReducedMotion } from '../../scripts/lib/motion';
 
@@ -20,6 +21,9 @@ export function initUseCaseSwitcher(section: HTMLElement): void {
   let current = panels.findIndex((panel) => !panel.hidden);
   if (current < 0) current = 0;
   let inView = false;
+  // A tab the visitor picked stays put: no progress line, no moving on,
+  // until the section leaves the screen
+  let chosen = false;
 
   // The stage animates its height only when switching tabs; sizing it to the
   // first scene, or after a layout change, is instant so nothing below jumps
@@ -82,7 +86,7 @@ export function initUseCaseSwitcher(section: HTMLElement): void {
   }
 
   section.addEventListener('scene:loopstart', (event) => {
-    if (!panels[current].contains(event.target as Node)) return;
+    if (chosen || !panels[current].contains(event.target as Node)) return;
     startProgress((event as CustomEvent<number>).detail);
   });
 
@@ -90,18 +94,24 @@ export function initUseCaseSwitcher(section: HTMLElement): void {
     // A scene that was switched away from finishing its loop is ignored.
     // Out of view, the scene restarts itself when it comes back.
     if (!panels[current].contains(event.target as Node)) return;
-    if (inView && !reduce) select((current + 1) % panels.length);
+    if (inView && !reduce && !chosen) select((current + 1) % panels.length);
   });
 
+  function choose(i: number, focus = false) {
+    chosen = true;
+    tabs[current].classList.remove('is-running');
+    select(i, focus);
+  }
+
   tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => select(i));
+    tab.addEventListener('click', () => choose(i));
     tab.addEventListener('keydown', (event) => {
       const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[
         event.key
       ];
       if (!step) return;
       event.preventDefault();
-      select((current + step + tabs.length) % tabs.length, true);
+      choose((current + step + tabs.length) % tabs.length, true);
     });
   });
 
@@ -109,7 +119,10 @@ export function initUseCaseSwitcher(section: HTMLElement): void {
     stage,
     (visible) => {
       inView = visible;
-      if (!visible) tabs[current].classList.remove('is-running');
+      if (!visible) {
+        tabs[current].classList.remove('is-running');
+        chosen = false;
+      }
     },
     { threshold: 0.2 },
   );

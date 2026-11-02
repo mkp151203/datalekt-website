@@ -43,7 +43,7 @@ const useCases = getUseCases();
         >
           <span class="case-num">{String(i + 1).padStart(2, '0')}</span>
           <span class="case-name">{useCase.name}</span>
-          <span class="case-desc">{useCase.description}</span>
+          <span class="case-desc"><span>{useCase.description}</span></span>
           <span class="case-progress" aria-hidden="true">
             <i></i>
           </span>

@@ -1,7 +1,8 @@
 ---
 // Full-screen preloader: the Datalekt mark divides cell by cell into shape
 // (preloader.ts), then the screen lifts once the page has loaded. The mask
-// starts with one cell so something shows before the script runs.
+// starts with one cell so something shows before the script runs. It plays
+// in full, but only on the first page of a visit.
 ---
 
 <div class="preloader" aria-hidden="true">
@@ -40,6 +41,13 @@
 </div>
 
 <noscript><style>.preloader { display: none; }</style></noscript>
+
+<!-- Runs before first paint: the intro plays once per visit, not on every page -->
+<script is:inline>
+  try {
+    if (sessionStorage.getItem('datalekt-intro-seen')) document.querySelector('.preloader')?.remove();
+  } catch {}
+</script>
 
 <style is:global>
   .preloader {
