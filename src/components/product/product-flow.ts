@@ -86,10 +86,14 @@ export function initProductFlow(section: HTMLElement): void {
 
   // Side by side when there is room, a pyramid on phones
   function layout() {
+    // A zero-width scene (a window squeezed to nothing, e.g. while DevTools
+    // docks) would make k zero and the dot grid below loop forever
+    if (wrap.clientWidth < 1) return;
     const stack = wrap.clientWidth < 760;
     const w = stack ? 720 : 1100;
     const k = Math.min(1, wrap.clientWidth / w);
-    const extra = Math.ceil(Math.max(0, (section.clientWidth / k - w) / 2));
+    // Capped so a sliver-wide window can't ask for a canvas miles across
+    const extra = Math.min(w, Math.ceil(Math.max(0, (section.clientWidth / k - w) / 2)));
     if (stack !== stacked || extra !== ex) {
       stacked = stack;
       ex = extra;
