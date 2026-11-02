@@ -16,6 +16,15 @@ dist/
 # Claude Code local files
 .claude/
 
+# Agent skills installed into the project (also installed globally) and
+# design-review screenshots they leave behind
+.agents/
+skills-lock.json
+.taste-skill/
+
+# Scratch prototypes kept outside archive/
+mitosis.html
+
 # Test output
 test-results/
 playwright-report/
